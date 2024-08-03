@@ -5,62 +5,67 @@ import "dotenv/config"
 import fetch from "node-fetch"
 
 const app = express()
-// const IGDB_ACCESS_TOKEN = {}
 app.use(cors())
 
-// console.log(dotenv.config)
+let IGDB_ACCESS_TOKEN
+let expireTime
 
 // Authenticate IGDB
+// Fix authentication token expiration
 app.use("/game/:name", (req, res, next) => {
-  const clientId = process.env.IGDB_CLIENT_ID
-  const clientSecret = process.env.IGDB_CLIENT_SECRET
-  const authUrl = "https://id.twitch.tv/oauth2/token"
-  const authOptions = {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    body: `client_id=${clientId}&client_secret=${clientSecret}&grant_type=client_credentials`,
-  }
+  if (!IGDB_ACCESS_TOKEN || Date.now() >= expireTime) {
+    // if (!IGDB_ACCESS_TOKEN) {
+    const clientId = process.env.IGDB_CLIENT_ID
+    const clientSecret = process.env.IGDB_CLIENT_SECRET
+    const authUrl = "https://id.twitch.tv/oauth2/token"
+    const authOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: `client_id=${clientId}&client_secret=${clientSecret}&grant_type=client_credentials`,
+    }
 
-  fetch(authUrl, authOptions)
-    .then((res) => res.json())
-    .then((json) => {
-      if (json.access_token) {
-        process.env.IGDB_ACCESS_TOKEN = json.access_token
-        next()
-      } else {
-        throw new Error("Failed to authenticate with IGDB")
-      }
-    })
-    .catch((err) => {
-      console.error("error:" + err)
-      res.status(500).send("Failed to authenticate with IGDB")
-    })
+    fetch(authUrl, authOptions)
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.access_token) {
+          IGDB_ACCESS_TOKEN = json.access_token
+          // console.log("IGDB access token:", IGDB_ACCESS_TOKEN)
+          expireTime = json.expires_in * 1000 + Date.now()
+          next()
+        } else {
+          throw new Error("Failed to authenticate with IGDB")
+        }
+      })
+      .catch((err) => {
+        console.error("error:" + err)
+        res.status(500).send("Failed to authenticate with IGDB")
+      })
+  }
+  next()
 })
 
 // Game route
 app.get("/game/:name", (req, res) => {
-  const gameName = req.params.name
-  const url = `https://api.igdb.com/v4/games`
-  const options = {
+  const name = req.params.name
+
+  fetch("https://api.igdb.com/v4/games", {
     method: "POST",
     headers: {
-      "Client-ID": process.env.IGDB_CLIENT_ID,
-      Authorization: `Bearer ${process.env.IGDB_ACCESS_TOKEN}`,
-      "Content-Type": "application/json",
+      Accept: "application/json",
+      "Client-ID": `${process.env.IGDB_CLIENT_ID}`,
+      Authorization: `Bearer ${IGDB_ACCESS_TOKEN}`,
     },
-    body: JSON.stringify({
-      search: gameName,
-      fields: "name,summary,cover.url",
-      limit: 1,
-    }),
-  }
-
-  fetch(url, options)
-    .then((res) => res.json())
-    .then((json) => res.json(json))
-    .catch((err) => console.error("error:" + err))
+    body: `fields name,summary,cover.url,first_release_date,age_ratings,aggregated_rating,platforms; search "${name}"; limit 10;`,
+  })
+    .then(async (response) => {
+      let data = await response.json()
+      res.json(data)
+    })
+    .catch((err) => {
+      console.error(err)
+    })
 })
 
 // Book route

@@ -11,29 +11,34 @@ export default function App() {
   const [games, setGames] = useState([])
   const [books, setBooks] = useState([])
 
+  // Fetch data from the server
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const url = `http://localhost:8000/${searchType}/${searchText}`
-        const response = await fetch(url)
-        const data = await response.json()
-        if (searchType === "movie") {
-          setMovies(data.results)
-        } else if (searchType === "music") {
-          setMusic(data.results)
-        } else if (searchType === "game") {
-          setGames(data.results)
-        } else if (searchType === "book") {
-          setBooks(data.results)
+      if (searchText.length > 2) {
+        try {
+          const url = `http://localhost:8000/${searchType}/${searchText}`
+          const response = await fetch(url)
+          const data = await response.json()
+          if (searchType === "movie" || searchType === "tv") {
+            setMovies(data.results)
+          } else if (searchType === "music") {
+            setMusic(data.results)
+          } else if (searchType === "game") {
+            setGames(data)
+            console.log(games)
+          } else if (searchType === "book") {
+            setBooks(data.results)
+          }
+        } catch (error) {
+          console.error(`Error fetching ${searchType}s: `, error)
         }
-      } catch (error) {
-        console.error(`Error fetching ${searchType}s: `, error)
       }
     }
 
     fetchData()
   }, [searchText])
 
+  // Map over the data and create a list of movie cards
   const movieList = movies?.map((movie) => {
     return (
       // TODO: Abstract away the movieCard component
@@ -48,34 +53,46 @@ export default function App() {
     )
   })
 
-  const gameList = games?.map((game) => {
+  // Map over the data and create a list of game cards
+  const gameList = games.map((game) => {
     return (
       <div key={game.id}>
         <h2>{game.name}</h2>
-        <p>{game.description}</p>
+        <p>{game.summary}</p>
         <img
-          src={game.background_image}
+          src={game.cover?.url}
           alt="game poster"
         />
+        <p>Rating: {game?.rating}</p>
+        <p>Release Date: {game?.first_release_date}</p>
+        <p>
+          Platforms: {game?.platforms?.map((platform) => platform).join(", ")}
+        </p>
       </div>
     )
   })
 
+  function selectMediaType(mediaType) {
+    setSearchText("")
+    setSearchType(mediaType)
+  }
+
+  // Searchtype button handler
   const handleTypeSelect = (e) => {
     if (e.target.id === "movie") {
-      setSearchType("movie")
+      selectMediaType("movie")
     }
     if (e.target.id === "tv") {
-      setSearchType("tv")
+      selectMediaType("tv")
     }
     if (e.target.id === "music") {
-      setSearchType("music")
+      selectMediaType("music")
     }
     if (e.target.id === "game") {
-      setSearchType("game")
+      selectMediaType("game")
     }
     if (e.target.id === "book") {
-      setSearchType("book")
+      selectMediaType("book")
     }
   }
 
