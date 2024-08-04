@@ -6,40 +6,40 @@ import MovieCard from "./components/media/movieCard"
 export default function App() {
   const [searchText, setSearchText] = useState("")
   const [searchType, setSearchType] = useState("movie")
+  const [authHelper, setAuthHelper] = useState(false)
   const [movies, setMovies] = useState([])
   const [music, setMusic] = useState([])
   const [games, setGames] = useState([])
   const [books, setBooks] = useState([])
 
-  // Fetch data from the server
-  useEffect(() => {
-    const fetchData = async () => {
-      if (searchText.length > 2) {
-        try {
-          const url = `http://localhost:8000/${searchType}/${searchText}`
-          const response = await fetch(url)
-          const data = await response.json()
-          if (searchType === "movie" || searchType === "tv") {
-            setMovies(data.results)
-          } else if (searchType === "music") {
-            setMusic(data.results)
-          } else if (searchType === "game") {
-            setGames(data)
-            console.log(games)
-          } else if (searchType === "book") {
-            setBooks(data.results)
-          }
-        } catch (error) {
-          console.error(`Error fetching ${searchType}s: `, error)
+  async function fetchData() {
+    if (searchText.length > 2) {
+      try {
+        const url = `http://localhost:8000/${searchType}/${searchText}`
+        const response = await fetch(url)
+        const data = await response.json()
+        if (searchType === "movie" || searchType === "tv") {
+          setMovies(data.results)
+        } else if (searchType === "music") {
+          setMusic(data.tracks.items)
+          console.log(data.tracks.items)
+        } else if (searchType === "game") {
+          setGames(data)
+        } else if (searchType === "book") {
+          setBooks(data.items)
         }
+      } catch (error) {
+        console.error(`Error fetching ${searchType}s: `, error)
       }
     }
-
+  }
+  // Fetch data from the server
+  useEffect(() => {
     fetchData()
   }, [searchText])
 
   // Map over the data and create a list of movie cards
-  const movieList = movies?.map((movie) => {
+  const movieList = movies.map((movie) => {
     return (
       // TODO: Abstract away the movieCard component
       <MovieCard
@@ -54,20 +54,39 @@ export default function App() {
   })
 
   // Map over the data and create a list of game cards
-  const gameList = games.map((game) => {
+  const gameList =
+    games.length > 0 &&
+    games.map((game) => {
+      return (
+        <div key={game.id}>
+          <h2>{game.name}</h2>
+          <p>{game.summary}</p>
+          <img
+            src={game.cover?.url}
+            alt="game poster"
+          />
+          <p>Rating: {game?.rating}</p>
+          <p>Release Date: {game?.first_release_date}</p>
+          <p>
+            Platforms: {game?.platforms?.map((platform) => platform).join(", ")}
+          </p>
+        </div>
+      )
+    })
+
+  // Map over the data and create a list of music cards
+  const musicList = music?.map((track) => {
     return (
-      <div key={game.id}>
-        <h2>{game.name}</h2>
-        <p>{game.summary}</p>
+      <div key={track.id}>
+        <h2>{track.name}</h2>
+        <p>{track.album.name}</p>
         <img
-          src={game.cover?.url}
-          alt="game poster"
+          src={track.album.images[0].url}
+          alt="album cover"
         />
-        <p>Rating: {game?.rating}</p>
-        <p>Release Date: {game?.first_release_date}</p>
-        <p>
-          Platforms: {game?.platforms?.map((platform) => platform).join(", ")}
-        </p>
+        <p>Rating: {track.popularity}</p>
+        <p>Release Date: {track.album.release_date}</p>
+        <p>Artists: {track.artists.map((artist) => artist.name).join(", ")}</p>
       </div>
     )
   })
@@ -76,6 +95,26 @@ export default function App() {
     setSearchText("")
     setSearchType(mediaType)
   }
+
+  // Map over the data and create a list of book cards
+  console.log(books)
+  const bookList =
+    // books &&
+    books?.map((book) => {
+      return (
+        <div key={book.id}>
+          <h2>{book.volumeInfo.title}</h2>
+          <p>{book.volumeInfo.description}</p>
+          <img
+            src={book.volumeInfo.imageLinks?.thumbnail}
+            alt="book cover"
+          />
+          <p>Rating: {book.volumeInfo.averageRating}</p>
+          <p>Published Date: {book.volumeInfo.publishedDate}</p>
+          <p>Authors: {book.volumeInfo.authors?.join(", ")}</p>
+        </div>
+      )
+    })
 
   // Searchtype button handler
   const handleTypeSelect = (e) => {
@@ -140,9 +179,9 @@ export default function App() {
         onChange={(e) => setSearchText(e.target.value)}
       />
       {(searchType === "movie" || searchType === "tv") && movieList}
-      {/* {searchType === "music" && musicList} */}
+      {searchType === "music" && musicList}
       {searchType === "game" && gameList}
-      {/* {searchType === "book" && bookList} */}
+      {searchType === "book" && bookList}
     </>
   )
 }

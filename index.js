@@ -1,19 +1,21 @@
-const PORT = 8000
+/* eslint-disable no-undef */
 import express from "express"
 import cors from "cors"
 import "dotenv/config"
 import fetch from "node-fetch"
 
+const PORT = 8000
 const app = express()
 app.use(cors())
 
 let IGDB_ACCESS_TOKEN
-let expireTime
+let SPOTIFY_ACCESS_TOKEN
+let igdbExpireTime
+let spotify_token_expire_time
 
 // Authenticate IGDB
-// Fix authentication token expiration
 app.use("/game/:name", (req, res, next) => {
-  if (!IGDB_ACCESS_TOKEN || Date.now() >= expireTime) {
+  if (!IGDB_ACCESS_TOKEN || Date.now() >= igdbExpireTime) {
     // if (!IGDB_ACCESS_TOKEN) {
     const clientId = process.env.IGDB_CLIENT_ID
     const clientSecret = process.env.IGDB_CLIENT_SECRET
@@ -32,7 +34,7 @@ app.use("/game/:name", (req, res, next) => {
         if (json.access_token) {
           IGDB_ACCESS_TOKEN = json.access_token
           // console.log("IGDB access token:", IGDB_ACCESS_TOKEN)
-          expireTime = json.expires_in * 1000 + Date.now()
+          igdbExpireTime = json.expires_in * 1000 + Date.now()
           next()
         } else {
           throw new Error("Failed to authenticate with IGDB")
@@ -41,6 +43,38 @@ app.use("/game/:name", (req, res, next) => {
       .catch((err) => {
         console.error("error:" + err)
         res.status(500).send("Failed to authenticate with IGDB")
+      })
+  }
+  next()
+})
+
+// Spotify authentication
+app.use("/music/:name", async (req, res, next) => {
+  if (!SPOTIFY_ACCESS_TOKEN || Date.now() >= spotify_token_expire_time) {
+    const authUrl = "https://accounts.spotify.com/api/token"
+    const authOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: `grant_type=client_credentials&client_id=${process.env.SPOTIFY_CLIENT_ID}&client_secret=${process.env.SPOTIFY_CLIENT_SECRET}`,
+    }
+
+    fetch(authUrl, authOptions)
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.access_token) {
+          SPOTIFY_ACCESS_TOKEN = json.access_token
+          console.log("Spotify access token:", SPOTIFY_ACCESS_TOKEN)
+          spotify_token_expire_time = json.expires_in * 1000 + Date.now()
+          next()
+        } else {
+          throw new Error("Failed to authenticate with Spotify")
+        }
+      })
+      .catch((err) => {
+        console.error("error:" + err)
+        res.status(500).send("Failed to authenticate with Spotify")
       })
   }
   next()
@@ -76,6 +110,7 @@ app.get("/book/:name", (req, res) => {
     method: "GET",
     headers: {
       accept: "application/json",
+      Authorization: process.env.GOOGLE_BOOKS_API_KEY,
     },
   }
 
@@ -93,7 +128,7 @@ app.get("/music/:name", (req, res) => {
     method: "GET",
     headers: {
       accept: "application/json",
-      Authorization: process.env.SPOTIFY_API_KEY,
+      Authorization: `Bearer ${SPOTIFY_ACCESS_TOKEN}`,
     },
   }
 
