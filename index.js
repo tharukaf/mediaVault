@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 import express from "express"
 import cors from "cors"
 import "dotenv/config"
@@ -105,12 +104,11 @@ app.get("/game/:name", (req, res) => {
 // Book route
 app.get("/book/:name", (req, res) => {
   const bookName = req.params.name
-  const url = `https://www.googleapis.com/books/v1/volumes?q=${bookName}`
+  const url = `https://www.googleapis.com/books/v1/volumes?key=${process.env.GOOGLE_BOOKS_API_KEY}&q=${bookName}`
   const options = {
     method: "GET",
     headers: {
       accept: "application/json",
-      Authorization: process.env.GOOGLE_BOOKS_API_KEY,
     },
   }
 
