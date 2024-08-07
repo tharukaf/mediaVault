@@ -6,8 +6,8 @@ import MovieCard from "./components/media/movieCard"
 export default function App() {
   const [searchText, setSearchText] = useState("")
   const [searchType, setSearchType] = useState("movie")
-  const [authHelper, setAuthHelper] = useState(false)
   const [movies, setMovies] = useState([])
+  const [tv, setTV] = useState([])
   const [music, setMusic] = useState([])
   const [games, setGames] = useState([])
   const [books, setBooks] = useState([])
@@ -18,8 +18,10 @@ export default function App() {
         const url = `http://localhost:8000/${searchType}/${searchText}`
         const response = await fetch(url)
         const data = await response.json()
-        if (searchType === "movie" || searchType === "tv") {
+        if (searchType === "movie") {
           setMovies(data.results)
+        } else if (searchType === "tv") {
+          setTV(data.results)
         } else if (searchType === "music") {
           setMusic(data.tracks.items)
           console.log(data.tracks.items)
@@ -44,11 +46,24 @@ export default function App() {
       // TODO: Abstract away the movieCard component
       <MovieCard
         key={movie.id} // Add a unique key prop
-        title={movie.title || movie.name}
-        releaseDate={movie.release_date || movie.first_air_date}
+        title={movie.title}
+        releaseDate={movie.first_air_date}
         description={movie.overview}
         posterPath={`https://image.tmdb.org/t/p/w185_and_h278_bestv2${movie.poster_path}`}
         rating={movie.vote_average}
+      />
+    )
+  })
+  const tvList = tv.map((tvShow) => {
+    return (
+      // TODO: Abstract away the movieCard component
+      <MovieCard
+        key={tvShow.id} // Add a unique key prop
+        title={tvShow.name}
+        releaseDate={tvShow.release_date || tvShow.first_air_date}
+        description={tvShow.overview}
+        posterPath={`https://image.tmdb.org/t/p/w185_and_h278_bestv2${tvShow.poster_path}`}
+        rating={tvShow.vote_average}
       />
     )
   })
@@ -178,7 +193,8 @@ export default function App() {
         value={searchText}
         onChange={(e) => setSearchText(e.target.value)}
       />
-      {(searchType === "movie" || searchType === "tv") && movieList}
+      {searchType === "movie" && movieList}
+      {searchType === "tv" && tvList}
       {searchType === "music" && musicList}
       {searchType === "game" && gameList}
       {searchType === "book" && bookList}
