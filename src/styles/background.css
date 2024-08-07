@@ -1,0 +1,82 @@
+.o1{
+    background:url(https://image.ibb.co/nBJ818/bg.png);
+    z-index: -4;
+  }
+  
+  .o2{
+    background:url(https://image.ibb.co/czVo18/stars.png);
+    z-index: -3;
+    animation:200s scroll infinite linear;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+    filter: alpha(opacity=50);
+    -moz-opacity: 0.5;
+    -khtml-opacity: 0.5;
+    opacity: 0.5;
+  }
+  
+  .o3{
+    background:url(https://image.ibb.co/g76HuT/nebula.png);
+    z-index: -2;
+    animation:200s scroll2 infinite linear;
+    opacity: 20%;
+  }
+  
+  .o4{
+    background:url(https://image.ibb.co/b8VcuT/clouds.png);
+    z-index: -1;
+    animation:400s scroll infinite linear;
+    opacity: 50%;
+  }
+  
+  @-webkit-keyframes scroll{
+    100%{
+      background-position:-3000px 0px;
+    }
+  }
+  @-moz-keyframes scroll{
+    100%{
+      background-position:-3000px 0px;
+    }
+  }
+  @-o-keyframes scroll{
+    100%{
+      background-position:-3000px 0px;
+    }
+  }
+  @-ms-keyframes scroll{
+    100%{
+      background-position:-3000px 0px;
+    }
+  }
+  @keyframes scroll{
+    100%{
+      background-position:-3000px 0px;
+    }
+  }
+  
+  @-webkit-keyframes scroll2{
+    100%{
+      background-position:-3000px 0px;
+    }
+  }
+  @-moz-keyframes scroll2{
+    100%{
+      background-position:-3000px 0px;
+    }
+  }
+  @-o-keyframes scroll2{
+    100%{
+      background-position:-3000px 0px;
+    }
+  }
+  @-ms-keyframes scroll2{
+    100%{
+      background-position:-3000px 0px;
+    }
+  }
+  @keyframes scroll2{
+    100%{
+      background-position:3000px 0px;
+    }
+  }
+  

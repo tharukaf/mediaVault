@@ -1,0 +1,7 @@
+#searchTypeButtonGroup {
+    background-color: brown;
+    display: flex;
+    width: fit-content;
+    align-self: center;
+}
+

@@ -1,18 +1,23 @@
-import * as React from 'react'
-import PropTypes from 'prop-types'
+import { useState } from 'react'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
-import Typography from '@mui/material/Typography'
-import Box from '@mui/material/Box'
+// import Typography from '@mui/material/Typography'
+// import Box from '@mui/material/Box'
 import { Outlet, NavLink } from 'react-router-dom'
 import '@fontsource/roboto/700.css'
 
-export default function MyVault() {
+export default function MyVaultLayout() {
+  const [value, setValue] = useState(1)
+
+  function handleChange() {
+    console.log('heh')
+  }
+
   return (
     <>
       <Tabs
-        // value={value}
-        // onChange={handleChange}
+        value={value}
+        onChange={handleChange}
         variant="scrollable"
         orientation="vertical"
         scrollButtons={false}
@@ -23,12 +28,15 @@ export default function MyVault() {
         <NavLink to="tv">
           <Tab label="tv" />
         </NavLink>
-        <Tab label="TV" />
-        <Tab label="Item Three" />
-        <Tab label="Item Four" />
-        <Tab label="Item Five" />
-        <Tab label="Item Six" />
-        <Tab label="Item Seven" />
+        <NavLink to="music">
+          <Tab label="Music" />
+        </NavLink>
+        <NavLink to="games">
+          <Tab label="Games" />
+        </NavLink>
+        <NavLink to="books">
+          <Tab label="books" />
+        </NavLink>
       </Tabs>
       <Outlet />
     </>

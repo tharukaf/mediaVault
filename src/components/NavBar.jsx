@@ -11,12 +11,13 @@ import Avatar from '@mui/material/Avatar'
 import Button from '@mui/material/Button'
 import Tooltip from '@mui/material/Tooltip'
 import MenuItem from '@mui/material/MenuItem'
-import AdbIcon from '@mui/icons-material/Adb'
+// import AdbIcon from '@mui/icons-material/Adb'
 import mySVG from '../assets/media_vault_logo.svg'
 import { NavLink } from 'react-router-dom'
 
-const pages = ['Products', 'Pricing', 'Blog']
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout']
+const pages = ['myVault', 'curator']
+const pagesText = { myVault: 'My Vault', curator: 'Curator' }
+const settings = ['Account', 'Logout']
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null)
@@ -41,8 +42,18 @@ function ResponsiveAppBar() {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
+          {/* <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} /> */}
           <NavLink to="/">
-            <img src={mySVG} width="90px" />
+            <Typography
+              variant="h6"
+              noWrap
+              href="#app-bar-with-responsive-menu"
+              sx={{
+                mr: 2,
+                display: { xs: 'none', md: 'flex' },
+              }}>
+              <img src={mySVG} width="76px"></img>
+            </Typography>
           </NavLink>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -73,17 +84,23 @@ function ResponsiveAppBar() {
                 display: { xs: 'block', md: 'none' },
               }}>
               {pages.map(page => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
+                <NavLink
+                  to={`${page}`}
+                  key={page}
+                  style={{ textDecoration: 'none' }}>
+                  <MenuItem onClick={handleCloseNavMenu}>
+                    <Typography textAlign="center">
+                      {pagesText[page]}
+                    </Typography>
+                  </MenuItem>
+                </NavLink>
               ))}
             </Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+          {/* <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} /> */}
           <Typography
             variant="h5"
             noWrap
-            component="a"
             href="#app-bar-with-responsive-menu"
             sx={{
               mr: 2,
@@ -95,16 +112,22 @@ function ResponsiveAppBar() {
               color: 'inherit',
               textDecoration: 'none',
             }}>
-            LOGO
+            <NavLink to="/">
+              <img src={mySVG} className="logo-img" width="76px"></img>
+            </NavLink>
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map(page => (
-              <Button
+              <NavLink
+                to={`${page}`}
                 key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}>
-                {page}
-              </Button>
+                style={{ textDecoration: 'none' }}>
+                <Button
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, color: 'white', display: 'block' }}>
+                  {pagesText[page]}
+                </Button>
+              </NavLink>
             ))}
           </Box>
 

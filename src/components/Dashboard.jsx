@@ -6,11 +6,6 @@ export default function Dashboard() {
   return (
     <>
       <ResponsiveAppBar />
-      <br />
-      <NavLinkButton to={'/'}>Home</NavLinkButton>
-      <NavLinkButton to={'/myvault'}>My Vault</NavLinkButton>
-      <NavLinkButton to={'/curator'}>Curator</NavLinkButton>
-      <br />
       <Outlet />
     </>
   )
@@ -28,10 +23,12 @@ const notActive = {
 
 function NavLinkButton({ to, children }) {
   return (
-    <NavLink
-      style={({ isActive }) => (isActive ? activeButton : notActive)}
-      to={to}>
-      {children}
-    </NavLink>
+    <>
+      <NavLink
+        style={({ isActive }) => (isActive ? activeButton : notActive)}
+        to={to}>
+        {children}
+      </NavLink>
+    </>
   )
 }
