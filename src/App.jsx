@@ -7,12 +7,12 @@ import Search from './components/Search'
 import MyVaultLayout from './components/MyVault'
 import Curator from './components/Curator'
 import VaultViewer from './components/VaultViewer'
-import StarBackground from './components/StarBackground'
+import StarBackground from './utils/StarBackground'
 
 export default function App() {
   return (
     <>
-      <StarBackground />
+      {/* <StarBackground /> */}
       <Routes>
         <Route path="/" element={<Dashboard />}>
           <Route index element={<Search />} />

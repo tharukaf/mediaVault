@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react'
-import MovieCard from './mediaCards/movieCard'
 import ToggleButton from '@mui/material/ToggleButton'
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
-import Box from '@mui/material/Box'
-import TextField from '@mui/material/TextField'
+import SearchDropDown from './Search/SearchDropDown'
+// import fetchData from '../utils/DataFetch'
 
 export default function Search() {
   const [searchText, setSearchText] = useState('')
@@ -18,19 +17,29 @@ export default function Search() {
     setSearchType(newAlignment)
   }
 
+  // console.log(searchType)
+
+  const mFunc = {
+    setMovies,
+    setTV,
+    setMusic,
+    setGames,
+    setBooks,
+  }
+
   async function fetchData() {
     if (searchText.length > 2) {
       try {
         const url = `http://localhost:8000/${searchType}/${searchText}`
         const response = await fetch(url)
         const data = await response.json()
+
         if (searchType === 'movie') {
           setMovies(data.results)
         } else if (searchType === 'tv') {
           setTV(data.results)
         } else if (searchType === 'music') {
           setMusic(data.tracks.items)
-          console.log(data.tracks.items)
         } else if (searchType === 'game') {
           setGames(data)
         } else if (searchType === 'book') {
@@ -39,161 +48,148 @@ export default function Search() {
       } catch (error) {
         console.error(`Error fetching ${searchType}s: `, error)
       }
-    }
+    } // Adjust the delay as needed
   }
   // Fetch data from the server
   useEffect(() => {
+    fetchData(searchType, searchText, mFunc)
     fetchData()
   }, [searchText])
 
   // Map over the data and create a list of movie cards
   const movieList = movies.map(movie => {
-    return (
-      // TODO: Abstract away the movieCard component
-      <MovieCard
-        key={movie.id} // Add a unique key prop
-        title={movie.title}
-        releaseDate={movie.first_air_date}
-        description={movie.overview}
-        posterPath={`https://image.tmdb.org/t/p/w185_and_h278_bestv2${movie.poster_path}`}
-        rating={movie.vote_average}
-      />
-    )
+    return {
+      id: movie.id, // Add a unique id prop
+      title: movie.title,
+      releaseDate: movie.first_air_date,
+      description: movie.overview,
+      poster: `https://image.tmdb.org/t/p/w185${movie.poster_path}`,
+      rating: movie.vote_average,
+    }
   })
   const tvList = tv.map(tvShow => {
-    return (
+    return {
       // TODO: Abstract away the movieCard component
-      <MovieCard
-        key={tvShow.id} // Add a unique key prop
-        title={tvShow.name}
-        releaseDate={tvShow.release_date || tvShow.first_air_date}
-        description={tvShow.overview}
-        posterPath={`https://image.tmdb.org/t/p/w185_and_h278_bestv2${tvShow.poster_path}`}
-        rating={tvShow.vote_average}
-      />
-    )
+      id: tvShow.id, // Add a unique key prop
+      title: tvShow.name,
+      releaseDate: tvShow.first_air_date,
+      description: tvShow.overview,
+      poster: `https://image.tmdb.org/t/p/w185_and_h278_bestv2${tvShow.poster_path}`,
+      rating: tvShow.vote_average,
+    }
   })
 
   // Map over the data and create a list of game cards
-  const gameList =
-    games.length > 0 &&
-    games.map(game => {
-      return (
-        <div key={game.id}>
-          <h2>{game.name}</h2>
-          <p>{game.summary}</p>
-          <img src={game.cover?.url} alt="game poster" />
-          <p>Rating: {game?.rating}</p>
-          <p>Release Date: {game?.first_release_date}</p>
-          <p>
-            Platforms: {game?.platforms?.map(platform => platform).join(', ')}
-          </p>
-        </div>
-      )
-    })
+  const gameList = games?.map(game => ({
+    id: game.id,
+    title: game.name,
+    description: game.summary,
+    poster: game.cover?.url,
+    rating: game?.rating,
+    releaseDate: game?.first_release_date,
+    platforms: game?.platforms?.map(platform => platform).join(', '),
+  }))
 
   // Map over the data and create a list of music cards
-  const musicList = music?.map(track => {
-    return (
-      <div key={track.id}>
-        <h2>{track.name}</h2>
-        <p>{track.album.name}</p>
-        <img src={track.album.images[0].url} alt="album cover" />
-        <p>Rating: {track.popularity}</p>
-        <p>Release Date: {track.album.release_date}</p>
-        <p>Artists: {track.artists.map(artist => artist.name).join(', ')}</p>
-      </div>
-    )
-  })
+  const musicList = music?.map(track => ({
+    id: track.id,
+    title: track.name,
+    album: track.album.name,
+    poster: track.album.images[0].url,
+    rating: track.popularity,
+    releaseDate: track.album.release_date,
+    artists: track.artists.map(artist => artist.name).join(', '),
+  }))
 
-  function selectMediaType(mediaType) {
-    setSearchText('')
-    setSearchType(mediaType)
-  }
+  // function selectMediaType(mediaType) {
+  //   setSearchText('')
+  //   setSearchType(mediaType)
+  // }
 
   // Map over the data and create a list of book cards
-  console.log(books)
-  const bookList =
-    // books &&
-    books?.map(book => {
-      return (
-        <div key={book.id}>
-          <h2>{book.volumeInfo.title}</h2>
-          <p>{book.volumeInfo.description}</p>
-          <img src={book.volumeInfo.imageLinks?.thumbnail} alt="book cover" />
-          <p>Rating: {book.volumeInfo.averageRating}</p>
-          <p>Published Date: {book.volumeInfo.publishedDate}</p>
-          <p>Authors: {book.volumeInfo.authors?.join(', ')}</p>
-        </div>
-      )
-    })
 
-  // Searchtype button handler
-  const handleTypeSelect = e => {
-    if (e.target.id === 'movie') {
-      selectMediaType('movie')
-    }
-    if (e.target.id === 'tv') {
-      selectMediaType('tv')
-    }
-    if (e.target.id === 'music') {
-      selectMediaType('music')
-    }
-    if (e.target.id === 'game') {
-      selectMediaType('game')
-    }
-    if (e.target.id === 'book') {
-      selectMediaType('book')
-    }
-  }
+  const bookList = books?.map(book => ({
+    id: book.id,
+    title: book.volumeInfo.title,
+    description: book.volumeInfo.description,
+    poster: book.volumeInfo.imageLinks?.thumbnail,
+    rating: book.volumeInfo.averageRating,
+    releaseDate: book.volumeInfo.publishedDate,
+    authors: book.volumeInfo.authors?.join(', '),
+  }))
 
   return (
     <>
-      <ToggleButtonGroup
-        id="searchTypeButtonGroup"
-        color="primary"
-        value={searchType}
-        exclusive
-        onChange={handleChange}
-        aria-label="Platform">
-        <ToggleButton className="searchTypeButton" value="movie">
-          Movie
-        </ToggleButton>
-        <ToggleButton className="searchTypeButton" value="tv">
-          TV
-        </ToggleButton>
-        <ToggleButton className="searchTypeButton" value="music">
-          Music
-        </ToggleButton>
-        <ToggleButton className="searchTypeButton" value="game">
-          Game
-        </ToggleButton>
-        <ToggleButton className="searchTypeButton" value="book">
-          Book
-        </ToggleButton>
-      </ToggleButtonGroup>
-      <br />
-      <Box
-        component="form"
-        sx={{
-          width: 500,
-          maxWidth: '100%',
-        }}
-        noValidate
-        autoComplete="off">
-        <TextField
-          id="outlined-basic"
-          label={`Enter ${searchType} name`}
-          variant="outlined"
-          onChange={e => setSearchText(e.target.value)}
-          value={searchText}
-        />
-      </Box>
-      {searchType === 'movie' && movieList}
-      {searchType === 'tv' && tvList}
-      {searchType === 'music' && musicList}
-      {searchType === 'game' && gameList}
-      {searchType === 'book' && bookList}
+      <div className="searchUIContainer">
+        <ToggleButtonGroup
+          id="searchTypeButtonGroup"
+          color="primary"
+          value={searchType}
+          exclusive
+          onChange={handleChange}
+          aria-label="Platform">
+          <ToggleButton className="searchTypeButton" value="movie">
+            Movie
+          </ToggleButton>
+          <ToggleButton className="searchTypeButton" value="tv">
+            TV
+          </ToggleButton>
+          <ToggleButton className="searchTypeButton" value="music">
+            Music
+          </ToggleButton>
+          <ToggleButton className="searchTypeButton" value="game">
+            Game
+          </ToggleButton>
+          <ToggleButton className="searchTypeButton" value="book">
+            Book
+          </ToggleButton>
+        </ToggleButtonGroup>
+        <br />
+
+        {searchType == 'movie' && (
+          <SearchDropDown
+            optionList={movieList}
+            searchType={searchType}
+            setSearchText={setSearchText}
+            searchText={searchText}
+          />
+        )}
+        {searchType == 'tv' && (
+          <SearchDropDown
+            optionList={tvList}
+            searchType={searchType}
+            setSearchText={setSearchText}
+            searchText={searchText}
+          />
+        )}
+
+        {searchType == 'music' && (
+          <SearchDropDown
+            optionList={musicList}
+            searchType={searchType}
+            setSearchText={setSearchText}
+            searchText={searchText}
+          />
+        )}
+        {searchType == 'game' && (
+          <SearchDropDown
+            optionList={gameList}
+            searchType={searchType}
+            setSearchText={setSearchText}
+            searchText={searchText}
+          />
+        )}
+        {searchType == 'book' && (
+          <SearchDropDown
+            optionList={bookList}
+            searchType={searchType}
+            setSearchText={setSearchText}
+            searchText={searchText}
+          />
+        )}
+      </div>
     </>
   )
 }
+
+// From https://bitbucket.org/atlassian/atlaskit-mk-2/raw/4ad0e56649c3e6c973e226b7efaeb28cb240ccb0/packages/core/select/src/data/countries.js

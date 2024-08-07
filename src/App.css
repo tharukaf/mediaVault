@@ -1,7 +1,64 @@
 #searchTypeButtonGroup {
-    background-color: brown;
+    /* background-color: brown; */
     display: flex;
-    width: fit-content;
+    width: 100%;
+    margin-top: 8%;
+    justify-content: center;
     align-self: center;
 }
 
+.searchTypeButton {
+    /* margin-top: 30px; */
+    width: 80px;
+  }
+
+#textfield-box {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    color: white;
+}
+
+#search-text-input {
+    width: 450px;
+    color: white;
+}
+
+.searchUIContainer {
+    background-color: rgba(43, 43, 43, 0.26);
+    /* background-color: red; */
+    background-blend-mode: color;
+    backdrop-filter: blur(10px);
+    padding: 0 0 10px 0;
+    border-radius: 15px;
+    margin: 0 20rem 0 20rem;
+    /* height: fit-content;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    align-self: center;
+    width: 80%; */
+}
+
+
+
+
+@media screen and (max-width: 720px) {
+    /* Your styles for screens greater than 720px here */
+    .searchUIContainer{
+        margin: 0 2rem 0 2rem;
+    }
+}
+
+
+@supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
+    .searchUIContainer {
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+    }
+  }
+
+  #release-date-text{
+    color: grey;
+  }
