@@ -1,5 +1,5 @@
-import React from "react"
-import "./mediaCards.css"
+import React from 'react'
+import './mediaCards.css'
 
 export default function MovieCard({
   title,
@@ -10,10 +10,7 @@ export default function MovieCard({
 }) {
   return (
     <div className="movie-card">
-      <img
-        src={posterPath}
-        alt="movie poster"
-      />
+      <img src={posterPath} alt="movie poster" />
       <h2>{title}</h2>
       <small>{releaseDate}</small>
       <p>{description}</p>
