@@ -3,16 +3,18 @@ import { useState, useEffect } from 'react'
 import { Routes, Route, Outlet } from 'react-router-dom'
 import './App.css'
 import Dashboard from './components/Dashboard'
-import Search from './components/Search'
+import Search from './components/Search/Search'
 import MyVaultLayout from './components/MyVault'
 import Curator from './components/Curator'
 import VaultViewer from './components/VaultViewer'
 import StarBackground from './utils/StarBackground'
+import { ThemeProvider, createTheme } from '@mui/material/styles'
+import CssBaseline from '@mui/material/CssBaseline'
 
-export default function App() {
+function App() {
   return (
     <>
-      {/* <StarBackground /> */}
+      <StarBackground />
       <Routes>
         <Route path="/" element={<Dashboard />}>
           <Route index element={<Search />} />
@@ -24,5 +26,20 @@ export default function App() {
         </Route>
       </Routes>
     </>
+  )
+}
+
+export default function AppWrapper() {
+  const theme = createTheme({
+    palette: {
+      mode: 'dark',
+    },
+  })
+
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <App />
+    </ThemeProvider>
   )
 }

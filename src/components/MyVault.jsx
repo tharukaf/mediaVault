@@ -15,7 +15,7 @@ export default function MyVaultLayout() {
 
   return (
     <>
-      <Tabs
+      {/* <Tabs
         value={value}
         onChange={handleChange}
         variant="scrollable"
@@ -38,7 +38,7 @@ export default function MyVaultLayout() {
           <Tab label="books" />
         </NavLink>
       </Tabs>
-      <Outlet />
+      <Outlet /> */}
     </>
   )
 }

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import ToggleButton from '@mui/material/ToggleButton'
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
-import SearchDropDown from './Search/SearchDropDown'
+import SearchDropDown from './SearchDropDown'
 // import fetchData from '../utils/DataFetch'
 
 export default function Search() {
@@ -122,32 +122,33 @@ export default function Search() {
     <>
       <div className="searchUIContainer">
         <ToggleButtonGroup
+          style={{ padding: '20px' }}
           id="searchTypeButtonGroup"
           color="primary"
           value={searchType}
           exclusive
           onChange={handleChange}
           aria-label="Platform">
-          <ToggleButton className="searchTypeButton" value="movie">
+          <ToggleButton className="searchTypeSelectItem" value="movie">
             Movie
           </ToggleButton>
-          <ToggleButton className="searchTypeButton" value="tv">
+          <ToggleButton className="searchTypeSelectItem" value="tv">
             TV
           </ToggleButton>
-          <ToggleButton className="searchTypeButton" value="music">
+          <ToggleButton className="searchTypeSelectItem" value="music">
             Music
           </ToggleButton>
-          <ToggleButton className="searchTypeButton" value="game">
+          <ToggleButton className="searchTypeSelectItem" value="game">
             Game
           </ToggleButton>
-          <ToggleButton className="searchTypeButton" value="book">
+          <ToggleButton className="searchTypeSelectItem" value="book">
             Book
           </ToggleButton>
         </ToggleButtonGroup>
-        <br />
 
         {searchType == 'movie' && (
           <SearchDropDown
+            style={{ width: '90%' }}
             optionList={movieList}
             searchType={searchType}
             setSearchText={setSearchText}

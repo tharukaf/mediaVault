@@ -11,21 +11,21 @@ export default function Dashboard() {
   )
 }
 
-const activeButton = {
-  color: 'yellow',
-  padding: '6px',
-}
+// const activeButton = {
+//   color: 'yellow',
+//   padding: '6px',
+// }
 
-const notActive = {
-  color: 'white',
-  padding: '6px',
-}
+// const notActive = {
+//   color: 'white',
+//   padding: '6px',
+// }
 
 function NavLinkButton({ to, children }) {
   return (
     <>
       <NavLink
-        style={({ isActive }) => (isActive ? activeButton : notActive)}
+        // style={({ isActive }) => (isActive ? activeButton : notActive)}
         to={to}>
         {children}
       </NavLink>

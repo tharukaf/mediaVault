@@ -87,7 +87,8 @@ function ResponsiveAppBar() {
                 <NavLink
                   to={`${page}`}
                   key={page}
-                  style={{ textDecoration: 'none' }}>
+                  color="inherit"
+                  style={{ textDecoration: 'none', color: 'white' }}>
                   <MenuItem onClick={handleCloseNavMenu}>
                     <Typography textAlign="center">
                       {pagesText[page]}
