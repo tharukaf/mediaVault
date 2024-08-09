@@ -35,6 +35,12 @@
     margin: 0 20rem 0 20rem;
 }
 
+.navbar-blur{
+  background-color: rgba(70, 70, 85, 0.26);
+  background-blend-mode: color;
+  backdrop-filter: blur(10px);
+}
+
 .searchTypeSelectItem {
   width: 70px;
 }

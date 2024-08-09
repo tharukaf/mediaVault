@@ -11,8 +11,7 @@ import Avatar from '@mui/material/Avatar'
 import Button from '@mui/material/Button'
 import Tooltip from '@mui/material/Tooltip'
 import MenuItem from '@mui/material/MenuItem'
-// import AdbIcon from '@mui/icons-material/Adb'
-import mySVG from '../assets/media_vault_logo.svg'
+import mySVG from '../assets/media_vault_logo_2.svg'
 import { NavLink } from 'react-router-dom'
 
 const pages = ['myVault', 'curator']
@@ -39,7 +38,7 @@ function ResponsiveAppBar() {
   }
 
   return (
-    <AppBar position="static">
+    <AppBar position="sticky" className="navbar-blur">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           {/* <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} /> */}
@@ -52,7 +51,9 @@ function ResponsiveAppBar() {
                 mr: 2,
                 display: { xs: 'none', md: 'flex' },
               }}>
-              <img src={mySVG} width="76px"></img>
+              <Button>
+                <img src={mySVG} width="76px"></img>
+              </Button>
             </Typography>
           </NavLink>
 
@@ -114,7 +115,9 @@ function ResponsiveAppBar() {
               textDecoration: 'none',
             }}>
             <NavLink to="/">
-              <img src={mySVG} className="logo-img" width="76px"></img>
+              <Button>
+                <img src={mySVG} width="76px"></img>
+              </Button>
             </NavLink>
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>

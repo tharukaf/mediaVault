@@ -7,7 +7,6 @@ export default function VaultViewer() {
   return (
     <>
       <h2>Vault Viewer {media ? media : 'movies'}</h2>
-      {/* <NavLink to="..">go back</NavLink> */}
     </>
   )
 }
