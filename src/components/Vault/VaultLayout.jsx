@@ -1,8 +1,6 @@
 import { useState } from 'react'
-import Tabs from '@mui/material/Tabs'
-import Tab from '@mui/material/Tab'
 import VaultSideBar from './VaultSideBar'
-import { Outlet, NavLink } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 import '@fontsource/roboto/700.css'
 import '../../styles/vault.css'
 

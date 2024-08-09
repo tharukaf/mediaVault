@@ -17,6 +17,7 @@ export default function SearchDropDown({
         autoHighlight
         getOptionLabel={option => option.title}
         renderOption={(props, option) => {
+          // eslint-disable-next-line no-unused-vars
           const { key, ...optionProps } = props
           return (
             <Box

@@ -1,5 +1,4 @@
-import React from 'react'
-import { useParams, NavLink } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 
 export default function VaultViewer() {
   const { media } = useParams()
