@@ -33,6 +33,20 @@
     padding: 1rem;
 }
 
+.vault-card-item{
+    margin: 1rem;
+}
+
+.mediaCardContainer{
+    display: flex;
+    flex-wrap: wrap;
+    
+}
+
+.vault-card-header{
+    /* background-color: rgba(156, 13, 13, 0.1); */
+}
+
 @media (max-width: 600px) {
 
     .vault-flex-container {
@@ -57,4 +71,5 @@
         height: 100vh;
     }
 }
+
 

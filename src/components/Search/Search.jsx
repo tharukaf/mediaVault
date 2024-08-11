@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import ToggleButton from '@mui/material/ToggleButton'
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
 import SearchDropDown from './SearchDropDown'
-// import fetchData from '../utils/DataFetch'
+import fetchData from '../../utils/FetchData'
 
 export default function Search() {
   const [searchText, setSearchText] = useState('')
@@ -16,10 +16,7 @@ export default function Search() {
   const handleChange = (event, newAlignment) => {
     setSearchType(newAlignment)
   }
-
-  // console.log(searchType)
-
-  const mFunc = {
+  const funcPointers = {
     setMovies,
     setTV,
     setMusic,
@@ -27,33 +24,10 @@ export default function Search() {
     setBooks,
   }
 
-  async function fetchData() {
-    if (searchText.length > 2) {
-      try {
-        const url = `http://localhost:8000/${searchType}/${searchText}`
-        const response = await fetch(url)
-        const data = await response.json()
-
-        if (searchType === 'movie') {
-          setMovies(data.results)
-        } else if (searchType === 'tv') {
-          setTV(data.results)
-        } else if (searchType === 'music') {
-          setMusic(data.tracks.items)
-        } else if (searchType === 'game') {
-          setGames(data)
-        } else if (searchType === 'book') {
-          setBooks(data.items)
-        }
-      } catch (error) {
-        console.error(`Error fetching ${searchType}s: `, error)
-      }
-    } // Adjust the delay as needed
-  }
   // Fetch data from the server
   useEffect(() => {
-    fetchData(searchType, searchText, mFunc)
-    fetchData()
+    fetchData(searchType, searchText, funcPointers)
+    // fetchData()
   }, [searchText])
 
   // Map over the data and create a list of movie cards
@@ -61,7 +35,7 @@ export default function Search() {
     return {
       id: movie.id, // Add a unique id prop
       title: movie.title,
-      releaseDate: movie.first_air_date,
+      releaseDate: movie.release_date,
       description: movie.overview,
       poster: `https://image.tmdb.org/t/p/w185${movie.poster_path}`,
       rating: movie.vote_average,
