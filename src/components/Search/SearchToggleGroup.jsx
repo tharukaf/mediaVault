@@ -4,6 +4,7 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
 export default function SearchToggleGroup({ searchType, handleChange }) {
   return (
     <ToggleButtonGroup
+      style={{ padding: '20px' }}
       id="searchTypeButtonGroup"
       color="primary"
       value={searchType}

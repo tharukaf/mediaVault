@@ -1,20 +1,30 @@
-import React from "react"
+import { Card } from '@mui/material'
+import CardMedia from '@mui/material/CardMedia'
+import CardFooter from '@mui/material/CardHeader'
 
-export default function MusicCard({
-  title,
-  artist,
-  releaseDate,
-  albumArtPath,
-}) {
+export default function MusicCard({ track }) {
   return (
-    <div className="music-card">
-      <img
-        src={albumArtPath}
-        alt="album art"
+    <Card
+      key={track.id}
+      className="vault-card-item"
+      sx={{ minWidth: 240, maxWidth: 200 }}>
+      <CardMedia
+        component="img"
+        height="fit-content"
+        image={track.poster}
+        alt="Paella dish"
       />
-      <h2>{title}</h2>
-      <small>{artist}</small>
-      <small>{releaseDate}</small>
-    </div>
+      <CardFooter
+        className="vault-card-header"
+        title={track.title.slice(0, 33)}
+        titleTypographyProps={{
+          variant: 'h6',
+          paddingRight: '20px',
+        }}
+        subheader={track.artists}
+        subheaderTypographyProps={{ variant: 'h7' }}
+        sx={{ height: '160px', alignItems: 'stretch' }}
+      />
+    </Card>
   )
 }

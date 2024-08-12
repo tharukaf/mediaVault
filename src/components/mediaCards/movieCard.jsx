@@ -24,7 +24,7 @@ const ExpandMore = styled(props => {
   }),
 }))
 
-export default function MovieCard({ movie }) {
+export default function MovieCard({ movie, type }) {
   const [expanded, setExpanded] = React.useState(false)
 
   const handleExpandClick = () => {
@@ -32,7 +32,7 @@ export default function MovieCard({ movie }) {
   }
 
   return (
-    <Card className="vault-card-item" sx={{ minWidth: 240, maxWidth: 200 }}>
+    <Card className="vault-card-item" sx={{ minWidth: 240, maxWidth: 240 }}>
       <CardHeader
         className="vault-card-header"
         action={
@@ -40,9 +40,11 @@ export default function MovieCard({ movie }) {
             <MoreVertIcon />
           </IconButton>
         }
-        title={movie.title}
+        title={movie.title.slice(0, 20) || 'N/A'}
         titleTypographyProps={{ variant: 'h7' }}
-        subheader={`${movie.releaseDate.slice(0, 4)}`}
+        subheader={
+          (type !== 'game' && `${movie.releaseDate.slice(0, 4)}`) || 'N/A'
+        }
       />
       <CardMedia
         component="img"
