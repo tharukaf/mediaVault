@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom'
 import fetchData from '../../utils/FetchData'
 import { useEffect, useState } from 'react'
 import { Card, CardContent } from '@mui/material'
-import RecipeReviewCard from '../mediaCards/movieCard'
+import MovieCard from '../mediaCards/movieCard'
 
 export default function VaultViewer() {
   const { media } = useParams()
@@ -39,7 +39,7 @@ export default function VaultViewer() {
     <>
       <div className="mediaCardContainer">
         {movieList.map(movie => {
-          return <RecipeReviewCard key={movie.id} movie={movie} />
+          return <MovieCard key={movie.id} movie={movie} />
         })}
       </div>
       <h2>Vault Viewer {media ? media : 'movies'}</h2>

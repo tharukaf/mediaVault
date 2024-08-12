@@ -54,7 +54,7 @@ export default function Search() {
   })
 
   // Map over the data and create a list of game cards
-  const gameList = games?.map(game => ({
+  const gameList = games && games?.map(game => ({
     id: game.id,
     title: game.name,
     description: game.summary,
@@ -75,13 +75,7 @@ export default function Search() {
     artists: track.artists.map(artist => artist.name).join(', '),
   }))
 
-  // function selectMediaType(mediaType) {
-  //   setSearchText('')
-  //   setSearchType(mediaType)
-  // }
-
   // Map over the data and create a list of book cards
-
   const bookList = books?.map(book => ({
     id: book.id,
     title: book.volumeInfo.title,

@@ -2,22 +2,46 @@ import express from 'express'
 import cors from 'cors'
 import 'dotenv/config'
 import fetch from 'node-fetch'
+import {
+  movieTVFetchOptionObj,
+  musicFetchOptionObj,
+  gameFetchOptionObj,
+  bookFetchOptionObj,
+} from './express/utility/fetchOptionObj.js'
+import { fetchData } from './express/utility/fetchData.js'
 
 const PORT = 8000
 const app = express()
 app.use(cors())
 
+const IGDB_CLIENT_ID = process.env.IGDB_CLIENT_ID
+const IGDB_CLIENT_SECRET = process.env.IGDB_CLIENT_SECRET
 let IGDB_ACCESS_TOKEN
-let SPOTIFY_ACCESS_TOKEN
 let igdbExpireTime
+
+const SPOTIFY_CLIENT_ID = process.env.SPOTIFY_CLIENT_ID
+const SPOTIFY_CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET
+let SPOTIFY_ACCESS_TOKEN
 let spotify_token_expire_time
+
+const GOOGLE_BOOKS_API_KEY = process.env.GOOGLE_BOOKS_API_KEY
+
+const TMDB_API_KEY = process.env.TMDB_API_KEY
+
+const fetchArgs = {
+  movie: ['movie', TMDB_API_KEY],
+  tv: ['tv', TMDB_API_KEY],
+  music: [() => SPOTIFY_ACCESS_TOKEN],
+  game: [() => IGDB_ACCESS_TOKEN, IGDB_CLIENT_ID],
+  book: [GOOGLE_BOOKS_API_KEY],
+}
 
 // Authenticate IGDB
 app.use('/game/:name', async (req, res, next) => {
   if (!IGDB_ACCESS_TOKEN || Date.now() >= igdbExpireTime) {
     // if (!IGDB_ACCESS_TOKEN) {
-    const clientId = process.env.IGDB_CLIENT_ID
-    const clientSecret = process.env.IGDB_CLIENT_SECRET
+    const clientId = IGDB_CLIENT_ID
+    const clientSecret = IGDB_CLIENT_SECRET
     const authUrl = 'https://id.twitch.tv/oauth2/token'
     const authOptions = {
       method: 'POST',
@@ -32,9 +56,7 @@ app.use('/game/:name', async (req, res, next) => {
       const json = await response.json()
       if (json.access_token) {
         IGDB_ACCESS_TOKEN = json.access_token
-        // console.log("IGDB access token:", IGDB_ACCESS_TOKEN)
         igdbExpireTime = json.expires_in * 1000 + Date.now()
-        next()
       } else {
         throw new Error('Failed to authenticate with IGDB')
       }
@@ -66,7 +88,6 @@ app.use('/music/:name', (req, res, next) => {
           SPOTIFY_ACCESS_TOKEN = json.access_token
           console.log(`Spotify access token: ${name}`, SPOTIFY_ACCESS_TOKEN)
           spotify_token_expire_time = json.expires_in * 1000 + Date.now()
-          next()
         } else {
           throw new Error('Failed to authenticate with Spotify')
         }
@@ -82,95 +103,40 @@ app.use('/music/:name', (req, res, next) => {
 // Game route
 app.get('/game/:name', async (req, res) => {
   const name = req.params.name
-  const url = `https://api.igdb.com/v4/games`
-  const options = {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Client-ID': `${process.env.IGDB_CLIENT_ID}`,
-      Authorization: `Bearer ${IGDB_ACCESS_TOKEN}`,
-    },
-    body: `fields name,summary,cover.url,first_release_date,age_ratings,aggregated_rating,platforms; search "${name}"; limit 10;`,
-  }
-
-  try {
-    const response = await fetch(url, options)
-    const data = await response.json()
-    res.json(data)
-  } catch (err) {
-    console.error(err)
-  }
+  const { url, options } = gameFetchOptionObj(name, ...fetchArgs.game)
+  fetchData(url, options, res)
 })
 
 // Book route
 app.get('/book/:name', (req, res) => {
-  const bookName = req.params.name
-  const url = `https://www.googleapis.com/books/v1/volumes?key=${process.env.GOOGLE_BOOKS_API_KEY}&q=${bookName}`
-  const options = {
-    method: 'GET',
-    headers: {
-      accept: 'application/json',
-    },
-  }
-
-  fetch(url, options)
-    .then(res => res.json())
-    .then(json => res.json(json))
-    .catch(err => console.error('error:' + err))
+  const name = req.params.name
+  const { url, options } = bookFetchOptionObj(name, ...fetchArgs.book)
+  fetchData(url, options, res)
 })
 
 // Music route
 app.get('/music/:name', (req, res) => {
-  const musicName = req.params.name
-  const url = `https://api.spotify.com/v1/search?q=${musicName}&type=track`
-  const options = {
-    method: 'GET',
-    headers: {
-      accept: 'application/json',
-      Authorization: `Bearer ${SPOTIFY_ACCESS_TOKEN}`,
-    },
-  }
-
-  fetch(url, options)
-    .then(res => res.json())
-    .then(json => res.json(json))
-    .catch(err => console.error('error:' + err))
+  const name = req.params.name
+  const { url, options } = musicFetchOptionObj(name, ...fetchArgs.music)
+  fetchData(url, options, res)
 })
 
 // Movie route
 app.get('/movie/:name', (req, res) => {
-  const movieName = req.params.name
-  const url = `https://api.themoviedb.org/3/search/movie?query=${movieName}&include_adult=false&language=en-US&page=1`
-  const options = {
-    method: 'GET',
-    headers: {
-      accept: 'application/json',
-      Authorization: process.env.TMDB_API_KEY,
-    },
-  }
-
-  fetch(url, options)
-    .then(res => res.json())
-    .then(json => res.json(json))
-    .catch(err => console.error('error:' + err))
+  const { url, options } = movieTVFetchOptionObj(
+    req.params.name,
+    ...fetchArgs.movie
+  )
+  fetchData(url, options, res)
 })
 
 // TV route
 app.get('/tv/:name', (req, res) => {
-  const tvName = req.params.name
-  const url = `https://api.themoviedb.org/3/search/tv?query=${tvName}&include_adult=false&language=en-US&page=1`
-  const options = {
-    method: 'GET',
-    headers: {
-      accept: 'application/json',
-      Authorization: process.env.TMDB_API_KEY,
-    },
-  }
-
-  fetch(url, options)
-    .then(res => res.json())
-    .then(json => res.json(json))
-    .catch(err => console.error('error:' + err))
+  const { url, options } = movieTVFetchOptionObj(
+    req.params.name,
+    ...fetchArgs.tv
+  )
+  fetchData(url, options, res)
 })
 
 // Root route
