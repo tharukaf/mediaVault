@@ -45,8 +45,8 @@ import {
   musicFetchOptionObj,
   gameFetchOptionObj,
   bookFetchOptionObj,
-} from './server/utility/fetchOptionObj.js'
-import { fetchData } from './server/utility/fetchData.js'
+} from './server/utility/fetchOptionObj.mjs'
+import { fetchData } from './server/utility/fetchData.mjs'
 
 const PORT = 8000
 const app = express()
