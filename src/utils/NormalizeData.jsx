@@ -1,30 +1,24 @@
-import SearchDropDown from '../components/Search/SearchDropDown'
+// import SearchDropDown from '../components/Search/SearchDropDown'
 
-export const normalizeMovie = movie => {
-  return {
-    // TODO: Abstract away the movieCard component
-    id: movie.id, // Add a unique key prop
-    title: movie.title,
-    releaseDate: movie.release_date,
-    description: movie.overview,
-    poster: `https://image.tmdb.org/t/p/w185_and_h278_bestv2${movie.poster_path}`,
-    rating: movie.vote_average,
-  }
-}
+const movie = movie => ({
+  id: movie.id, // Add a unique key prop
+  title: movie.title,
+  releaseDate: movie.release_date,
+  description: movie.overview,
+  poster: `https://image.tmdb.org/t/p/w185_and_h278_bestv2${movie.poster_path}`,
+  rating: movie.vote_average,
+})
 
-export const normalizeTvShow = tvShow => {
-  return {
-    // TODO: Abstract away the movieCard component
-    id: tvShow.id, // Add a unique key prop
-    title: tvShow.name,
-    releaseDate: tvShow.first_air_date,
-    description: tvShow.overview,
-    poster: `https://image.tmdb.org/t/p/w185_and_h278_bestv2${tvShow.poster_path}`,
-    rating: tvShow.vote_average,
-  }
-}
+const show = show => ({
+  id: show.id, // Add a unique key prop
+  title: show.name,
+  releaseDate: show.first_air_date,
+  description: show.overview,
+  poster: `https://image.tmdb.org/t/p/w185_and_h278_bestv2${show.poster_path}`,
+  rating: show.vote_average,
+})
 
-export const normalizeTrack = track => ({
+const track = track => ({
   id: track.id,
   title: track.name,
   album: track.album.name,
@@ -34,7 +28,7 @@ export const normalizeTrack = track => ({
   artists: track.artists.map(artist => artist.name).join(', '),
 })
 
-export const normalizeBook = book => ({
+const book = book => ({
   id: book.id,
   title: book.volumeInfo.title,
   description: book.volumeInfo.description,
@@ -44,7 +38,7 @@ export const normalizeBook = book => ({
   authors: book.volumeInfo.authors?.join(', '),
 })
 
-export const normalizeGame = game => ({
+const game = game => ({
   id: game.id,
   title: game.name,
   description: game.summary,
@@ -54,8 +48,16 @@ export const normalizeGame = game => ({
   platforms: game?.platforms?.map(platform => platform).join(', '),
 })
 
-// export function MapMovies(movies, searchType, searchText, setSearchText) {
-//   const data = normalizeMovies(movies)
+export const normalize = {
+  movie,
+  tv: show,
+  music: track,
+  book,
+  game,
+}
+
+// export function MapData(mediaArray, searchType, setSearchText, searchText) {
+//   const data = mediaArray.map(normalize[searchType])
 //   return (
 //     <SearchDropDown
 //       optionList={data}

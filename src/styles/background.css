@@ -1,3 +1,5 @@
+import {}
+
 .o{
     position:fixed;
     top:0;
@@ -20,21 +22,26 @@
     filter: alpha(opacity=50);
     -moz-opacity: 0.5;
     -khtml-opacity: 0.5;
-    opacity: 0.5;
+    opacity: 0.6;
+    
   }
   
   .o3{
     background:url(https://image.ibb.co/g76HuT/nebula.png);
     z-index: -2;
     animation:200s scroll2 infinite linear;
-    opacity: 20%;
+    opacity: 10%;
+    filter: drop-shadow(0 0 0.75rem rgb(35, 72, 97));
+    filter: saturate(0.5);
   }
   
   .o4{
     background:url(https://image.ibb.co/b8VcuT/clouds.png);
     z-index: -1;
     animation:400s scroll infinite linear;
-    opacity: 50%;
+    opacity: 40%;
+    /* filter: drop-shadow(0 0 0.75rem linear-gradient(rgba(99, 30, 30, 0.5), rgba(228, 14, 14, 0.5))); */
+    filter: saturate(0.5);
   }
   
   @-webkit-keyframes scroll{

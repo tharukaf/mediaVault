@@ -1,6 +1,8 @@
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
 import Autocomplete from '@mui/material/Autocomplete'
+import { debounce } from 'lodash'
+import Button from '@mui/material/Button'
 
 export default function SearchDropDown({
   optionList,
@@ -8,10 +10,16 @@ export default function SearchDropDown({
   setSearchText,
   searchText,
 }) {
-  let typingTimer = null
+  const handleTextChange = debounce(e => {
+    console.log('searching')
+    setSearchText(e.target.value)
+  }, 400)
+
   return (
     <div id="textfield-box">
       <Autocomplete
+        disableCloseOnSelect
+        autoSelect={true}
         sx={{ width: '90%' }}
         options={optionList}
         autoHighlight
@@ -21,6 +29,7 @@ export default function SearchDropDown({
           const { key, ...optionProps } = props
           return (
             <Box
+              // borderColor="primary.dark"
               key={option.id}
               component="li"
               sx={{ '& > img': { mr: 2, flexShrink: 0 } }}
@@ -36,6 +45,15 @@ export default function SearchDropDown({
               {searchType === 'music' && (
                 <div className="dropdownArtists">{option.artists}</div>
               )}
+              <Button
+                onClick={e => {
+                  console.log('add to vault', option)
+                  return option
+                }}
+                variant="outlined"
+                style={{ fontSize: '10px', marginLeft: '10px' }}>
+                +
+              </Button>
             </Box>
             // <div key={option.id}>name</div>
           )
@@ -44,13 +62,7 @@ export default function SearchDropDown({
           <TextField
             {...params}
             variant="outlined"
-            onChange={e => {
-              clearTimeout(typingTimer)
-              typingTimer = setTimeout(() => {
-                // console.log('timer done')
-                setSearchText(e.target.value)
-              }, 400)
-            }}
+            onChange={handleTextChange}
             value={searchText}
             label={`Search for ${
               searchType.charAt(0).toUpperCase() + searchType.slice(1)

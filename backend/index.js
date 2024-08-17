@@ -2,13 +2,51 @@ import express from 'express'
 import cors from 'cors'
 import 'dotenv/config'
 import fetch from 'node-fetch'
+import mongoose from 'mongoose'
+
+const mongoConnectionString = process.env.MONGO_CONNECTION_STRING
+
+async function connectToMongo() {
+  let a = await mongoose.connect(mongoConnectionString)
+  console.log('Connected to MongoDB', a)
+}
+
+connectToMongo()
+
+const movieSchema = new mongoose.Schema({
+  name: String,
+  year: Number,
+  poster: String,
+  rating: Number,
+})
+
+const Movie = mongoose.model('Movie', movieSchema)
+
+async function createMovie() {
+  const mov = new Movie({
+    name: 'Silence of the lambs',
+    year: 1991,
+    poster: 'https://www.imdb.com/title/tt0102926/mediaviewer/rm4263666176/',
+    rating: 8.6,
+  })
+  await mov.save()
+}
+
+// get all movies
+async function getMovies() {
+  const movies = await Movie.find()
+  console.log(movies)
+}
+getMovies()
+// createMovie()
+
 import {
   movieTVFetchOptionObj,
   musicFetchOptionObj,
   gameFetchOptionObj,
   bookFetchOptionObj,
-} from './express/utility/fetchOptionObj.js'
-import { fetchData } from './express/utility/fetchData.js'
+} from './server/utility/fetchOptionObj.js'
+import { fetchData } from './server/utility/fetchData.js'
 
 const PORT = 8000
 const app = express()

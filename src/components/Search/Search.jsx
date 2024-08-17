@@ -1,16 +1,9 @@
-import { useState, useEffect } from 'react'
-import ToggleButton from '@mui/material/ToggleButton'
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
+import { useState, useEffect, useRef } from 'react'
 import SearchDropDown from './SearchDropDown'
 import fetchData from '../../utils/FetchData'
 import SearchToggleGroup from './SearchToggleGroup'
-import {
-  normalizeMovie,
-  normalizeTvShow,
-  normalizeTrack,
-  normalizeGame,
-  normalizeBook,
-} from '../../utils/NormalizeData'
+import { normalize } from '../../utils/NormalizeData'
+
 
 export default function Search() {
   const [searchText, setSearchText] = useState('')
@@ -20,6 +13,7 @@ export default function Search() {
   const [music, setMusic] = useState([])
   const [games, setGames] = useState([])
   const [books, setBooks] = useState([])
+  const storage = useRef(window.localStorage)
 
   const handleChange = (event, newAlignment) => {
     setSearchType(newAlignment)
@@ -32,16 +26,19 @@ export default function Search() {
     setBooks,
   }
 
+  useEffect(() => {
+    movies.map(movie =>
+      storage.current.setItem(movie.id, JSON.stringify(movie))
+    )
+  }, [searchType, searchText])
+  console.log(JSON.parse(storage.current.getItem(movies[1]?.id)))
+
   // Fetch data from the server
   useEffect(() => {
     fetchData(searchType, searchText, funcPointers)
   }, [searchText])
 
-  const movieList = movies.map(normalizeMovie)
-  const tvList = tv.map(normalizeTvShow)
-  const gameList = games && games?.map(normalizeGame)
-  const musicList = music?.map(normalizeTrack)
-  const bookList = books?.map(normalizeBook)
+  const argsArr = [searchType, setSearchText, searchText]
 
   return (
     <>
@@ -50,53 +47,24 @@ export default function Search() {
           searchType={searchType}
           handleChange={handleChange}
         />
-
-        {searchType == 'movie' && (
-          <SearchDropDown
-            style={{ width: '90%' }}
-            optionList={movieList}
-            searchType={searchType}
-            setSearchText={setSearchText}
-            searchText={searchText}
-          />
-        )}
-        {/* {searchType == 'movie' && movieList} */}
-        {searchType == 'tv' && (
-          <SearchDropDown
-            optionList={tvList}
-            searchType={searchType}
-            setSearchText={setSearchText}
-            searchText={searchText}
-          />
-        )}
-
-        {searchType == 'music' && (
-          <SearchDropDown
-            optionList={musicList}
-            searchType={searchType}
-            setSearchText={setSearchText}
-            searchText={searchText}
-          />
-        )}
-        {searchType == 'game' && (
-          <SearchDropDown
-            optionList={gameList}
-            searchType={searchType}
-            setSearchText={setSearchText}
-            searchText={searchText}
-          />
-        )}
-        {searchType == 'book' && (
-          <SearchDropDown
-            optionList={bookList}
-            searchType={searchType}
-            setSearchText={setSearchText}
-            searchText={searchText}
-          />
-        )}
+        {searchType == 'movie' && MapData(movies, ...argsArr)}
+        {searchType == 'tv' && MapData(tv, ...argsArr)}
+        {searchType == 'music' && MapData(music, ...argsArr)}
+        {searchType == 'game' && MapData(games, ...argsArr)}
+        {searchType == 'book' && MapData(books, ...argsArr)}
       </div>
     </>
   )
 }
 
-// From https://bitbucket.org/atlassian/atlaskit-mk-2/raw/4ad0e56649c3e6c973e226b7efaeb28cb240ccb0/packages/core/select/src/data/countries.js
+function MapData(mediaArray, searchType, setSearchText, searchText) {
+  const data = mediaArray.map(normalize[searchType])
+  return (
+    <SearchDropDown
+      optionList={data}
+      searchType={searchType}
+      setSearchText={setSearchText}
+      searchText={searchText}
+    />
+  )
+}

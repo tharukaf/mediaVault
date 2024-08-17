@@ -1,5 +1,6 @@
 import ToggleButton from '@mui/material/ToggleButton'
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
+import '../../App.css'
 
 export default function SearchToggleGroup({ searchType, handleChange }) {
   return (

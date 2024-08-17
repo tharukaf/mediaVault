@@ -10,6 +10,7 @@
 .searchTypeButton {
     /* margin-top: 30px; */
     color: white;
+    width: 80px;
   }
 
 #textfield-box {
