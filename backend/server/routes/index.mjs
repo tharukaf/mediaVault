@@ -1,5 +1,5 @@
 import express from 'express'
-import { fetchArgs } from '../../index.mjs'
+import { fetchArgs } from '../utility/apiAuth.mjs'
 import { fetchData } from '../utility/fetchData.mjs'
 import OptObj from '../utility/fetchOptionObj.mjs'
 
@@ -10,28 +10,28 @@ const router = express.Router()
 //   fetchData(url, options, res)
 // })
 
-router.route('/movies/:search').get((req, res) => {
-  const { url, options } = OptObj.movie(req.params.search, ...fetchArgs.movie)
+router.route('/movies/search/:query').get((req, res) => {
+  const { url, options } = OptObj.movie(req.params.query, ...fetchArgs.movie)
   fetchData(url, options, res)
 })
 
-router.get('/tv/:search', (req, res) => {
-  const { url, options } = OptObj.movie(req.params.search, ...fetchArgs.tv)
+router.get('/tv/search/:query', (req, res) => {
+  const { url, options } = OptObj.movie(req.params.query, ...fetchArgs.tv)
   fetchData(url, options, res)
 })
 
-router.get('/games/:search', async (req, res) => {
-  const { url, options } = OptObj.game(req.params.search, ...fetchArgs.game)
+router.get('/games/search/:query', async (req, res) => {
+  const { url, options } = OptObj.game(req.params.query, ...fetchArgs.game)
   fetchData(url, options, res)
 })
 
-router.get('/books/:search', (req, res) => {
-  const { url, options } = OptObj.book(req.params.search, ...fetchArgs.book)
+router.get('/books/search/:query', (req, res) => {
+  const { url, options } = OptObj.book(req.params.query, ...fetchArgs.book)
   fetchData(url, options, res)
 })
 
-router.get('/music/:search', (req, res) => {
-  const { url, options } = OptObj.music(req.params.search, ...fetchArgs.music)
+router.get('/music/search/:query', (req, res) => {
+  const { url, options } = OptObj.music(req.params.query, ...fetchArgs.music)
   fetchData(url, options, res)
 })
 
