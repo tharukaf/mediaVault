@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom'
-import fetchData from '../../utils/FetchData'
+import fetchSearchResults from '../../utils/FetchData'
 import { useEffect, useState } from 'react'
-import { Card, CardContent, CardHeader, Typography } from '@mui/material'
+// import { Card, CardContent, CardHeader, Typography } from '@mui/material'
 import MovieCard from '../mediaCards/movieCard'
 import MusicCard from '../mediaCards/musicCard'
 import { normalize } from '../../utils/NormalizeData'
@@ -23,21 +23,21 @@ export default function VaultViewer() {
   }
 
   useEffect(() => {
-    fetchData(media, 'yesterday', funcPointers)
+    fetchSearchResults(media, 'yesterday', funcPointers)
   }, [media])
 
   const movieList =
-    media === 'movie' && movies.map(movie => normalize.movie(movie))
+    media === 'movies' && movies.map(movie => normalize.movie(movie))
   const tvList = media === 'tv' && tv.map(normalize.tv)
   const musicList = media === 'music' && music.map(normalize.music)
-  const bookList = media === 'book' && books?.map(book => normalize.book(book))
+  const bookList = media === 'books' && books?.map(book => normalize.book(book))
   const gameList =
-    media === 'game' && games && games?.map(game => normalize.game(game))
+    media === 'games' && games && games?.map(game => normalize.game(game))
 
   return (
     <>
       <div className="mediaCardContainer">
-        {media === 'movie' &&
+        {media === 'movies' &&
           movieList.map(movie => {
             return <MovieCard key={movie.id} movie={movie} type={media} />
           })}
@@ -49,11 +49,11 @@ export default function VaultViewer() {
           musicList.map(track => {
             return <MusicCard key={track.id} track={track} />
           })}
-        {media === 'book' &&
+        {media === 'books' &&
           bookList.map(movie => {
             return <MovieCard key={movie.id} movie={movie} type={media} />
           })}
-        {media === 'game' &&
+        {media === 'games' &&
           gameList.map(movie => {
             return <MovieCard key={movie.id} movie={movie} type={media} />
           })}

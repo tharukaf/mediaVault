@@ -1,3 +1,5 @@
+import 'dotenv/config'
+
 export async function authenticateIGDB(
   req,
   res,

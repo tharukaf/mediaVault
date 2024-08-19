@@ -1,4 +1,4 @@
-export const gameFetchOptionObj = (name, ACCESS_TOKEN, CLIENT_ID) => {
+const gameOptObj = (name, ACCESS_TOKEN, CLIENT_ID) => {
   return {
     url: `https://api.igdb.com/v4/games`,
     options: {
@@ -13,7 +13,7 @@ export const gameFetchOptionObj = (name, ACCESS_TOKEN, CLIENT_ID) => {
   }
 }
 
-export const bookFetchOptionObj = (name, API_KEY) => {
+const bookOptObj = (name, API_KEY) => {
   return {
     url: `https://www.googleapis.com/books/v1/volumes?key=${API_KEY}&q=${name}`,
     options: {
@@ -25,7 +25,7 @@ export const bookFetchOptionObj = (name, API_KEY) => {
   }
 }
 
-export const musicFetchOptionObj = (name, ACCESS_TOKEN) => {
+const musicOptObj = (name, ACCESS_TOKEN) => {
   return {
     url: `https://api.spotify.com/v1/search?q=${name}&type=track`,
     options: {
@@ -38,7 +38,7 @@ export const musicFetchOptionObj = (name, ACCESS_TOKEN) => {
   }
 }
 
-export const movieTVFetchOptionObj = (name, type, API_KEY) => {
+const movieTVOptObj = (name, type, API_KEY) => {
   return {
     url: `https://api.themoviedb.org/3/search/${type}?query=${name}&include_adult=false&language=en-US&page=1`,
     options: {
@@ -50,3 +50,12 @@ export const movieTVFetchOptionObj = (name, type, API_KEY) => {
     },
   }
 }
+
+const OptObj = {
+  game: gameOptObj,
+  book: bookOptObj,
+  music: musicOptObj,
+  movie: movieTVOptObj,
+}
+
+export default OptObj

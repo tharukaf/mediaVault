@@ -49,11 +49,11 @@ const game = game => ({
 })
 
 export const normalize = {
-  movie,
+  movies: movie,
   tv: show,
   music: track,
-  book,
-  game,
+  books: book,
+  games: game,
 }
 
 // export function MapData(mediaArray, searchType, setSearchText, searchText) {

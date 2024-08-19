@@ -11,7 +11,6 @@ export default function SearchDropDown({
   searchText,
 }) {
   const handleTextChange = debounce(e => {
-    console.log('searching')
     setSearchText(e.target.value)
   }, 400)
 
@@ -36,17 +35,17 @@ export default function SearchDropDown({
               {...optionProps}>
               <img loading="lazy" width="50" src={option.poster} alt="" />
               {option.title}{' '}
-              {(searchType === 'movie' || searchType === 'tv') &&
+              {(searchType === 'movies' || searchType === 'tv') &&
                 option.releaseDate &&
                 `(${option.releaseDate.slice(0, 4)})`}
-              {searchType === 'book' && (
+              {searchType === 'books' && (
                 <div className="dropdownArtists">{option.authors}</div>
               )}
               {searchType === 'music' && (
                 <div className="dropdownArtists">{option.artists}</div>
               )}
               <Button
-                onClick={e => {
+                onClick={() => {
                   console.log('add to vault', option)
                   return option
                 }}

@@ -18,7 +18,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Dashboard />}>
           <Route index element={<Search />} />
-          <Route path="myVault" element={<VaultLayout />}>
+          <Route path="myvault" element={<VaultLayout />}>
             <Route index element={<VaultViewer />} />
             <Route path=":media" element={<VaultViewer />} />
           </Route>

@@ -14,8 +14,8 @@ import MenuItem from '@mui/material/MenuItem'
 import mySVG from '../assets/media_vault_logo_2.svg'
 import { NavLink } from 'react-router-dom'
 
-const pages = ['myVault', 'curator']
-const pagesText = { myVault: 'My Vault', curator: 'Curator' }
+const pages = ['myvault', 'curator']
+const pagesText = { myvault: 'My Vault', curator: 'Curator' }
 const settings = ['Account', 'Logout']
 
 function ResponsiveAppBar() {

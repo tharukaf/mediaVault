@@ -1,13 +1,12 @@
 import { useState, useEffect, useRef } from 'react'
 import SearchDropDown from './SearchDropDown'
-import fetchData from '../../utils/FetchData'
+import fetchSearchResults from '../../utils/FetchData'
 import SearchToggleGroup from './SearchToggleGroup'
 import { normalize } from '../../utils/NormalizeData'
 
-
 export default function Search() {
   const [searchText, setSearchText] = useState('')
-  const [searchType, setSearchType] = useState('movie')
+  const [searchType, setSearchType] = useState('movies')
   const [movies, setMovies] = useState([])
   const [tv, setTV] = useState([])
   const [music, setMusic] = useState([])
@@ -35,7 +34,7 @@ export default function Search() {
 
   // Fetch data from the server
   useEffect(() => {
-    fetchData(searchType, searchText, funcPointers)
+    fetchSearchResults(searchType, searchText, funcPointers)
   }, [searchText])
 
   const argsArr = [searchType, setSearchText, searchText]
@@ -47,11 +46,11 @@ export default function Search() {
           searchType={searchType}
           handleChange={handleChange}
         />
-        {searchType == 'movie' && MapData(movies, ...argsArr)}
+        {searchType == 'movies' && MapData(movies, ...argsArr)}
         {searchType == 'tv' && MapData(tv, ...argsArr)}
         {searchType == 'music' && MapData(music, ...argsArr)}
-        {searchType == 'game' && MapData(games, ...argsArr)}
-        {searchType == 'book' && MapData(books, ...argsArr)}
+        {searchType == 'games' && MapData(games, ...argsArr)}
+        {searchType == 'books' && MapData(books, ...argsArr)}
       </div>
     </>
   )

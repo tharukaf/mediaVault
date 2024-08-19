@@ -1,19 +1,25 @@
-export default async function fetchData(mSearchType, mSearchText, mFunc) {
+const baseURL = 'http://localhost:8000/'
+
+export default async function fetchSearchResults(
+  mSearchType,
+  mSearchText,
+  mFunc
+) {
   if (mSearchText.length > 2) {
     try {
-      const url = `http://localhost:8000/${mSearchType}/${mSearchText}`
+      const url = `${baseURL}${mSearchType}/${mSearchText}`
       const response = await fetch(url)
       const data = await response.json()
 
-      if (mSearchType === 'movie') {
+      if (mSearchType === 'movies') {
         mFunc.setMovies(data.results)
       } else if (mSearchType === 'tv') {
         mFunc.setTV(data.results)
       } else if (mSearchType === 'music') {
         mFunc.setMusic(data.tracks.items)
-      } else if (mSearchType === 'game') {
+      } else if (mSearchType === 'games') {
         mFunc.setGames(data)
-      } else if (mSearchType === 'book') {
+      } else if (mSearchType === 'books') {
         mFunc.setBooks(data.items)
       }
     } catch (error) {

@@ -12,7 +12,7 @@ export default function SearchToggleGroup({ searchType, handleChange }) {
       exclusive
       onChange={handleChange}
       aria-label="Platform">
-      <ToggleButton className="searchTypeButton" value="movie">
+      <ToggleButton className="searchTypeButton" value="movies">
         Movie
       </ToggleButton>
       <ToggleButton className="searchTypeButton" value="tv">
@@ -21,10 +21,10 @@ export default function SearchToggleGroup({ searchType, handleChange }) {
       <ToggleButton className="searchTypeButton" value="music">
         Music
       </ToggleButton>
-      <ToggleButton className="searchTypeButton" value="game">
+      <ToggleButton className="searchTypeButton" value="games">
         Game
       </ToggleButton>
-      <ToggleButton className="searchTypeButton" value="book">
+      <ToggleButton className="searchTypeButton" value="books">
         Book
       </ToggleButton>
     </ToggleButtonGroup>
