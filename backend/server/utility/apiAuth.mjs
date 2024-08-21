@@ -67,7 +67,6 @@ export const spotifyAuth = async (req, res, next) => {
       .then(json => {
         if (json.access_token) {
           SPOTIFY_ACCESS_TOKEN = json.access_token
-          console.log(`Spotify access token: ${name}`, SPOTIFY_ACCESS_TOKEN)
           spotify_token_expire_time = json.expires_in * 1000 + Date.now()
         } else {
           throw new Error('Failed to authenticate with Spotify')
