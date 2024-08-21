@@ -4,11 +4,10 @@ import { movieSchema } from '../schema.mjs'
 export const Movie = mongoose.model('Movie', movieSchema)
 
 export async function createMovie(movieObj) {
-  console.log(movieObj)
   let mov = new Movie(movieObj)
   mov._id = movieObj.id
-  console.log(mov)
   await mov.save()
+  confirm.log('Movie created')
 }
 
 // get all movies

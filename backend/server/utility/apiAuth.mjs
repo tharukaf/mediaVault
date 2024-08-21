@@ -47,6 +47,7 @@ export const igdbAuth = async (req, res, next) => {
       res.status(500).send('Failed to authenticate with IGDB')
     }
   }
+
   next()
 }
 
@@ -62,20 +63,19 @@ export const spotifyAuth = async (req, res, next) => {
       body: `grant_type=client_credentials&client_id=${SPOTIFY_CLIENT_ID}&client_secret=${SPOTIFY_CLIENT_SECRET}`,
     }
 
-    fetch(authUrl, authOptions)
-      .then(res => res.json())
-      .then(json => {
-        if (json.access_token) {
-          SPOTIFY_ACCESS_TOKEN = json.access_token
-          spotify_token_expire_time = json.expires_in * 1000 + Date.now()
-        } else {
-          throw new Error('Failed to authenticate with Spotify')
-        }
-      })
-      .catch(err => {
-        console.error('error:' + err)
-        // res.status(500).send('Failed to authenticate with Spotify')
-      })
+    try {
+      const response = await fetch(authUrl, authOptions)
+      const json = await response.json()
+      if (json.access_token) {
+        SPOTIFY_ACCESS_TOKEN = json.access_token
+        spotify_token_expire_time = json.expires_in * 1000 + Date.now()
+      } else {
+        throw new Error('Failed to authenticate with Spotify')
+      }
+    } catch (err) {
+      console.error('error:' + err)
+    }
   }
+  console.log('spotify_access_token: ', SPOTIFY_ACCESS_TOKEN)
   next()
 }

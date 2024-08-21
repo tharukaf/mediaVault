@@ -12,6 +12,20 @@ const gameOptObj = (name, ACCESS_TOKEN, CLIENT_ID) => {
     },
   }
 }
+// const gameOptObj = (name, ACCESS_TOKEN, CLIENT_ID) => {
+//   return {
+//     url: `https://api.igdb.com/v4/games`,
+//     options: {
+//       method: 'POST',
+//       headers: {
+//         Accept: 'application/json',
+//         'Client-ID': `${CLIENT_ID}`,
+//         Authorization: `Bearer ${ACCESS_TOKEN()}`,
+//       },
+//       body: `fields name,summary,cover.url,first_release_date,age_ratings,aggregated_rating,platforms; where id = ${id};`,
+//     },
+//   }
+// }
 
 const bookOptObj = (name, API_KEY) => {
   return {

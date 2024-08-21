@@ -59,81 +59,48 @@ export const gameSchema = new mongoose.Schema({
   genres: [],
   name: String,
   platforms: [],
-  rating: Number,
+  aggregated_rating: Number,
   rating_count: Number,
   summary: String,
 })
 
+export const industryIdentifiersSchema = new mongoose.Schema({
+  type: String,
+  identifier: Number,
+})
+
 export const bookSchema = new mongoose.Schema({
-  _id: Number,
-  kind: String,
-  etag: String,
-  selfLink: String,
-  volumeInfo: {
-    title: String,
-    subtitle: String,
-    authors: [String],
-    publishedDate: String,
-    description: String,
-    industryIdentifiers: [
-      {
-        type: String,
-        identifier: String,
-      },
-      {
-        type: String,
-        identifier: String,
-      },
-    ],
-    readingModes: {
-      text: Boolean,
-      image: Boolean,
-    },
-    pageCount: Number,
-    printType: String,
-    categories: [String],
-    averageRating: Number,
-    ratingsCount: Number,
-    maturityRating: String,
-    allowAnonLogging: Boolean,
-    contentVersion: String,
-    panelizationSummary: {
-      containsEpubBubbles: Boolean,
-      containsImageBubbles: Boolean,
-    },
-    imageLinks: {
-      smallThumbnail: String,
-      thumbnail: String,
-    },
-    language: String,
-    previewLink: String,
-    infoLink: String,
-    canonicalVolumeLink: String,
+  _id: String,
+  title: String,
+  subtitle: String,
+  authors: [String],
+  publishedDate: String,
+  description: String,
+  industryIdentifiers: [industryIdentifiersSchema],
+  readingModes: {
+    text: Boolean,
+    image: Boolean,
   },
-  saleInfo: {
-    country: String,
-    saleability: String,
-    isEbook: Boolean,
+  pageCount: Number,
+  printType: String,
+  categories: [String],
+  averageRating: Number,
+  ratingsCount: Number,
+  maturityRating: String,
+  allowAnonLogging: Boolean,
+  contentVersion: String,
+  panelizationSummary: {
+    containsEpubBubbles: Boolean,
+    containsImageBubbles: Boolean,
   },
-  accessInfo: {
-    country: String,
-    viewability: String,
-    embeddable: Boolean,
-    publicDomain: Boolean,
-    textToSpeechPermission: String,
-    epub: {
-      isAvailable: Boolean,
-    },
-    pdf: {
-      isAvailable: Boolean,
-    },
-    webReaderLink: String,
-    accessViewStatus: String,
-    quoteSharingAllowed: Boolean,
+  imageLinks: {
+    smallThumbnail: String,
+    thumbnail: String,
   },
-  searchInfo: {
-    textSnippet: String,
-  },
+  language: String,
+  previewLink: String,
+  infoLink: String,
+  canonicalVolumeLink: String,
 })
 
 export const spotifyArtistSchema = new mongoose.Schema({
@@ -154,10 +121,10 @@ export const spotifyAlbumSchema = new mongoose.Schema({
 })
 
 export const musicSchema = new mongoose.Schema({
+  _id: String,
   album: {
     album_type: String,
     artists: [spotifyArtistSchema],
-    available_markets: [],
     external_urls: {
       spotify: String,
     },
@@ -166,29 +133,20 @@ export const musicSchema = new mongoose.Schema({
     images: [spotifyAlbumSchema],
     name: String,
     release_date: String,
-    release_date_precision: String,
-    total_tracks: Number,
-    type: String,
     uri: String,
   },
   artists: [spotifyArtistSchema],
   available_markets: [],
-  disc_number: Number,
   duration_ms: Number,
   explicit: Boolean,
-  external_ids: {
-    isrc: String,
-  },
   external_urls: {
     spotify: String,
   },
   href: String,
-  _id: Number,
-  is_local: Boolean,
+
   name: String,
   popularity: Number,
   preview_url: String,
-  track_number: Number,
   type: String,
   uri: String,
 })
