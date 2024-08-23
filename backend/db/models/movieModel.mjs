@@ -7,7 +7,7 @@ export async function createMovie(movieObj) {
   let mov = new Movie(movieObj)
   mov._id = movieObj.id
   await mov.save()
-  confirm.log('Movie created')
+  console.log('Movie created')
 }
 
 // get all movies

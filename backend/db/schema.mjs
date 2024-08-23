@@ -150,3 +150,14 @@ export const musicSchema = new mongoose.Schema({
   type: String,
   uri: String,
 })
+
+export const userSchema = new mongoose.Schema({
+  _id: String,
+  name: String,
+  password: String,
+  movies: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Movie' }],
+  tv: [{ type: mongoose.Schema.Types.ObjectId, ref: 'TvShow' }],
+  games: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Game' }],
+  music: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Music' }],
+  books: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Book' }],
+})
