@@ -76,6 +76,5 @@ export const spotifyAuth = async (req, res, next) => {
       console.error('error:' + err)
     }
   }
-  console.log('spotify_access_token: ', SPOTIFY_ACCESS_TOKEN)
   next()
 }

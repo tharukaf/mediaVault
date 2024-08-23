@@ -2,7 +2,6 @@ export async function fetchDataToClient(url, options, res) {
   try {
     const response = await fetch(url, options)
     const data = await response.json()
-    // console.log(data.tracks.items[0])
     res.json(data)
   } catch (err) {
     console.error(err)
