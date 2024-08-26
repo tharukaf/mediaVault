@@ -1,29 +1,64 @@
 import mongoose from 'mongoose'
 import { userSchema } from '../schema.mjs'
+import { saveToDatabaseByID } from '../dbActions.mjs'
+import { sha256 } from 'js-sha256'
+import { TvShow } from './tvModel.mjs'
 
 export const User = mongoose.model('User', userSchema)
 
-export async function createUser(userData) {
+export async function createUser(userData, res) {
   try {
     let user = new User(userData)
-    user._id = userData.id
     await user.save()
-    console.log('User created')
+    res.status(200).send('User created')
   } catch (error) {
-    console.log(error)
+    error.value = 'User already exists'
+    res.status(400).send('User already exists')
   }
 }
 
 export async function getUser(email) {
-  let user = await User.findById({ _id: email })
+  let user = await User.findById(sha256(email))
   return user
 }
 
-export async function addItemToUser(email, model, itemId) {
-  const mediaItem = await new model({ _id: itemId })
-  await mediaItem.save()
+function getCollectionByModelName(user, optStr) {
+  switch (optStr) {
+    case 'movie':
+      return user.movies
+    case 'tv':
+      return user.tv
+    case 'game':
+      return user.games
+    case 'music':
+      return user.music
+    case 'book':
+      return user.books
+    default:
+      return ''
+  }
+}
 
-  const user = await User.findById({ _id: email })
-  user[mediaItem.constructor.modelName].push(mediaItem)
-  await user.save()
+export async function addMediaItemToUser(model, email, itemId, res) {
+  const req = { params: { id: itemId } }
+  const optStr = model === TvShow ? 'tv' : model.modelName.toLowerCase()
+  const mediaItem = await saveToDatabaseByID(req, res, model, optStr)
+
+  const user = await getUser(email)
+  const collection = getCollectionByModelName(user, optStr)
+
+  const isInArray = collection.some(item => item === itemId.toString())
+  if (!isInArray) {
+    collection.push(mediaItem._id)
+    await user.save()
+  }
+  res.sendStatus(200)
+}
+
+export async function getSameMediaTypeItemsFromUser(model, email, res) {
+  const user = await getUser(email)
+  const optStr = model === TvShow ? 'tv' : model.modelName.toLowerCase()
+
+  const collection = getCollectionByModelName(user, optStr)
+  res.json(collection)
 }

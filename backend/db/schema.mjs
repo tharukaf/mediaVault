@@ -1,6 +1,6 @@
-import mongoose from 'mongoose'
+import { Schema } from 'mongoose'
 
-export const movieSchema = new mongoose.Schema({
+export const movieSchema = new Schema({
   _id: Number,
   adult: Boolean,
   backdrop_path: String,
@@ -32,7 +32,7 @@ export const movieSchema = new mongoose.Schema({
   vote_count: Number,
 })
 
-export const tvSchema = new mongoose.Schema({
+export const tvSchema = new Schema({
   _id: Number,
   adult: Boolean,
   backdrop_path: String,
@@ -49,7 +49,7 @@ export const tvSchema = new mongoose.Schema({
   vote_count: Number,
 })
 
-export const gameSchema = new mongoose.Schema({
+export const gameSchema = new Schema({
   _id: Number,
   cover: {
     id: Number,
@@ -64,12 +64,12 @@ export const gameSchema = new mongoose.Schema({
   summary: String,
 })
 
-export const industryIdentifiersSchema = new mongoose.Schema({
+export const industryIdentifiersSchema = new Schema({
   type: String,
   identifier: Number,
 })
 
-export const bookSchema = new mongoose.Schema({
+export const bookSchema = new Schema({
   _id: String,
   title: String,
   subtitle: String,
@@ -103,7 +103,7 @@ export const bookSchema = new mongoose.Schema({
   canonicalVolumeLink: String,
 })
 
-export const spotifyArtistSchema = new mongoose.Schema({
+export const spotifyArtistSchema = new Schema({
   external_urls: {
     spotify: String,
   },
@@ -114,13 +114,13 @@ export const spotifyArtistSchema = new mongoose.Schema({
   uri: String,
 })
 
-export const spotifyAlbumSchema = new mongoose.Schema({
+export const spotifyAlbumSchema = new Schema({
   height: Number,
   url: String,
   width: Number,
 })
 
-export const musicSchema = new mongoose.Schema({
+export const musicSchema = new Schema({
   _id: String,
   album: {
     album_type: String,
@@ -151,13 +151,25 @@ export const musicSchema = new mongoose.Schema({
   uri: String,
 })
 
-export const userSchema = new mongoose.Schema({
+// export const userSchema = new Schema({
+//   email: String,
+//   name: String,
+//   password: String,
+//   movies: [{ type: Schema.Types.ObjectId, ref: 'Movie' }],
+//   tv: [{ type: Schema.Types.ObjectId, ref: 'TvShow' }],
+//   games: [{ type: Schema.Types.ObjectId, ref: 'Game' }],
+//   music: [{ type: Schema.Types.ObjectId, ref: 'Music' }],
+//   books: [{ type: Schema.Types.ObjectId, ref: 'Book' }],
+// })
+
+export const userSchema = new Schema({
   _id: String,
+  email: String,
   name: String,
   password: String,
-  movies: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Movie' }],
-  tv: [{ type: mongoose.Schema.Types.ObjectId, ref: 'TvShow' }],
-  games: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Game' }],
-  music: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Music' }],
-  books: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Book' }],
+  movies: [String],
+  tv: [String],
+  games: [String],
+  music: [String],
+  books: [String],
 })

@@ -28,6 +28,17 @@ This application provides a single place for you to store all your favorite type
 
 - `cd ./backend`
 - Create a `.env` file and define API keys as follows:
+
+```
+TMDB_API_KEY = 'Bearer YOUR_API_KEY'
+IGDB_CLIENT_ID = 'YOUR_IGDB_CLIENT_ID'
+IGDB_CLIENT_SECRET = 'YOUR_IGDB_CLIENT_SECRET'
+SPOTIFY_CLIENT_SECRET = 'YOUR_SPOTIFY_CLIENT_SECRET'
+SPOTIFY_CLIENT_ID = 'YOUR_SPOTIFY_CLIENT_ID'
+GOOGLE_BOOKS_API_KEY = 'YOUR_GOOGLE_BOOKS_API_KEY'
+MONGO_CONNECTION_STRING = 'mongodb+srv://myDatabaseUser:D1fficultP%40ssw0rd@cluster0.example.mongodb.net/myDatabaseName'
+```
+
 - Run `npm install` to install the required packages
 - Start the backend development server by running `npm start`
 - Access the application in your browser at `http://localhost:5173`

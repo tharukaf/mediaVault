@@ -10,5 +10,5 @@ export async function createGame(res) {
   let game = new Game(res[0])
   game._id = res[0].id
   await game.save()
-  console.log('Game created')
+  return game
 }

@@ -10,5 +10,6 @@ export async function createMusic(res) {
   let music = new Music(res)
   music._id = res.id
   await music.save()
-  console.log('Music created')
+  console.log(music._id)
+  return music
 }

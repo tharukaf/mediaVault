@@ -10,7 +10,12 @@ import { TvShow } from './db/models/tvModel.mjs'
 import { Game } from './db/models/gameModel.mjs'
 import { Music } from './db/models/musicModel.mjs'
 import { Book } from './db/models/bookModel.mjs'
-import { createUser, getUser } from './db/models/userModel.mjs'
+import {
+  addMediaItemToUser,
+  createUser,
+  getUser,
+} from './db/models/userModel.mjs'
+import { getSameMediaTypeItemsFromUser } from './db/models/userModel.mjs'
 // import {
 //   retrieveItemByIdFromDB,
 //   retrieveItemsFromDB,
@@ -26,18 +31,33 @@ const app = express()
 app.use(cors())
 
 // Authenticate IGDB
-app.use(['/games/search/:query', '/games/:id'], igdbAuth)
+app.use(['/games/search/:query', '/games/:id', '/test'], igdbAuth)
 
 // Spotify authentication
-app.use(['/music/search/:query', '/music/:id'], spotifyAuth)
+app.use(['/music/search/:query', '/music/:id', '/test'], spotifyAuth)
 
 // Routes middleware
 app.use('/', Routes)
 
 app.get('/test', async (req, res) => {
-  const email = 'test@email.com'
-  const user = await getUser(email)
-  console.log(user)
+  const email = 'me@example.com'
+  const userData = {
+    email: email,
+    _id: sha256(email),
+    name: 'John Doe',
+    password: sha256('password'),
+  }
+  // addMediaItemToUser(Book, userData.email, 'D8DDZKiOcc4C', res)
+  // createUser(userData, res)
+  getSameMediaTypeItemsFromUser(Book, email, res)
+})
+
+app.use('/users', express.json())
+app.post('/users', async (req, res) => {
+  const userData = req.body
+  console.log(userData)
+  res.sendStatus(200)
+  // createUser(userData, res)
 })
 
 app.listen(PORT, () => {

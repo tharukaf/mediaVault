@@ -59,6 +59,7 @@ router
   // Add a tv show by an id to the database
   .post(async (req, res) => {
     saveToDatabaseByID(req, res, TvShow, 'tv')
+    res.sendStatus(200)
   })
 
 router
@@ -71,6 +72,7 @@ router
   // Add a game by an id to the database
   .post(async (req, res) => {
     saveToDatabaseByID(req, res, Game, 'game')
+    res.sendStatus(200)
   })
 
 router
@@ -83,6 +85,7 @@ router
   // Add music by an id to the database
   .post(async (req, res) => {
     saveToDatabaseByID(req, res, Music, 'music')
+    res.sendStatus(200)
   })
 
 router
@@ -93,6 +96,7 @@ router
   })
   .post(async (req, res) => {
     saveToDatabaseByID(req, res, Book, 'book')
+    res.sendStatus(200)
   })
 
 export default router
