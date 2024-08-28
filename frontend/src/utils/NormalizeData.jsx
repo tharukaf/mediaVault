@@ -30,12 +30,12 @@ const track = track => ({
 
 const book = book => ({
   id: book.id,
-  title: book.volumeInfo.title,
-  description: book.volumeInfo.description,
-  poster: book.volumeInfo.imageLinks?.thumbnail,
-  rating: book.volumeInfo.averageRating,
-  releaseDate: book.volumeInfo.publishedDate,
-  authors: book.volumeInfo.authors?.join(', '),
+  title: book.title,
+  description: book?.description,
+  poster: book.imageLinks?.thumbnail,
+  rating: book.averageRating,
+  releaseDate: book.publishedDate,
+  authors: book.authors?.join(', '),
 })
 
 const game = game => ({

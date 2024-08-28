@@ -30,6 +30,14 @@ export default function MovieCard({ movie, type }) {
   const handleExpandClick = () => {
     setExpanded(!expanded)
   }
+  const releaseDate =
+    type === 'movies' || type === 'tv'
+      ? `${movie.releaseDate.slice(0, 4)}`
+      : type === 'books'
+      ? `${movie.releaseDate}`
+      : type === 'games'
+      ? `${movie.releaseDate}`
+      : 'N/A'
 
   return (
     <Card className="vault-card-item" sx={{ minWidth: 240, maxWidth: 240 }}>
@@ -42,9 +50,7 @@ export default function MovieCard({ movie, type }) {
         }
         title={movie.title.slice(0, 20) || 'N/A'}
         titleTypographyProps={{ variant: 'h7' }}
-        subheader={
-          (type !== 'game' && `${movie.releaseDate.slice(0, 4)}`) || 'N/A'
-        }
+        subheader={releaseDate}
       />
       <CardMedia
         component="img"
@@ -52,7 +58,6 @@ export default function MovieCard({ movie, type }) {
         image={movie.poster}
         alt="Paella dish"
       />
-
       <CardActions disableSpacing>
         <IconButton aria-label="add to favorites">
           <FavoriteIcon />

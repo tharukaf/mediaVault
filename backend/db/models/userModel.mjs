@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 import { userSchema } from '../schema.mjs'
-import { saveToDatabaseByID } from '../dbActions.mjs'
+import { retrieveItemsFromDB, saveToDatabaseByID } from '../dbActions.mjs'
 import { sha256 } from 'js-sha256'
 import { TvShow } from './tvModel.mjs'
 
@@ -17,7 +17,7 @@ export async function createUser(userData, res) {
   }
 }
 
-export async function getUser(email) {
+export async function getUserByEmail(email) {
   let user = await User.findById(sha256(email))
   return user
 }
@@ -44,7 +44,7 @@ export async function addMediaItemToUser(model, email, itemId, res) {
   const optStr = model === TvShow ? 'tv' : model.modelName.toLowerCase()
   const mediaItem = await saveToDatabaseByID(req, res, model, optStr)
 
-  const user = await getUser(email)
+  const user = await getUserByEmail(email)
   const collection = getCollectionByModelName(user, optStr)
 
   const isInArray = collection.some(item => item === itemId.toString())
@@ -56,9 +56,9 @@ export async function addMediaItemToUser(model, email, itemId, res) {
 }
 
 export async function getSameMediaTypeItemsFromUser(model, email, res) {
-  const user = await getUser(email)
+  const user = await getUserByEmail(email)
   const optStr = model === TvShow ? 'tv' : model.modelName.toLowerCase()
 
   const collection = getCollectionByModelName(user, optStr)
-  res.json(collection)
+  retrieveItemsFromDB(model, collection, res)
 }

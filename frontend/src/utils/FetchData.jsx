@@ -1,4 +1,4 @@
-const baseURL = 'http://localhost:8000/'
+export const baseURL = 'http://localhost:8000/'
 
 export default async function fetchSearchResults(
   mSearchType,

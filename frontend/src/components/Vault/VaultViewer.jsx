@@ -23,16 +23,36 @@ export default function VaultViewer() {
   }
 
   useEffect(() => {
-    fetchSearchResults(media, 'yesterday', funcPointers)
+    // fetchSearchResults(media, 'yesterday', funcPointers)
+    async function fetchDataFromDB() {
+      const email = 'me@example.com'
+      const url = `http://localhost:8000/users/${email}/${media}`
+      const response = await fetch(url)
+      const data = await response.json()
+      console.log(data)
+      if (media === 'movies') {
+        setMovies(data)
+      } else if (media === 'tv') {
+        setTV(data)
+      } else if (media === 'music') {
+        setMusic(data)
+      } else if (media === 'games') {
+        setGames(data)
+      } else if (media === 'books') {
+        setBooks(data)
+      }
+    }
+    fetchDataFromDB()
   }, [media])
 
   const movieList =
-    media === 'movies' && movies.map(movie => normalize.movie(movie))
+    media === 'movies' && movies.map(movie => normalize.movies(movie))
   const tvList = media === 'tv' && tv.map(normalize.tv)
   const musicList = media === 'music' && music.map(normalize.music)
-  const bookList = media === 'books' && books?.map(book => normalize.book(book))
+  const bookList =
+    media === 'books' && books?.map(book => normalize.books(book))
   const gameList =
-    media === 'games' && games && games?.map(game => normalize.game(game))
+    media === 'games' && games?.map(game => normalize.games(game))
 
   return (
     <>

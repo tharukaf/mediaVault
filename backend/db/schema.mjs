@@ -4,7 +4,12 @@ export const movieSchema = new Schema({
   _id: Number,
   adult: Boolean,
   backdrop_path: String,
-  belongs_to_collection: Boolean,
+  belongs_to_collection: {
+    id: Number,
+    name: String,
+    poster_path: String,
+    backdrop_path: String,
+  },
   budget: Number,
   genres: [],
   homepage: String,

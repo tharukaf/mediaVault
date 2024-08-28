@@ -26,12 +26,12 @@ export default function VaultSideBar({ view, setView }) {
       className="vault-sidebar"
       exclusive
       onChange={handleChange}>
-      <NavLink to="movie">
+      <NavLink to="movies">
         <ToggleButton
           className="vault-sidebar-button"
-          value="movie"
-          aria-label="movie">
-          <MovieIcon className="vault-sidebar-icon" /> Movie
+          value="movies"
+          aria-label="movies">
+          <MovieIcon className="vault-sidebar-icon" /> Movies
         </ToggleButton>
       </NavLink>
       <NavLink to="tv">
@@ -50,20 +50,20 @@ export default function VaultSideBar({ view, setView }) {
           <LibraryMusicIcon className="vault-sidebar-icon" /> Music
         </ToggleButton>
       </NavLink>
-      <NavLink to="game">
+      <NavLink to="games">
         <ToggleButton
           className="vault-sidebar-button"
-          value="game"
-          aria-label="game">
-          <SportsEsportsIcon className="vault-sidebar-icon" /> Game
+          value="games"
+          aria-label="games">
+          <SportsEsportsIcon className="vault-sidebar-icon" /> Games
         </ToggleButton>
       </NavLink>
-      <NavLink to="book">
+      <NavLink to="books">
         <ToggleButton
           className="vault-sidebar-button"
-          value="book"
-          aria-label="book">
-          <AutoStoriesIcon className="vault-sidebar-icon" /> Book
+          value="books"
+          aria-label="books">
+          <AutoStoriesIcon className="vault-sidebar-icon" /> Books
         </ToggleButton>
       </NavLink>
     </ToggleButtonGroup>

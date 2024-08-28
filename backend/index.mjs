@@ -2,62 +2,76 @@ import express from 'express'
 import cors from 'cors'
 import 'dotenv/config'
 import connectToMongo from './db/config.mjs'
-import { fetchDataToServer } from './server/utility/fetchData.mjs'
-import Routes from './server/routes/index.mjs'
+import Routes from './server/routes/searchRoutes.mjs'
 import { igdbAuth, spotifyAuth } from './server/utility/apiAuth.mjs'
-import { Movie } from './db/models/moviemodel.mjs'
-import { TvShow } from './db/models/tvModel.mjs'
-import { Game } from './db/models/gameModel.mjs'
-import { Music } from './db/models/musicModel.mjs'
-import { Book } from './db/models/bookModel.mjs'
-import {
-  addMediaItemToUser,
-  createUser,
-  getUser,
-} from './db/models/userModel.mjs'
-import { getSameMediaTypeItemsFromUser } from './db/models/userModel.mjs'
-// import {
-//   retrieveItemByIdFromDB,
-//   retrieveItemsFromDB,
-//   saveToDatabaseByID,
-// } from './db/dbActions.mjs'
-
+import { Book, Movie, Game, Music, TvShow } from './db/models/dbModels.mjs'
 import sha256 from 'js-sha256'
+import { createUser } from './db/models/userModel.mjs'
+import helmet from 'helmet'
+import RateLimit from 'express-rate-limit'
+import {
+  getUserByEmail,
+  addMediaItemToUser,
+  getSameMediaTypeItemsFromUser,
+} from './db/models/userModel.mjs'
+import cookieParser from 'cookie-parser'
+import session from 'express-session'
+
+const limiter = RateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 60,
+  message: 'Too many requests',
+  headers: true,
+})
 
 connectToMongo()
 
 const PORT = 8000
 const app = express()
+
+app.use(limiter)
+app.use(helmet())
 app.use(cors())
 
+app.use(cookieParser())
+app.use(session({ secret: 'thisisakey' }))
+
 // Authenticate IGDB
-app.use(['/games/search/:query', '/games/:id', '/test'], igdbAuth)
+app.use(['/games/search/:query', '/games/:id'], igdbAuth)
 
 // Spotify authentication
-app.use(['/music/search/:query', '/music/:id', '/test'], spotifyAuth)
+app.use(['/music/search/:query', '/music/:id'], spotifyAuth)
 
 // Routes middleware
 app.use('/', Routes)
 
-app.get('/test', async (req, res) => {
-  const email = 'me@example.com'
-  const userData = {
-    email: email,
-    _id: sha256(email),
-    name: 'John Doe',
-    password: sha256('password'),
-  }
-  // addMediaItemToUser(Book, userData.email, 'D8DDZKiOcc4C', res)
-  // createUser(userData, res)
-  getSameMediaTypeItemsFromUser(Book, email, res)
+app.get('/viewcount', (req, res) => {
+  req.session.views = req.session.views ? req.session.views + 1 : 1
+  res.send(`Views: ${req.session.views}`)
 })
 
-app.use('/users', express.json())
+app.use(['/users', '/login'], express.json())
 app.post('/users', async (req, res) => {
   const userData = req.body
+  userData._id = sha256(userData.email)
+  userData.password = sha256(userData.password)
   console.log(userData)
-  res.sendStatus(200)
-  // createUser(userData, res)
+  createUser(userData, res)
+})
+
+// login route
+app.post('/login', async (req, res) => {
+  const { email, password } = req.body
+  const user = await getUserByEmail(email)
+  if (user.password === sha256(password)) {
+    res.status(200).send('Login successful')
+  } else {
+    res.sendStatus(401)
+  }
+})
+
+app.post('/logout', (req, res) => {
+  res.status(200).send('Logout successful')
 })
 
 app.listen(PORT, () => {

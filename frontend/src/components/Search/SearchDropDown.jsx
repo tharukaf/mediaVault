@@ -3,6 +3,7 @@ import TextField from '@mui/material/TextField'
 import Autocomplete from '@mui/material/Autocomplete'
 import { debounce } from 'lodash'
 import Button from '@mui/material/Button'
+import { baseURL } from '../../utils/FetchData'
 
 export default function SearchDropDown({
   optionList,
@@ -45,10 +46,20 @@ export default function SearchDropDown({
                 <div className="dropdownArtists">{option.artists}</div>
               )}
               <Button
-                onClick={() => {
-                  console.log('add to vault', option)
-                  return option
-                }}
+                // onClick={async () => {
+                //   const url = `${baseURL}${searchType}/${option.id}`
+                //   console.log(url)
+                //   // TODO: add user email to body
+                //   const options = { email: 'me@example.com' }
+                //   const response = await fetch(url, {
+                //     method: 'POST',
+                //     headers: {
+                //       'Content-Type': 'application/json',
+                //     },
+                //     body: JSON.stringify(options),
+                //   })
+                //   console.log(response)
+                // }}
                 variant="outlined"
                 style={{ fontSize: '10px', marginLeft: '10px' }}>
                 +

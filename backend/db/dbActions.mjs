@@ -1,17 +1,17 @@
 import OptObj from '../server/utility/fetchOptionObj.mjs'
 import { fetchArgs } from '../server/utility/apiAuth.mjs'
 import { fetchDataToServer } from '../server/utility/fetchData.mjs'
-import { Movie } from './models/moviemodel.mjs'
+import { Movie, Book, Music } from '../db/models/dbModels.mjs'
 
 export async function retrieveItemByIdFromDB(model, id) {
   let isNum = /^\d+$/.test(id)
-  const data = await model.findById(isNum ? Number(id) : 0)
+  const data = await model.findById(id)
   return data
 }
 
-export async function retrieveItemsFromDB(model, idList) {
+export async function retrieveItemsFromDB(model, idList, res) {
   const data = await model.find({ _id: { $in: idList } })
-  return data
+  res.json(data)
 }
 
 export async function saveToDatabaseByID(req, res, model, optObjType) {
@@ -24,12 +24,10 @@ export async function saveToDatabaseByID(req, res, model, optObjType) {
 
   let data = await model.findById(id)
   if (data !== null) {
-    console.log('Data already exists in the database')
     return data
   } else {
     const url = model.url(id)
     data = await fetchDataToServer(url, options)
     return model.createItem(data)
   }
-
 }

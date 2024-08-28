@@ -8,6 +8,12 @@ import {
   retrieveItemByIdFromDB,
   retrieveItemsFromDB,
 } from '../../db/dbActions.mjs'
+import { getModelByMediaType } from '../utility/mediaTypes.mjs'
+import { model } from 'mongoose'
+import {
+  addMediaItemToUser,
+  getSameMediaTypeItemsFromUser,
+} from '../../db/models/userModel.mjs'
 
 const router = express.Router()
 
@@ -37,66 +43,33 @@ router.get('/music/search/:query', (req, res) => {
   fetchDataToClient(url, options, res)
 })
 
-// Item endpoints
+// Media item endpoints
 router
-  .route('/movies/:id')
+  .route('/:mediaType/:id')
   .get(async (req, res) => {
-    const data = await retrieveItemByIdFromDB(Movie, req.params.id)
+    const [model] = getModelByMediaType(req.params.mediaType)
+    const data = await retrieveItemByIdFromDB(model, req.params.id)
     res.json(data)
   })
   // Add a movie by an id to the database
   .post(async (req, res) => {
-    saveToDatabaseByID(req, res, Movie, 'movie')
-  })
-
-router
-  // Get a tv show by id
-  .route('/tv/:id')
-  .get(async (req, res) => {
-    const data = await retrieveItemByIdFromDB(TvShow, req.params.id)
-    res.json(data)
-  })
-  // Add a tv show by an id to the database
-  .post(async (req, res) => {
-    saveToDatabaseByID(req, res, TvShow, 'tv')
+    const [model, modelName] = getModelByMediaType(req.params.mediaType)
+    saveToDatabaseByID(req, res, model, modelName)
     res.sendStatus(200)
   })
 
-router
-  // Get a game by id
-  .route('/games/:id')
-  .get(async (req, res) => {
-    const data = await retrieveItemByIdFromDB(Game, req.params.id)
-    res.json(data)
-  })
-  // Add a game by an id to the database
-  .post(async (req, res) => {
-    saveToDatabaseByID(req, res, Game, 'game')
-    res.sendStatus(200)
-  })
+router.post('/users/:mediaType/:id', async (req, res) => {
+  const { mediaType, id } = req.params
+  const email = req.body.email
+  const model = getModelByMediaType(mediaType)
+  addMediaItemToUser(model, email, id, res)
+})
 
-router
-  .route('/music/:id')
-  // Get music by id
-  .get(async (req, res) => {
-    const data = await retrieveItemByIdFromDB(Music, req.params.id)
-    res.json(data)
-  })
-  // Add music by an id to the database
-  .post(async (req, res) => {
-    saveToDatabaseByID(req, res, Music, 'music')
-    res.sendStatus(200)
-  })
-
-router
-  .route('/books/:id')
-  .get(async (req, res) => {
-    const data = await retrieveItemByIdFromDB(Book, Number(req.params.id))
-    res.json(data)
-  })
-  .post(async (req, res) => {
-    saveToDatabaseByID(req, res, Book, 'book')
-    res.sendStatus(200)
-  })
+router.get('/users/:email/:mediaType', async (req, res) => {
+  const { mediaType, email } = req.params
+  // const { email } = req.body
+  const model = getModelByMediaType(mediaType)
+  getSameMediaTypeItemsFromUser(model, email, res)
+})
 
 export default router
