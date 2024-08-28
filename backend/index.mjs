@@ -37,10 +37,10 @@ app.use(cookieParser())
 app.use(session({ secret: 'thisisakey' }))
 
 // Authenticate IGDB
-app.use(['/games/search/:query', '/games/:id'], igdbAuth)
+app.use(['/search/games/:query', '/games/:id'], igdbAuth)
 
 // Spotify authentication
-app.use(['/music/search/:query', '/music/:id'], spotifyAuth)
+app.use(['/search/music/:query', '/music/:id'], spotifyAuth)
 
 // Routes middleware
 app.use('/', Routes)

@@ -2,14 +2,11 @@ import express from 'express'
 import { fetchArgs } from '../utility/apiAuth.mjs'
 import { fetchDataToClient } from '../utility/fetchData.mjs'
 import OptObj from '../utility/fetchOptionObj.mjs'
-import { Movie, TvShow, Game, Music, Book } from '../../db/models/dbModels.mjs'
 import {
   saveToDatabaseByID,
   retrieveItemByIdFromDB,
-  retrieveItemsFromDB,
 } from '../../db/dbActions.mjs'
 import { getModelByMediaType } from '../utility/mediaTypes.mjs'
-import { model } from 'mongoose'
 import {
   addMediaItemToUser,
   getSameMediaTypeItemsFromUser,
@@ -17,29 +14,13 @@ import {
 
 const router = express.Router()
 
-// Search endpoints
-router.route('/movies/search/:query').get((req, res) => {
-  const { url, options } = OptObj.movie(req.params.query, ...fetchArgs.movie)
-  fetchDataToClient(url, options, res)
-})
-
-router.get('/tv/search/:query', (req, res) => {
-  const { url, options } = OptObj.tv(req.params.query, ...fetchArgs.tv)
-  fetchDataToClient(url, options, res)
-})
-
-router.get('/games/search/:query', (req, res) => {
-  const { url, options } = OptObj.game(req.params.query, ...fetchArgs.game)
-  fetchDataToClient(url, options, res)
-})
-
-router.get('/books/search/:query', (req, res) => {
-  const { url, options } = OptObj.book(req.params.query, ...fetchArgs.book)
-  fetchDataToClient(url, options, res)
-})
-
-router.get('/music/search/:query', (req, res) => {
-  const { url, options } = OptObj.music(req.params.query, ...fetchArgs.music)
+// Search endpoint
+router.route('/search/:mediaType/:query').get((req, res) => {
+  const [model, modelName] = getModelByMediaType(req.params.mediaType)
+  const { url, options } = OptObj[modelName](
+    req.params.query,
+    ...fetchArgs[modelName]
+  )
   fetchDataToClient(url, options, res)
 })
 
