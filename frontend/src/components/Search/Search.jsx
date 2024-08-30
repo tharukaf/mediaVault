@@ -1,8 +1,10 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, createContext } from 'react'
 import SearchDropDown from './SearchDropDown'
 import fetchSearchResults from '../../utils/FetchData'
 import SearchToggleGroup from './SearchToggleGroup'
 import { normalize } from '../../utils/NormalizeData'
+
+export const TestContext = createContext()
 
 export default function Search() {
   const [searchText, setSearchText] = useState('')
@@ -12,7 +14,7 @@ export default function Search() {
   const [music, setMusic] = useState([])
   const [games, setGames] = useState([])
   const [books, setBooks] = useState([])
-  const storage = useRef(window.localStorage)
+  const [inMemoryMediaList, setInMemoryMediaList] = useState({})
 
   const handleChange = (event, newAlignment) => {
     setSearchType(newAlignment)
@@ -25,13 +27,6 @@ export default function Search() {
     setBooks,
   }
 
-  useEffect(() => {
-    movies.map(movie =>
-      storage.current.setItem(movie.id, JSON.stringify(movie))
-    )
-  }, [searchType, searchText])
-  console.log(JSON.parse(storage.current.getItem(movies[1]?.id)))
-
   // Fetch data from the server
   useEffect(() => {
     fetchSearchResults(searchType, searchText, funcPointers)
@@ -41,17 +36,19 @@ export default function Search() {
 
   return (
     <>
-      <div className="searchUIContainer">
-        <SearchToggleGroup
-          searchType={searchType}
-          handleChange={handleChange}
-        />
-        {searchType == 'movies' && MapData(movies, ...argsArr)}
-        {searchType == 'tv' && MapData(tv, ...argsArr)}
-        {searchType == 'music' && MapData(music, ...argsArr)}
-        {searchType == 'games' && MapData(games, ...argsArr)}
-        {searchType == 'books' && MapData(books, ...argsArr)}
-      </div>
+      <TestContext.Provider value={{ inMemoryMediaList, setInMemoryMediaList }}>
+        <div className="searchUIContainer">
+          <SearchToggleGroup
+            searchType={searchType}
+            handleChange={handleChange}
+          />
+          {searchType == 'movies' && MapData(movies, ...argsArr)}
+          {searchType == 'tv' && MapData(tv, ...argsArr)}
+          {searchType == 'music' && MapData(music, ...argsArr)}
+          {searchType == 'games' && MapData(games, ...argsArr)}
+          {searchType == 'books' && MapData(books, ...argsArr)}
+        </div>
+      </TestContext.Provider>
     </>
   )
 }

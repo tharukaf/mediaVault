@@ -10,38 +10,62 @@ import React from 'react'
 import { useState, useEffect, useContext } from 'react'
 import { UserContext } from '../../utils/UserContext'
 import passwordValidator from 'password-validator'
+import { baseURL } from '../../utils/FetchData'
+import CircularProgress from '@mui/material/CircularProgress'
 
 export default function CreateUser() {
   const { currentUser, setCurrentUser } = useContext(UserContext)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [isNameError, setIsNameError] = useState(false)
+  const [isEmailError, setIsEmailError] = useState(false)
   const [isPasswordError, setIsPasswordError] = useState(false)
   const [isUsernameError, setIsUsernameError] = useState(false)
   const [firstClicked, setFirstClicked] = useState(false)
-  const [userForm, setUserForm] = useState({ passwordText: '' })
+  const [userForm, setUserForm] = useState({ password: '' })
+  const [responseError, setResponseError] = useState()
+  const [loading, setLoading] = useState(false)
 
   let schema = new passwordValidator()
   schema.is().min(8).max(30)
+
+  function validateForm() {
+    setIsNameError(userForm.name ? false : true)
+    setIsEmailError(userForm.email ? false : true)
+    setIsUsernameError(userForm.username ? false : true)
+    setIsPasswordError(schema.validate(userForm.password))
+
+    return !isNameError && !isEmailError && !isPasswordError && !isUsernameError
+  }
 
   useEffect(() => {
     console.log(currentUser)
   }, [isLoggedIn])
 
-  function handleLogin() {
+  async function handleCreateUser() {
+    setLoading(true)
     setFirstClicked(true)
-    console.log(userForm.passwordText)
-    if (!schema.validate(userForm.passwordText)) {
-      setIsPasswordError(true)
-    } else {
-      setIsPasswordError(false)
-    }
-    if (!userForm.usernameText) {
-      setIsUsernameError(true)
-    } else {
-      setIsUsernameError(false)
+
+    if (validateForm()) {
+      const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userForm),
+      }
+      console.log(userForm)
+      try {
+        const data = await fetch(`${baseURL}users`, requestOptions)
+        setTimeout(() => {
+          setLoading(false)
+        }, 1000)
+
+        setIsLoggedIn(true)
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
 
-  async function handleFormChange(e) {
+  function handleFormChange(e) {
     const target = e.target
     setUserForm(prev => {
       return { ...prev, [target.id]: target.value }
@@ -68,49 +92,51 @@ export default function CreateUser() {
           margin: '5px',
         }}>
         <TextField
+          required={true}
+          id="name"
           onChange={handleFormChange}
           style={{ marginTop: '7px' }}
-          error={isUsernameError}
-          id="nameText"
+          error={isNameError}
           label="Name"
         />
         <TextField
+          required={true}
+          id="email"
           onChange={handleFormChange}
           style={{ marginTop: '7px' }}
-          error={isUsernameError}
-          id="email"
+          error={isEmailError}
           label="Email"
         />
         <TextField
+          required={true}
           onChange={handleFormChange}
           style={{ marginTop: '7px' }}
           error={isUsernameError}
-          id="usernameText"
+          id="username"
           label="Username"
         />
         <TextField
+          required={true}
           onChange={handleFormChange}
-          error={isPasswordError}
+          error={!isPasswordError}
           style={{ marginTop: '15px' }}
-          id="passwordText"
+          id="password"
           label="Password"
           type="password"
         />
         <Button
-          onClick={handleLogin}
+          onClick={handleCreateUser}
           variant="contained"
-          
           style={{ marginTop: '20px', marginBottom: '10px' }}>
-          Login
+          {loading ? <CircularProgress /> : 'Create Account'}
         </Button>
         {firstClicked &&
-          schema
-            .validate(userForm.passwordText, { details: true })
-            .map(item => (
-              <Typography key={item.index} sx={{ color: 'error.main' }}>
-                {item.message}
-              </Typography>
-            ))}
+          schema.validate(userForm.password, { details: true }).map(item => (
+            <Typography key={item.index} sx={{ color: 'error.main' }}>
+              {item.message}
+            </Typography>
+          ))}
+        {responseError && 'User Already Exists'}
       </Paper>
     </Box>
   )

@@ -12,27 +12,33 @@ import Button from '@mui/material/Button'
 import Tooltip from '@mui/material/Tooltip'
 import MenuItem from '@mui/material/MenuItem'
 import mySVG from '../assets/media_vault_logo_2.svg'
-import { NavLink } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import { useContext } from 'react'
 import { UserContext } from '../utils/UserContext'
 import { useNavigate } from 'react-router-dom'
 
 function ResponsiveAppBar() {
   const navigate = useNavigate()
-  const loginNavLink = (
-    <div
-      onClick={() => {
-        navigate('/login')
-      }}>
-      Login
-    </div>
-  )
+  // const loginNavLink = (
+  //   <div
+  //     onClick={() => {
+  //       navigate('/login')
+  //     }}>
+  //     Login
+  //   </div>
+  // )
   const { currentUser, setCurrentUser } = useContext(UserContext)
   const pages = ['myvault', 'curator']
   const pagesText = { myvault: 'My Vault', curator: 'Curator' }
   const settings = [
     currentUser,
-    currentUser === 'Guest' ? loginNavLink : 'Logout',
+    currentUser === 'Guest' ? (
+      <Link style={{ color: 'white', textDecoration: 'none' }} to="/login">
+        Login
+      </Link>
+    ) : (
+      'Logout'
+    ),
   ]
   const [anchorElNav, setAnchorElNav] = React.useState(null)
   const [anchorElUser, setAnchorElUser] = React.useState(null)

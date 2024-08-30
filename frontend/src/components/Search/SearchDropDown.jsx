@@ -4,6 +4,15 @@ import Autocomplete from '@mui/material/Autocomplete'
 import { debounce } from 'lodash'
 import Button from '@mui/material/Button'
 import { baseURL } from '../../utils/FetchData'
+import { UserContext } from '../../utils/UserContext'
+import { useState, useContext, useRef, useEffect } from 'react'
+import { TestContext } from './Search'
+
+const Status = {
+  Init: 'Init',
+  Consumed: 'Consumed',
+  WantTo: 'WantTo',
+}
 
 export default function SearchDropDown({
   optionList,
@@ -11,9 +20,61 @@ export default function SearchDropDown({
   setSearchText,
   searchText,
 }) {
+  const { inMemoryMediaList, setInMemoryMediaList } = useContext(TestContext)
+  console.log(setInMemoryMediaList)
   const handleTextChange = debounce(e => {
     setSearchText(e.target.value)
   }, 400)
+  const storage = useRef(window.localStorage)
+
+  useEffect(() => {
+    storage.current.setItem(
+      [searchType],
+      JSON.stringify(inMemoryMediaList[searchType])
+    )
+  }, [inMemoryMediaList])
+  // console.log(JSON.parse(storage.current.getItem(movies[1]?.id)))
+  const { currentUser } = useContext(UserContext)
+  console.log(inMemoryMediaList)
+
+  const handleAddMediaToList = option => {
+    return async () => {
+      const url = `${baseURL}users/${searchType}/${option.id}`
+      console.log(url)
+      // TODO: add user email to body
+      const options = { email: 'me@example.com' }
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(options),
+      })
+      console.log(response)
+    }
+  }
+
+  const handleAddToStorage = id => {
+    return () => {
+      fetch(`${baseURL}${searchType}/${id}`, {
+        method: 'POST',
+      })
+      setInMemoryMediaList(prev => {
+        return {
+          ...prev,
+          [searchType]: { ...prev[searchType], [id]: Status.Init },
+        }
+      })
+    }
+  }
+
+  function hello(option) {
+    if (currentUser == 'Guest') {
+      return handleAddToStorage(option.id)
+    } else {
+      return handleAddMediaToList(option)
+    }
+  }
 
   return (
     <div id="textfield-box">
@@ -29,7 +90,6 @@ export default function SearchDropDown({
           const { key, ...optionProps } = props
           return (
             <Box
-              // borderColor="primary.dark"
               key={option.id}
               component="li"
               sx={{ '& > img': { mr: 2, flexShrink: 0 } }}
@@ -46,20 +106,7 @@ export default function SearchDropDown({
                 <div className="dropdownArtists">{option.artists}</div>
               )}
               <Button
-                // onClick={async () => {
-                //   const url = `${baseURL}${searchType}/${option.id}`
-                //   console.log(url)
-                //   // TODO: add user email to body
-                //   const options = { email: 'me@example.com' }
-                //   const response = await fetch(url, {
-                //     method: 'POST',
-                //     headers: {
-                //       'Content-Type': 'application/json',
-                //     },
-                //     body: JSON.stringify(options),
-                //   })
-                //   console.log(response)
-                // }}
+                onClick={hello(option)}
                 variant="outlined"
                 style={{ fontSize: '10px', marginLeft: '10px' }}>
                 +

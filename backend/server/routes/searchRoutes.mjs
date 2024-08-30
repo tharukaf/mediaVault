@@ -37,6 +37,7 @@ router
   .post(async (req, res) => {
     const [model, modelName] = getModelByMediaType(req.params.mediaType)
     saveToDatabaseByID(req, res, model, modelName)
+    console.log('got it')
     res.sendStatus(200)
   })
 
