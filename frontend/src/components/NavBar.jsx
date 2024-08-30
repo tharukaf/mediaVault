@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import AppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
 import Toolbar from '@mui/material/Toolbar'
@@ -13,12 +13,27 @@ import Tooltip from '@mui/material/Tooltip'
 import MenuItem from '@mui/material/MenuItem'
 import mySVG from '../assets/media_vault_logo_2.svg'
 import { NavLink } from 'react-router-dom'
-
-const pages = ['myvault', 'curator']
-const pagesText = { myvault: 'My Vault', curator: 'Curator' }
-const settings = ['Account', 'Logout']
+import { useContext } from 'react'
+import { UserContext } from '../utils/UserContext'
+import { useNavigate } from 'react-router-dom'
 
 function ResponsiveAppBar() {
+  const navigate = useNavigate()
+  const loginNavLink = (
+    <div
+      onClick={() => {
+        navigate('/login')
+      }}>
+      Login
+    </div>
+  )
+  const { currentUser, setCurrentUser } = useContext(UserContext)
+  const pages = ['myvault', 'curator']
+  const pagesText = { myvault: 'My Vault', curator: 'Curator' }
+  const settings = [
+    currentUser,
+    currentUser === 'Guest' ? loginNavLink : 'Logout',
+  ]
   const [anchorElNav, setAnchorElNav] = React.useState(null)
   const [anchorElUser, setAnchorElUser] = React.useState(null)
 
@@ -138,7 +153,7 @@ function ResponsiveAppBar() {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar>{settings[0][0]}</Avatar>
               </IconButton>
             </Tooltip>
             <Menu

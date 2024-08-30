@@ -34,23 +34,25 @@ app.use(helmet())
 app.use(cors())
 
 app.use(cookieParser())
-app.use(session({ secret: 'thisisakey' }))
+app.use(
+  session({ secret: 'thisisakey', resave: false, saveUninitialized: false })
+)
 
-// Authenticate IGDB
+// Authenticate IGDB & Spotify APIs
 app.use(['/search/games/:query', '/games/:id'], igdbAuth)
-
-// Spotify authentication
 app.use(['/search/music/:query', '/music/:id'], spotifyAuth)
 
-// Routes middleware
+// Router middleware
 app.use('/', Routes)
 
 app.get('/viewcount', (req, res) => {
   req.session.views = req.session.views ? req.session.views + 1 : 1
-  res.send(`Views: ${req.session.views}`)
+  res.send(`Views: ${req.session.user}`)
 })
 
 app.use(['/users', '/login'], express.json())
+
+// create user route
 app.post('/users', async (req, res) => {
   const userData = req.body
   userData._id = sha256(userData.email)
@@ -64,13 +66,17 @@ app.post('/login', async (req, res) => {
   const { email, password } = req.body
   const user = await getUserByEmail(email)
   if (user.password === sha256(password)) {
-    res.status(200).send('Login successful')
+    req.session.user = user.id
+    res.status(200).send(`Login successful ${req.session.user}`)
   } else {
     res.sendStatus(401)
   }
 })
 
 app.post('/logout', (req, res) => {
+  req.session.destroy(() => {
+    console.log('Session destroyed')
+  })
   res.status(200).send('Logout successful')
 })
 

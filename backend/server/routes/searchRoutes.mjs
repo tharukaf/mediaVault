@@ -11,6 +11,7 @@ import {
   addMediaItemToUser,
   getSameMediaTypeItemsFromUser,
 } from '../../db/models/userModel.mjs'
+import session from 'express-session'
 
 const router = express.Router()
 
@@ -39,18 +40,26 @@ router
     res.sendStatus(200)
   })
 
+// User endpoints
 router.post('/users/:mediaType/:id', async (req, res) => {
-  const { mediaType, id } = req.params
-  const email = req.body.email
-  const model = getModelByMediaType(mediaType)
-  addMediaItemToUser(model, email, id, res)
+  if (req.session.user) {
+    const { mediaType, id } = req.params
+    const email = req.body.email
+    const [model] = getModelByMediaType(mediaType)
+    addMediaItemToUser(model, email, id, res)
+  } else {
+    res.redirect('/login')
+  }
 })
 
 router.get('/users/:email/:mediaType', async (req, res) => {
-  const { mediaType, email } = req.params
-  // const { email } = req.body
-  const model = getModelByMediaType(mediaType)
-  getSameMediaTypeItemsFromUser(model, email, res)
+  if (req.session.user) {
+    const { mediaType, email } = req.params
+    const [model] = getModelByMediaType(mediaType)
+    getSameMediaTypeItemsFromUser(model, email, res)
+  } else {
+    res.redirect('/login')
+  }
 })
 
 export default router

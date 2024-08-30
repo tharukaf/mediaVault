@@ -10,21 +10,31 @@ import VaultViewer from './components/Vault/VaultViewer'
 import StarBackground from './utils/StarBackground'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
+import Login from './components/User/login'
+import { createContext } from 'react'
+import { UserContext } from './utils/UserContext'
+import CreateUser from './components/User/createUser'
 
 function App() {
+  const [currentUser, setCurrentUser] = useState('Guest')
+
   return (
     <>
       <StarBackground />
-      <Routes>
-        <Route path="/" element={<Dashboard />}>
-          <Route index element={<Search />} />
-          <Route path="myvault" element={<VaultLayout />}>
-            <Route index element={<VaultViewer />} />
-            <Route path=":media" element={<VaultViewer />} />
+      <UserContext.Provider value={{ currentUser, setCurrentUser }}>
+        <Routes>
+          <Route path="/" element={<Dashboard />}>
+            <Route index element={<Search />} />
+            <Route path="myvault" element={<VaultLayout />}>
+              <Route index element={<VaultViewer />} />
+              <Route path=":media" element={<VaultViewer />} />
+            </Route>
+            <Route path="curator" element={<Curator />}></Route>
+            <Route path="login" element={<Login />} />
+            <Route path="createuser" element={<CreateUser />} />
           </Route>
-          <Route path="curator" element={<Curator />}></Route>
-        </Route>
-      </Routes>
+        </Routes>
+      </UserContext.Provider>
     </>
   )
 }

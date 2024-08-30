@@ -7,7 +7,7 @@ export default async function fetchSearchResults(
 ) {
   if (mSearchText.length > 2) {
     try {
-      const url = `${baseURL}${mSearchType}/search/${mSearchText}`
+      const url = `${baseURL}search/${mSearchType}/${mSearchText}`
       const response = await fetch(url)
       const data = await response.json()
 
