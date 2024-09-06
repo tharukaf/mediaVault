@@ -14,25 +14,18 @@ import MenuItem from '@mui/material/MenuItem'
 import mySVG from '../assets/media_vault_logo_2.svg'
 import { Link, NavLink } from 'react-router-dom'
 import { useContext } from 'react'
-import { UserContext } from '../utils/UserContext'
+import { AuthContext } from '../utils/UserContext'
 import { useNavigate } from 'react-router-dom'
+import { baseURL } from '../utils/FetchData'
 
 function ResponsiveAppBar() {
   const navigate = useNavigate()
-  // const loginNavLink = (
-  //   <div
-  //     onClick={() => {
-  //       navigate('/login')
-  //     }}>
-  //     Login
-  //   </div>
-  // )
-  const { currentUser, setCurrentUser } = useContext(UserContext)
+  const { currentUser, setCurrentUser } = useContext(AuthContext)
   const pages = ['myvault', 'curator']
   const pagesText = { myvault: 'My Vault', curator: 'Curator' }
   const settings = [
-    currentUser,
-    currentUser === 'Guest' ? (
+    currentUser.name,
+    currentUser.name === 'Guest' ? (
       <Link style={{ color: 'white', textDecoration: 'none' }} to="/login">
         Login
       </Link>
@@ -56,6 +49,17 @@ function ResponsiveAppBar() {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null)
+  }
+
+  const handleLogout = async () => {
+    const res = await fetch(`${baseURL}logout`, {
+      method: 'POST',
+      credentials: 'include',
+    })
+    if (res.status) {
+      setCurrentUser({ name: 'Guest' })
+      navigate('/')
+    }
   }
 
   return (
@@ -178,7 +182,15 @@ function ResponsiveAppBar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}>
               {settings.map(setting => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <MenuItem
+                  key={setting}
+                  onClick={
+                    setting === 'Logout'
+                      ? () => {
+                          handleLogout()
+                        }
+                      : handleCloseUserMenu
+                  }>
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}

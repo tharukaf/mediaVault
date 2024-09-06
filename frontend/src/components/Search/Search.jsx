@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, createContext } from 'react'
+import { useState, useEffect, createContext } from 'react'
 import SearchDropDown from './SearchDropDown'
 import fetchSearchResults from '../../utils/FetchData'
 import SearchToggleGroup from './SearchToggleGroup'

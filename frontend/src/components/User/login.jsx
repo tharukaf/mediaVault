@@ -1,49 +1,61 @@
-import {
-  Box,
-  Paper,
-  Typography,
-  Button,
-  TextField,
-  colors,
-} from '@mui/material'
-import React from 'react'
-import { useState, useEffect, useContext } from 'react'
-import { UserContext } from '../../utils/UserContext'
+import { Box, Paper, Typography, Button, TextField } from '@mui/material'
+
+import { useState, useContext } from 'react'
+import { AuthContext } from '../../utils/UserContext'
 import passwordValidator from 'password-validator'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import { baseURL } from '../../utils/FetchData'
+import Cookies from 'js-cookie'
+import { useAuth } from '../../App'
+
+// axios.defaults.withCredentials = true
 
 export default function Login() {
-  const { currentUser, setCurrentUser } = useContext(UserContext)
+  const { currentUser, setCurrentUser } = useAuth()
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [isPasswordError, setIsPasswordError] = useState(false)
-  const [isUsernameError, setIsUsernameError] = useState(false)
+  const [isEmailError, setIsEmailError] = useState(false)
   const [firstClicked, setFirstClicked] = useState(false)
-  const [userForm, setUserForm] = useState({ passwordText: '' })
+  const [userForm, setUserForm] = useState({ password: '' })
+  const [isLoginError, setIsLoginError] = useState(false)
   const navigate = useNavigate()
 
   let schema = new passwordValidator()
   schema.is().min(8).max(30)
 
-  useEffect(() => {
-    console.log(currentUser)
-  }, [isLoggedIn])
-
   function handleCreateAccountRoute() {
     navigate('/createuser')
   }
 
+  async function fetchUserData() {
+    const requestOptions = {
+      method: 'POST',
+      mode: 'cors',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(userForm),
+    }
+    const res = await fetch(`${baseURL}login`, requestOptions)
+    fetchHelper('cookie/refresh', userForm.email, setCurrentUser)
+
+    if (res.status === 200) {
+      setIsLoggedIn(true)
+      navigate('/')
+    } else {
+      setIsLoginError(true)
+    }
+  }
+
+  function validateForm() {
+    setIsEmailError(userForm.email ? false : true)
+    setIsPasswordError(schema.validate(userForm.password))
+    return !isEmailError && !isPasswordError
+  }
+
   function handleLogin() {
     setFirstClicked(true)
-    console.log(userForm.passwordText)
-    if (!schema.validate(userForm.passwordText)) {
-      setIsPasswordError(true)
-    } else {
-      setIsPasswordError(false)
-    }
-    if (!userForm.usernameText) {
-      setIsUsernameError(true)
-    } else {
-      setIsUsernameError(false)
+    if (validateForm()) {
+      fetchUserData()
     }
   }
 
@@ -76,15 +88,15 @@ export default function Login() {
         <TextField
           onChange={handleFormChange}
           style={{ marginTop: '7px' }}
-          error={isUsernameError}
-          id="usernameText"
-          label="Username"
+          error={isEmailError}
+          id="email"
+          label="Email"
         />
         <TextField
           onChange={handleFormChange}
           error={isPasswordError}
           style={{ marginTop: '15px' }}
-          id="passwordText"
+          id="password"
           label="Password"
           type="password"
         />
@@ -104,14 +116,28 @@ export default function Login() {
           </Typography>
         </Button>
         {firstClicked &&
-          schema
-            .validate(userForm.passwordText, { details: true })
-            .map(item => (
-              <Typography key={item.index} sx={{ color: 'error.main' }}>
-                {item.message}
-              </Typography>
-            ))}
+          schema.validate(userForm.password, { details: true }).map(item => (
+            <Typography key={item.index} sx={{ color: 'error.main' }}>
+              {item.message}
+            </Typography>
+          ))}
+        {isLoginError && (
+          <Typography sx={{ color: 'error.main' }}>
+            Email or password is incorrect
+          </Typography>
+        )}
       </Paper>
     </Box>
   )
+}
+
+export async function fetchHelper(path, email, mSetCurrentUser) {
+  const res = await fetch(`${baseURL}${path}/${email}`, {
+    method: 'GET',
+    mode: 'cors',
+    credentials: 'include',
+  })
+
+  const data = await res.json()
+  mSetCurrentUser({ name: data.name, email: data.email, token: data.token })
 }

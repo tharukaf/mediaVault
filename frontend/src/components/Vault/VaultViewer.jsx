@@ -1,12 +1,13 @@
 import { useParams } from 'react-router-dom'
-import fetchSearchResults from '../../utils/FetchData'
+import { baseURL } from '../../utils/FetchData'
 import { useEffect, useState } from 'react'
-// import { Card, CardContent, CardHeader, Typography } from '@mui/material'
 import MovieCard from '../mediaCards/movieCard'
 import MusicCard from '../mediaCards/musicCard'
 import { normalize } from '../../utils/NormalizeData'
+import { useAuth } from '../../App'
 
 export default function VaultViewer() {
+  const auth = useAuth()
   const { media } = useParams()
   const [movies, setMovies] = useState([])
   const [tv, setTV] = useState([])
@@ -14,19 +15,10 @@ export default function VaultViewer() {
   const [games, setGames] = useState([])
   const [books, setBooks] = useState([])
 
-  const funcPointers = {
-    setMovies,
-    setTV,
-    setMusic,
-    setGames,
-    setBooks,
-  }
-
   useEffect(() => {
-    // fetchSearchResults(media, 'yesterday', funcPointers)
     async function fetchDataFromDB() {
-      const email = 'me@example.com'
-      const url = `http://localhost:8000/users/${email}/${media}`
+      const email = auth.currentUser.email
+      const url = `${baseURL}users/${email}/${media}`
       const response = await fetch(url)
       const data = await response.json()
       console.log(data)

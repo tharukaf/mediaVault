@@ -4,9 +4,10 @@ import Autocomplete from '@mui/material/Autocomplete'
 import { debounce } from 'lodash'
 import Button from '@mui/material/Button'
 import { baseURL } from '../../utils/FetchData'
-import { UserContext } from '../../utils/UserContext'
-import { useState, useContext, useRef, useEffect } from 'react'
+import { AuthContext } from '../../utils/UserContext'
+import { useContext, useRef, useEffect } from 'react'
 import { TestContext } from './Search'
+import { useAuth } from '../../App'
 
 const Status = {
   Init: 'Init',
@@ -14,14 +15,10 @@ const Status = {
   WantTo: 'WantTo',
 }
 
-export default function SearchDropDown({
-  optionList,
-  searchType,
-  setSearchText,
-  searchText,
-}) {
+export default function SearchDropDown(props) {
+  const { optionList, searchType, setSearchText, searchText } = props
+  const auth = useAuth()
   const { inMemoryMediaList, setInMemoryMediaList } = useContext(TestContext)
-  console.log(setInMemoryMediaList)
   const handleTextChange = debounce(e => {
     setSearchText(e.target.value)
   }, 400)
@@ -34,21 +31,18 @@ export default function SearchDropDown({
     )
   }, [inMemoryMediaList])
   // console.log(JSON.parse(storage.current.getItem(movies[1]?.id)))
-  const { currentUser } = useContext(UserContext)
-  console.log(inMemoryMediaList)
+  const { currentUser } = useContext(AuthContext)
+  // console.log(inMemoryMediaList)
 
   const handleAddMediaToList = option => {
     return async () => {
-      const url = `${baseURL}users/${searchType}/${option.id}`
-      console.log(url)
-      // TODO: add user email to body
-      const options = { email: 'me@example.com' }
+      const url = `${baseURL}users/${auth.currentUser.email}/${searchType}/${option.id}`
       const response = await fetch(url, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          // 'Content-Type': 'application/json',
         },
-        body: JSON.stringify(options),
+        // body: JSON.stringify(options),
       })
       console.log(response)
     }
@@ -68,13 +62,23 @@ export default function SearchDropDown({
     }
   }
 
-  function hello(option) {
-    if (currentUser == 'Guest') {
+  function handleAddMedia(option) {
+    if (currentUser.name == 'Guest') {
       return handleAddToStorage(option.id)
     } else {
       return handleAddMediaToList(option)
     }
   }
+
+  // // CORS Fixed
+  // async function fetchHelper() {
+  //   const res = await fetch(`${baseURL}viewcount`, {
+  //     method: 'GET',
+  //     mode: 'cors',
+  //     credentials: 'include',
+  //   })
+  //   const data = await res.json()
+  // }
 
   return (
     <div id="textfield-box">
@@ -106,13 +110,12 @@ export default function SearchDropDown({
                 <div className="dropdownArtists">{option.artists}</div>
               )}
               <Button
-                onClick={hello(option)}
+                onClick={handleAddMedia(option)}
                 variant="outlined"
                 style={{ fontSize: '10px', marginLeft: '10px' }}>
                 +
               </Button>
             </Box>
-            // <div key={option.id}>name</div>
           )
         }}
         renderInput={params => (

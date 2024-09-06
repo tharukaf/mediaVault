@@ -27,6 +27,7 @@ router.route('/search/:mediaType/:query').get((req, res) => {
 
 // Media item endpoints
 router
+  // Retrieves a media item by id
   .route('/:mediaType/:id')
   .get(async (req, res) => {
     const [model] = getModelByMediaType(req.params.mediaType)
@@ -37,15 +38,16 @@ router
   .post(async (req, res) => {
     const [model, modelName] = getModelByMediaType(req.params.mediaType)
     saveToDatabaseByID(req, res, model, modelName)
-    console.log('got it')
     res.sendStatus(200)
   })
 
 // User endpoints
-router.post('/users/:mediaType/:id', async (req, res) => {
-  if (req.session.user) {
-    const { mediaType, id } = req.params
-    const email = req.body.email
+// Adds an item of a certain media type to a user's list
+router.post('/users/:email/:mediaType/:id', async (req, res) => {
+  // console.log('body', req.body)
+  if (req.session) {
+    const { mediaType, id, email } = req.params
+    // const { email } = req.body
     const [model] = getModelByMediaType(mediaType)
     addMediaItemToUser(model, email, id, res)
   } else {
@@ -53,13 +55,15 @@ router.post('/users/:mediaType/:id', async (req, res) => {
   }
 })
 
+// Retrieves all the items of a particular type of media
 router.get('/users/:email/:mediaType', async (req, res) => {
-  if (req.session.user) {
+  if (req.session) {
     const { mediaType, email } = req.params
     const [model] = getModelByMediaType(mediaType)
     getSameMediaTypeItemsFromUser(model, email, res)
   } else {
-    res.redirect('/login')
+    // res.redirect('/login')
+    res.sendStatus(401)
   }
 })
 

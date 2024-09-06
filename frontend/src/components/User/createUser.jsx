@@ -1,20 +1,12 @@
-import {
-  Box,
-  Paper,
-  Typography,
-  Button,
-  TextField,
-  colors,
-} from '@mui/material'
-import React from 'react'
-import { useState, useEffect, useContext } from 'react'
-import { UserContext } from '../../utils/UserContext'
+import { Box, Paper, Typography, Button, TextField } from '@mui/material'
+import { useState, useEffect } from 'react'
 import passwordValidator from 'password-validator'
 import { baseURL } from '../../utils/FetchData'
 import CircularProgress from '@mui/material/CircularProgress'
+import { useAuth } from '../../App'
 
 export default function CreateUser() {
-  const { currentUser, setCurrentUser } = useContext(UserContext)
+  const { currentUser } = useAuth()
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [isNameError, setIsNameError] = useState(false)
   const [isEmailError, setIsEmailError] = useState(false)
@@ -51,7 +43,6 @@ export default function CreateUser() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(userForm),
       }
-      console.log(userForm)
       try {
         const data = await fetch(`${baseURL}users`, requestOptions)
         setTimeout(() => {

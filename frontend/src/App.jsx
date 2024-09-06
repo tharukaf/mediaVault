@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { Routes, Route, Outlet } from 'react-router-dom'
 import './App.css'
 import Dashboard from './components/Dashboard'
@@ -12,16 +12,38 @@ import { ThemeProvider, createTheme } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
 import Login from './components/User/login'
 import { createContext } from 'react'
-import { UserContext } from './utils/UserContext'
+import { AuthContext } from './utils/UserContext'
 import CreateUser from './components/User/createUser'
+import axios from 'axios'
+import { baseURL } from './utils/FetchData'
+
+// axios.defaults.withCredentials = true
 
 function App() {
-  const [currentUser, setCurrentUser] = useState('Guest')
+  const [currentUser, setCurrentUser] = useState({
+    name: 'Guest',
+    email: '',
+    token: '',
+  })
+  const [token, setToken] = useState(localStorage.getItem('site') || '')
+
+  // useEffect(() => {
+  //   async function fetchUser() {
+  //     const options = {
+  //       method: 'GET',
+  //       mode: 'cors',
+  //       credentials: 'include',
+  //     }
+  //     const url = `${baseURL}userdata`
+  //     const data = await fetch(url, options)
+  //   }
+  //   const user = fetchUser()
+  // }, [currentUser])
 
   return (
     <>
       <StarBackground />
-      <UserContext.Provider value={{ currentUser, setCurrentUser }}>
+      <AuthContext.Provider value={{ currentUser, setCurrentUser }}>
         <Routes>
           <Route path="/" element={<Dashboard />}>
             <Route index element={<Search />} />
@@ -34,7 +56,7 @@ function App() {
             <Route path="createuser" element={<CreateUser />} />
           </Route>
         </Routes>
-      </UserContext.Provider>
+      </AuthContext.Provider>
     </>
   )
 }
@@ -52,4 +74,8 @@ export default function AppWrapper() {
       <App />
     </ThemeProvider>
   )
+}
+
+export const useAuth = () => {
+  return useContext(AuthContext)
 }
