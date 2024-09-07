@@ -157,6 +157,7 @@ export const musicSchema = new Schema({
 })
 
 // export const userSchema = new Schema({
+//   _id: String,
 //   email: String,
 //   name: String,
 //   password: String,
@@ -172,9 +173,9 @@ export const userSchema = new Schema({
   email: String,
   name: String,
   password: String,
-  movies: [String],
-  tv: [String],
-  games: [String],
-  music: [String],
-  books: [String],
+  movies: [{ _id: String, mediaItemStatus: String }],
+  tv: [{ _id: String, mediaItemStatus: String }],
+  games: [{ _id: String, mediaItemStatus: String }],
+  music: [{ _id: String, mediaItemStatus: String }],
+  books: [{ _id: String, mediaItemStatus: String }],
 })

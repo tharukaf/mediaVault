@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import MovieCard from '../mediaCards/movieCard'
 import MusicCard from '../mediaCards/musicCard'
 import { normalize } from '../../utils/NormalizeData'
-import { useAuth } from '../../App'
+import { useAuth } from '../../utils/UserContext'
 
 export default function VaultViewer() {
   const auth = useAuth()
@@ -21,7 +21,6 @@ export default function VaultViewer() {
       const url = `${baseURL}users/${email}/${media}`
       const response = await fetch(url)
       const data = await response.json()
-      console.log(data)
       if (media === 'movies') {
         setMovies(data)
       } else if (media === 'tv') {
@@ -51,23 +50,47 @@ export default function VaultViewer() {
       <div className="mediaCardContainer">
         {media === 'movies' &&
           movieList.map(movie => {
-            return <MovieCard key={movie.id} movie={movie} type={media} />
+            return (
+              <MovieCard
+                key={self.crypto.randomUUID()}
+                movie={movie}
+                type={media}
+              />
+            )
           })}
         {media === 'tv' &&
           tvList.map(movie => {
-            return <MovieCard key={movie.id} movie={movie} type={media} />
+            return (
+              <MovieCard
+                key={self.crypto.randomUUID()}
+                movie={movie}
+                type={media}
+              />
+            )
           })}
         {media === 'music' &&
           musicList.map(track => {
-            return <MusicCard key={track.id} track={track} />
+            return <MusicCard key={self.crypto.randomUUID()} track={track} />
           })}
         {media === 'books' &&
           bookList.map(movie => {
-            return <MovieCard key={movie.id} movie={movie} type={media} />
+            return (
+              <MovieCard
+                key={self.crypto.randomUUID()}
+                movie={movie}
+                type={media}
+              />
+            )
           })}
         {media === 'games' &&
           gameList.map(movie => {
-            return <MovieCard key={movie.id} movie={movie} type={media} />
+            return (
+              <MovieCard
+                key={self.crypto.randomUUID()}
+                movie={movie}
+                type={media}
+              />
+            )
           })}
       </div>
       <h2>Vault Viewer {media ? media : 'movies'}</h2>

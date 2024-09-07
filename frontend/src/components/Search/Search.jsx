@@ -42,11 +42,11 @@ export default function Search() {
             searchType={searchType}
             handleChange={handleChange}
           />
-          {searchType == 'movies' && MapData(movies, ...argsArr)}
-          {searchType == 'tv' && MapData(tv, ...argsArr)}
-          {searchType == 'music' && MapData(music, ...argsArr)}
-          {searchType == 'games' && MapData(games, ...argsArr)}
-          {searchType == 'books' && MapData(books, ...argsArr)}
+          {searchType === 'movies' && MapData(movies, ...argsArr)}
+          {searchType === 'tv' && MapData(tv, ...argsArr)}
+          {searchType === 'music' && MapData(music, ...argsArr)}
+          {searchType === 'games' && MapData(games, ...argsArr)}
+          {searchType === 'books' && MapData(books, ...argsArr)}
         </div>
       </TestContext.Provider>
     </>

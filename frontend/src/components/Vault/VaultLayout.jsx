@@ -3,8 +3,8 @@ import VaultSideBar from './VaultSideBar'
 import { Outlet } from 'react-router-dom'
 import '@fontsource/roboto/700.css'
 import '../../styles/vault.css'
-import { useAuth } from '../../App'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../../utils/UserContext'
 
 export default function VaultLayout() {
   const [view, setView] = useState('list')

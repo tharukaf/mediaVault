@@ -4,10 +4,9 @@ import Autocomplete from '@mui/material/Autocomplete'
 import { debounce } from 'lodash'
 import Button from '@mui/material/Button'
 import { baseURL } from '../../utils/FetchData'
-import { AuthContext } from '../../utils/UserContext'
+import { AuthContext, useAuth } from '../../utils/UserContext'
 import { useContext, useRef, useEffect } from 'react'
 import { TestContext } from './Search'
-import { useAuth } from '../../App'
 
 const Status = {
   Init: 'Init',

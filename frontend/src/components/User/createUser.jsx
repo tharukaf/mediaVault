@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import passwordValidator from 'password-validator'
 import { baseURL } from '../../utils/FetchData'
 import CircularProgress from '@mui/material/CircularProgress'
-import { useAuth } from '../../App'
+import { useAuth } from '../../utils/UserContext'
 
 export default function CreateUser() {
   const { currentUser } = useAuth()

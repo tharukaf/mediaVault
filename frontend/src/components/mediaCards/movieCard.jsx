@@ -14,6 +14,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 
 const ExpandMore = styled(props => {
+  // eslint-disable-next-line no-unused-vars
   const { expand, ...other } = props
   return <IconButton {...other} />
 })(({ theme, expand }) => ({
@@ -24,7 +25,7 @@ const ExpandMore = styled(props => {
   }),
 }))
 
-export default function MovieCard({ movie, type }) {
+export default function MovieCard({ movie, type, key }) {
   const [expanded, setExpanded] = React.useState(false)
 
   const handleExpandClick = () => {
@@ -39,8 +40,12 @@ export default function MovieCard({ movie, type }) {
       ? `${movie.releaseDate}`
       : 'N/A'
 
+  console.log(movie.title, movie.mediaItemStatus)
   return (
-    <Card className="vault-card-item" sx={{ minWidth: 240, maxWidth: 240 }}>
+    <Card
+      key={key}
+      className="vault-card-item"
+      sx={{ minWidth: 240, maxWidth: 240 }}>
       <CardHeader
         className="vault-card-header"
         action={

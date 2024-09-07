@@ -1,17 +1,15 @@
 import { Box, Paper, Typography, Button, TextField } from '@mui/material'
 
-import { useState, useContext } from 'react'
-import { AuthContext } from '../../utils/UserContext'
+import { useState } from 'react'
+import { useAuth } from '../../utils/UserContext'
 import passwordValidator from 'password-validator'
 import { useNavigate } from 'react-router-dom'
 import { baseURL } from '../../utils/FetchData'
-import Cookies from 'js-cookie'
-import { useAuth } from '../../App'
-
-// axios.defaults.withCredentials = true
 
 export default function Login() {
+  // eslint-disable-next-line no-unused-vars
   const { currentUser, setCurrentUser } = useAuth()
+  // eslint-disable-next-line no-unused-vars
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [isPasswordError, setIsPasswordError] = useState(false)
   const [isEmailError, setIsEmailError] = useState(false)

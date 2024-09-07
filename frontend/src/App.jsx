@@ -12,7 +12,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
 import Login from './components/User/login'
 import { createContext } from 'react'
-import { AuthContext } from './utils/UserContext'
+import { AuthContext, useAuth } from './utils/UserContext'
 import CreateUser from './components/User/createUser'
 import axios from 'axios'
 import { baseURL } from './utils/FetchData'
@@ -74,8 +74,4 @@ export default function AppWrapper() {
       <App />
     </ThemeProvider>
   )
-}
-
-export const useAuth = () => {
-  return useContext(AuthContext)
 }

@@ -7,6 +7,7 @@ const movie = movie => ({
   description: movie.overview,
   poster: `https://image.tmdb.org/t/p/w185_and_h278_bestv2${movie.poster_path}`,
   rating: movie.vote_average,
+  mediaItemStatus: movie.mediaItemStatus
 })
 
 const show = show => ({

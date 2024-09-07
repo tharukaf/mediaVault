@@ -20,7 +20,10 @@ export default async function fetchSearchResults(
       } else if (mSearchType === 'games') {
         mFunc.setGames(data)
       } else if (mSearchType === 'books') {
-        mFunc.setBooks(data.items)
+        let normalized = data.items.map(item => {
+          return { id: item.id, ...item.volumeInfo }
+        })
+        mFunc.setBooks(normalized)
       }
     } catch (error) {
       console.error(`Error fetching ${mSearchType}s: `, error)

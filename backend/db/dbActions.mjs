@@ -11,7 +11,17 @@ export async function retrieveItemByIdFromDB(model, id) {
 
 export async function retrieveItemsFromDB(model, idList, res) {
   const data = await model.find({ _id: { $in: idList } })
-  res.json(data)
+
+  const addedStatus = data.map(dataItem => {
+    return {
+      ...dataItem._doc,
+      mediaItemStatus: idList.find(
+        listItem => listItem._id === dataItem._id.toString()
+      ).mediaItemStatus,
+    }
+  })
+  console.log(addedStatus)
+  res.json(addedStatus)
 }
 
 export async function saveToDatabaseByID(req, res, model, optObjType) {

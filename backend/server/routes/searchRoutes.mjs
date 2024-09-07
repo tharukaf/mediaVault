@@ -10,10 +10,11 @@ import { getModelByMediaType } from '../utility/mediaTypes.mjs'
 import {
   addMediaItemToUser,
   getSameMediaTypeItemsFromUser,
+  updateMediaItemStatus,
 } from '../../db/models/userModel.mjs'
-import session from 'express-session'
-
 const router = express.Router()
+
+router.use(express.json())
 
 // Search endpoint
 router.route('/search/:mediaType/:query').get((req, res) => {
@@ -44,7 +45,6 @@ router
 // User endpoints
 // Adds an item of a certain media type to a user's list
 router.post('/users/:email/:mediaType/:id', async (req, res) => {
-  // console.log('body', req.body)
   if (req.session) {
     const { mediaType, id, email } = req.params
     // const { email } = req.body
@@ -63,6 +63,19 @@ router.get('/users/:email/:mediaType', async (req, res) => {
     getSameMediaTypeItemsFromUser(model, email, res)
   } else {
     // res.redirect('/login')
+    res.sendStatus(401)
+  }
+})
+
+// Updates the status of a media item
+router.put('/users/:email/:mediaType/:id', async (req, res) => {
+  if (req.session) {
+    const { mediaType, id, email } = req.params
+    const { status } = req.body
+    const [model] = getModelByMediaType(mediaType)
+    updateMediaItemStatus(model, email, id, status)
+    res.sendStatus(200)
+  } else {
     res.sendStatus(401)
   }
 })

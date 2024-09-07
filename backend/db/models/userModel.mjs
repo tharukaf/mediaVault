@@ -47,9 +47,9 @@ export async function addMediaItemToUser(model, email, itemId, res) {
   const user = await getUserByEmail(email)
   const collection = getCollectionByModelName(user, optStr)
 
-  const isInArray = collection.some(item => item === itemId.toString())
+  const isInArray = collection.some(item => item.id === itemId.toString())
   if (!isInArray) {
-    collection.push(mediaItem._id)
+    collection.push({ _id: mediaItem._id, mediaItemStatus: 'init' })
     await user.save()
   }
   res.sendStatus(200)
@@ -61,4 +61,15 @@ export async function getSameMediaTypeItemsFromUser(model, email, res) {
 
   const collection = getCollectionByModelName(user, optStr)
   retrieveItemsFromDB(model, collection, res)
+}
+
+export async function updateMediaItemStatus(model, email, itemId, status) {
+  const user = await getUserByEmail(email)
+  const optStr = model === TvShow ? 'tv' : model.modelName.toLowerCase()
+
+  const collection = getCollectionByModelName(user, optStr)
+  const item = collection.find(item => item._id === itemId)
+  item.mediaItemStatus = status
+  await user.save()
+  return item
 }
