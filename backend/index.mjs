@@ -27,7 +27,7 @@ const app = express()
 app.use(limiter)
 app.use(helmet())
 
-// app.use(cors())
+app.use(cors())
 app.use(CorsOptions)
 app.use(session(sessionOptions))
 app.use(cookieParser(sessionOptions.secret))
@@ -54,6 +54,9 @@ app.post('/login', async (req, res) => {
   // res.header('Access-Control-Allow-Origin', process.env.FRONTEND_URL)
   const { email, password } = req.body
   const user = await getUserByEmail(email)
+  if (user === null) {
+    res.status(404).send('User not found')
+  }
   if (user.password === sha256(password)) {
     res.sendStatus(200)
   } else {

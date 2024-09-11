@@ -20,7 +20,6 @@ export async function retrieveItemsFromDB(model, idList, res) {
       ).mediaItemStatus,
     }
   })
-  console.log(addedStatus)
   res.json(addedStatus)
 }
 

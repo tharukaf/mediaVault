@@ -5,6 +5,7 @@ import MovieCard from '../mediaCards/movieCard'
 import MusicCard from '../mediaCards/musicCard'
 import { normalize } from '../../utils/NormalizeData'
 import { useAuth } from '../../utils/UserContext'
+import { useLocation } from 'react-router-dom'
 
 export default function VaultViewer() {
   const auth = useAuth()
@@ -14,11 +15,15 @@ export default function VaultViewer() {
   const [music, setMusic] = useState([])
   const [games, setGames] = useState([])
   const [books, setBooks] = useState([])
+  const location = useLocation()
 
   useEffect(() => {
     async function fetchDataFromDB() {
       const email = auth.currentUser.email
-      const url = `${baseURL}users/${email}/${media}`
+      const url =
+        location.pathname === '/myvault'
+          ? `${baseURL}users/${email}/movies`
+          : `${baseURL}users/${email}/${media}`
       const response = await fetch(url)
       const data = await response.json()
       if (media === 'movies') {
@@ -32,10 +37,18 @@ export default function VaultViewer() {
       } else if (media === 'books') {
         setBooks(data)
       }
+      if (location.pathname === '/myvault') {
+        console.log(data)
+        setMovies(data)
+      }
     }
     fetchDataFromDB()
   }, [media])
 
+  console.log(movies)
+  const initMovieList =
+    location.pathname === '/myvault' &&
+    movies.map(movie => normalize.movies(movie))
   const movieList =
     media === 'movies' && movies.map(movie => normalize.movies(movie))
   const tvList = media === 'tv' && tv.map(normalize.tv)
@@ -48,6 +61,16 @@ export default function VaultViewer() {
   return (
     <>
       <div className="mediaCardContainer">
+        {location.pathname === '/myvault' &&
+          initMovieList.map(movie => {
+            return (
+              <MovieCard
+                key={self.crypto.randomUUID()}
+                movie={movie}
+                type={media}
+              />
+            )
+          })}
         {media === 'movies' &&
           movieList.map(movie => {
             return (
