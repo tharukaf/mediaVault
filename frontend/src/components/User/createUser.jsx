@@ -4,9 +4,11 @@ import passwordValidator from 'password-validator'
 import { baseURL } from '../../utils/FetchData'
 import CircularProgress from '@mui/material/CircularProgress'
 import { useAuth } from '../../utils/UserContext'
+import { useNavigate } from 'react-router'
+import { fetchHelper } from './login'
 
 export default function CreateUser() {
-  const { currentUser } = useAuth()
+  const { currentUser, setCurrentUser } = useAuth()
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [isNameError, setIsNameError] = useState(false)
   const [isEmailError, setIsEmailError] = useState(false)
@@ -16,6 +18,7 @@ export default function CreateUser() {
   const [userForm, setUserForm] = useState({ password: '' })
   const [responseError, setResponseError] = useState()
   const [loading, setLoading] = useState(false)
+  const navigate = useNavigate()
 
   let schema = new passwordValidator()
   schema.is().min(8).max(30)
@@ -48,7 +51,10 @@ export default function CreateUser() {
         setTimeout(() => {
           setLoading(false)
         }, 1000)
-
+        if (data.status === 200) {
+          fetchHelper('cookie/refresh', userForm.email, setCurrentUser)
+          navigate('/')
+        }
         setIsLoggedIn(true)
       } catch (error) {
         console.log(error)
@@ -123,7 +129,9 @@ export default function CreateUser() {
         </Button>
         {firstClicked &&
           schema.validate(userForm.password, { details: true }).map(item => (
-            <Typography key={item.index} sx={{ color: 'error.main' }}>
+            <Typography
+              key={self.crypto.randomUUID()}
+              sx={{ color: 'error.main' }}>
               {item.message}
             </Typography>
           ))}
