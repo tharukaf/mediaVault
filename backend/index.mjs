@@ -35,8 +35,8 @@ app.use(cookieParser(sessionOptions.secret))
 app.use(express.json())
 
 // Authenticate IGDB & Spotify APIs
-app.use(['/search/games/:query', '/games/:id'], igdbAuth)
-app.use(['/search/music/:query', '/music/:id'], spotifyAuth)
+app.use(['/search/games/:query', '/games/:id', '/curator'], igdbAuth)
+app.use(['/search/music/:query', '/music/:id', '/curator'], spotifyAuth)
 
 // Router middleware
 app.use('/', Routes)
@@ -80,7 +80,6 @@ app.get('/cookie/refresh/:email', async (req, res) => {
 })
 
 app.get('/userdata', (req, res) => {
-  // console.log('from home: ', req.session.email)
   res.send('ok')
 })
 

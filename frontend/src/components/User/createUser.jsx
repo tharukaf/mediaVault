@@ -5,7 +5,7 @@ import { baseURL } from '../../utils/FetchData'
 import CircularProgress from '@mui/material/CircularProgress'
 import { useAuth } from '../../utils/UserContext'
 import { useNavigate } from 'react-router'
-import { fetchHelper } from './login'
+import { authHelper } from './login'
 
 export default function CreateUser() {
   const { currentUser, setCurrentUser } = useAuth()
@@ -32,10 +32,6 @@ export default function CreateUser() {
     return !isNameError && !isEmailError && !isPasswordError && !isUsernameError
   }
 
-  useEffect(() => {
-    console.log(currentUser)
-  }, [isLoggedIn])
-
   async function handleCreateUser() {
     setLoading(true)
     setFirstClicked(true)
@@ -52,7 +48,7 @@ export default function CreateUser() {
           setLoading(false)
         }, 1000)
         if (data.status === 200) {
-          fetchHelper('cookie/refresh', userForm.email, setCurrentUser)
+          authHelper('cookie/refresh', userForm.email, setCurrentUser)
           navigate('/')
         }
         setIsLoggedIn(true)

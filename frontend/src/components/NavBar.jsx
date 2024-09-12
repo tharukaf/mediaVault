@@ -57,7 +57,10 @@ function ResponsiveAppBar() {
       credentials: 'include',
     })
     if (res.status) {
-      setCurrentUser({ name: 'Guest' })
+      localStorage.removeItem('token')
+      localStorage.removeItem('email')
+      localStorage.removeItem('name')
+      setCurrentUser({ name: 'Guest', email: null, token: null })
       navigate('/')
     }
   }

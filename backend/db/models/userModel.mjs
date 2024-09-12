@@ -22,8 +22,8 @@ export async function getUserByEmail(email) {
   return user
 }
 
-function getCollectionByModelName(user, optStr) {
-  switch (optStr) {
+function getCollectionByModelName(user, mediaTypeString) {
+  switch (mediaTypeString) {
     case 'movie':
       return user.movies
     case 'tv':
@@ -41,11 +41,12 @@ function getCollectionByModelName(user, optStr) {
 
 export async function addMediaItemToUser(model, email, itemId, res) {
   const req = { params: { id: itemId } }
-  const optStr = model === TvShow ? 'tv' : model.modelName.toLowerCase()
-  const mediaItem = await saveToDatabaseByID(req, res, model, optStr)
+  const mediaTypeString =
+    model === TvShow ? 'tv' : model.modelName.toLowerCase()
+  const mediaItem = await saveToDatabaseByID(req, res, model, mediaTypeString)
 
   const user = await getUserByEmail(email)
-  const collection = getCollectionByModelName(user, optStr)
+  const collection = getCollectionByModelName(user, mediaTypeString)
 
   const isInArray = collection.some(item => item.id === itemId.toString())
   if (!isInArray) {
@@ -57,17 +58,19 @@ export async function addMediaItemToUser(model, email, itemId, res) {
 
 export async function getSameMediaTypeItemsFromUser(model, email, res) {
   const user = await getUserByEmail(email)
-  const optStr = model === TvShow ? 'tv' : model.modelName.toLowerCase()
+  const mediaTypeString =
+    model === TvShow ? 'tv' : model.modelName.toLowerCase()
 
-  const collection = getCollectionByModelName(user, optStr)
+  const collection = getCollectionByModelName(user, mediaTypeString)
   retrieveItemsFromDB(model, collection, res)
 }
 
 export async function updateMediaItemStatus(model, email, itemId, status) {
   const user = await getUserByEmail(email)
-  const optStr = model === TvShow ? 'tv' : model.modelName.toLowerCase()
+  const mediaTypeString =
+    model === TvShow ? 'tv' : model.modelName.toLowerCase()
 
-  const collection = getCollectionByModelName(user, optStr)
+  const collection = getCollectionByModelName(user, mediaTypeString)
   const item = collection.find(item => item._id === itemId)
   item.mediaItemStatus = status
   await user.save()

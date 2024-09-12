@@ -11,22 +11,51 @@ export default async function fetchSearchResults(
       const response = await fetch(url)
       const data = await response.json()
 
-      if (mSearchType === 'movies') {
-        mFunc.setMovies(data.results)
-      } else if (mSearchType === 'tv') {
-        mFunc.setTV(data.results)
-      } else if (mSearchType === 'music') {
-        mFunc.setMusic(data.tracks.items)
-      } else if (mSearchType === 'games') {
-        mFunc.setGames(data)
-      } else if (mSearchType === 'books') {
-        let normalized = data.items.map(item => {
-          return { id: item.id, ...item.volumeInfo }
-        })
-        mFunc.setBooks(normalized)
-      }
+      const [model, dataNormalizer] = getModelByMediaType(mSearchType)
+      console.log(model, dataNormalizer)
+      const normalizedData = dataNormalizer(data)
+      console.log('normalized data', normalizedData)
+      mFunc[model.setter](normalizedData)
     } catch (error) {
       console.error(`Error fetching ${mSearchType}s: `, error)
     }
+  }
+}
+
+const Movies = { name: 'movies', setter: 'setMovies' }
+const TV = { name: 'tv', setter: 'setTV' }
+const Music = { name: 'music', setter: 'setMusic' }
+const Games = { name: 'games', setter: 'setGames' }
+const Books = { name: 'books', setter: 'setBooks' }
+
+export const Models = {
+  Movies,
+  TV,
+  Music,
+  Games,
+  Books,
+}
+
+export const getModelByMediaType = mediaType => {
+  switch (mediaType) {
+    case 'movies':
+      return [Movies, data => data.results]
+    case 'tv':
+      return [TV, data => data.results]
+    case 'games':
+      return [Games, data => data]
+    case 'music':
+      return [Music, data => data.tracks.items]
+    case 'books':
+      return [
+        Books,
+        data => {
+          return data.items.map(item => {
+            return { id: item.id, ...item.volumeInfo }
+          })
+        },
+      ]
+    default:
+      return ''
   }
 }

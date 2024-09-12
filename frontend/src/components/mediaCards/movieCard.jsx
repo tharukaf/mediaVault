@@ -25,8 +25,9 @@ const ExpandMore = styled(props => {
   }),
 }))
 
-export default function MovieCard({ movie, type, key }) {
+export default function MovieCard({ movie, type }) {
   const [expanded, setExpanded] = React.useState(false)
+  console.log(movie)
 
   const handleExpandClick = () => {
     setExpanded(!expanded)
@@ -40,12 +41,8 @@ export default function MovieCard({ movie, type, key }) {
       ? `${movie.releaseDate}`
       : 'N/A'
 
-  console.log(movie.title, movie.mediaItemStatus)
   return (
-    <Card
-      key={key}
-      className="vault-card-item"
-      sx={{ minWidth: 240, maxWidth: 240 }}>
+    <Card className="vault-card-item" sx={{ minWidth: 240, maxWidth: 240 }}>
       <CardHeader
         className="vault-card-header"
         action={

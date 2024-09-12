@@ -8,25 +8,39 @@ import { useAuth } from '../../utils/UserContext'
 import { useLocation } from 'react-router-dom'
 
 export default function VaultViewer() {
-  const auth = useAuth()
+  const { currentUser } = useAuth()
   const { media } = useParams()
   const [movies, setMovies] = useState([])
   const [tv, setTV] = useState([])
   const [music, setMusic] = useState([])
   const [games, setGames] = useState([])
   const [books, setBooks] = useState([])
+  const [isListEmpty, setIsListEmpty] = useState(false)
   const location = useLocation()
 
   useEffect(() => {
     async function fetchDataFromDB() {
-      const email = auth.currentUser.email
-      const url =
-        location.pathname === '/myvault'
-          ? `${baseURL}users/${email}/movies`
-          : `${baseURL}users/${email}/${media}`
-      const response = await fetch(url)
-      const data = await response.json()
-      if (media === 'movies') {
+      let data
+      const email = currentUser.email
+      const mediaType = location.pathname === '/myvault' ? 'movies' : media
+      if (currentUser.name === 'Guest') {
+        const storageItems = JSON.parse(localStorage.getItem(mediaType))
+        const keys = Object.keys(storageItems)
+        const res = await fetch(`${baseURL}guest/${media}/list`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ keys }),
+        })
+        data = await res.json()
+      } else {
+        const url = `${baseURL}users/${email}/${mediaType}`
+        const response = await fetch(url)
+        data = await response.json()
+      }
+      data.length === 0 ? setIsListEmpty(true) : setIsListEmpty(false)
+      if (media === 'movies' || location.pathname === '/myvault') {
         setMovies(data)
       } else if (media === 'tv') {
         setTV(data)
@@ -37,15 +51,10 @@ export default function VaultViewer() {
       } else if (media === 'books') {
         setBooks(data)
       }
-      if (location.pathname === '/myvault') {
-        console.log(data)
-        setMovies(data)
-      }
     }
     fetchDataFromDB()
   }, [media])
 
-  console.log(movies)
   const initMovieList =
     location.pathname === '/myvault' &&
     movies.map(movie => normalize.movies(movie))
@@ -60,63 +69,69 @@ export default function VaultViewer() {
 
   return (
     <>
-      <div className="mediaCardContainer">
-        {location.pathname === '/myvault' &&
-          initMovieList.map(movie => {
-            return (
-              <MovieCard
-                key={self.crypto.randomUUID()}
-                movie={movie}
-                type={media}
-              />
-            )
-          })}
-        {media === 'movies' &&
-          movieList.map(movie => {
-            return (
-              <MovieCard
-                key={self.crypto.randomUUID()}
-                movie={movie}
-                type={media}
-              />
-            )
-          })}
-        {media === 'tv' &&
-          tvList.map(movie => {
-            return (
-              <MovieCard
-                key={self.crypto.randomUUID()}
-                movie={movie}
-                type={media}
-              />
-            )
-          })}
-        {media === 'music' &&
-          musicList.map(track => {
-            return <MusicCard key={self.crypto.randomUUID()} track={track} />
-          })}
-        {media === 'books' &&
-          bookList.map(movie => {
-            return (
-              <MovieCard
-                key={self.crypto.randomUUID()}
-                movie={movie}
-                type={media}
-              />
-            )
-          })}
-        {media === 'games' &&
-          gameList.map(movie => {
-            return (
-              <MovieCard
-                key={self.crypto.randomUUID()}
-                movie={movie}
-                type={media}
-              />
-            )
-          })}
+      <div className="vault-items-view">
+        <div className="mediaCardContainer">
+          {location.pathname === '/myvault' &&
+            initMovieList.map(movie => {
+              return (
+                <MovieCard
+                  type="movies"
+                  key={self.crypto.randomUUID()}
+                  movie={movie}
+                />
+              )
+            })}
+          {media === 'movies' &&
+            movieList.map(movie => {
+              return (
+                <MovieCard
+                  type="movies"
+                  key={self.crypto.randomUUID()}
+                  movie={movie}
+                />
+              )
+            })}
+          {media === 'tv' &&
+            tvList.map(movie => {
+              return (
+                <MovieCard
+                  key={self.crypto.randomUUID()}
+                  movie={movie}
+                  type={media}
+                />
+              )
+            })}
+          {media === 'music' &&
+            musicList.map(track => {
+              return <MusicCard key={self.crypto.randomUUID()} track={track} />
+            })}
+          {media === 'books' &&
+            bookList.map(movie => {
+              return (
+                <MovieCard
+                  key={self.crypto.randomUUID()}
+                  movie={movie}
+                  type={media}
+                />
+              )
+            })}
+          {media === 'games' &&
+            gameList.map(movie => {
+              return (
+                <MovieCard
+                  key={self.crypto.randomUUID()}
+                  movie={movie}
+                  type={media}
+                />
+              )
+            })}
+        </div>
+        {isListEmpty && (
+          <div className="empty-list">
+            <h1>Your list is empty</h1>
+          </div>
+        )}
       </div>
-      <h2>Vault Viewer {media ? media : 'movies'}</h2>
     </>
   )
 }

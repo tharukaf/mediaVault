@@ -3,6 +3,7 @@ import SearchDropDown from './SearchDropDown'
 import fetchSearchResults from '../../utils/FetchData'
 import SearchToggleGroup from './SearchToggleGroup'
 import { normalize } from '../../utils/NormalizeData'
+import { Models } from '../../utils/FetchData'
 
 export const TestContext = createContext()
 

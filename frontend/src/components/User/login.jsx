@@ -34,7 +34,7 @@ export default function Login() {
       body: JSON.stringify(userForm),
     }
     const res = await fetch(`${baseURL}login`, requestOptions)
-    fetchHelper('cookie/refresh', userForm.email, setCurrentUser)
+    authHelper('cookie/refresh', userForm.email, setCurrentUser)
 
     if (res.status === 200) {
       setIsLoggedIn(true)
@@ -129,7 +129,7 @@ export default function Login() {
   )
 }
 
-export async function fetchHelper(path, email, mSetCurrentUser) {
+export async function authHelper(path, email, mSetCurrentUser) {
   const res = await fetch(`${baseURL}${path}/${email}`, {
     method: 'GET',
     mode: 'cors',
@@ -138,4 +138,8 @@ export async function fetchHelper(path, email, mSetCurrentUser) {
 
   const data = await res.json()
   mSetCurrentUser({ name: data.name, email: data.email, token: data.token })
+  localStorage.setItem('token', data.token)
+  localStorage.setItem('name', data.name)
+  localStorage.setItem('email', data.email)
+  // localStorage.setItem('user', JSON.stringify(data))
 }

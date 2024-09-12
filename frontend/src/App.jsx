@@ -10,35 +10,36 @@ import VaultViewer from './components/Vault/VaultViewer'
 import StarBackground from './utils/StarBackground'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
-import Login from './components/User/login'
-import { createContext } from 'react'
+import Login, { authHelper } from './components/User/login'
 import { AuthContext, useAuth } from './utils/UserContext'
 import CreateUser from './components/User/createUser'
-import axios from 'axios'
-import { baseURL } from './utils/FetchData'
 
 // axios.defaults.withCredentials = true
 
 function App() {
-  const [currentUser, setCurrentUser] = useState({
-    name: 'Guest',
-    email: '',
-    token: '',
-  })
-  const [token, setToken] = useState(localStorage.getItem('site') || '')
+  const [currentUser, setCurrentUser] = useState(
+    localStorage.getItem('token')
+      ? {
+          token: localStorage.getItem('token'),
+          email: localStorage.getItem('email'),
+          name: localStorage.getItem('name'),
+        }
+      : {
+          name: 'Guest',
+          email: null,
+          token: null,
+        }
+  )
 
-  // useEffect(() => {
-  //   async function fetchUser() {
-  //     const options = {
-  //       method: 'GET',
-  //       mode: 'cors',
-  //       credentials: 'include',
-  //     }
-  //     const url = `${baseURL}userdata`
-  //     const data = await fetch(url, options)
-  //   }
-  //   const user = fetchUser()
-  // }, [currentUser])
+  useEffect(() => {
+    if (localStorage.getItem('token')) {
+      authHelper(
+        'cookie/refresh',
+        localStorage.getItem('email'),
+        setCurrentUser
+      )
+    }
+  }, [])
 
   return (
     <>

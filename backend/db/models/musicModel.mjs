@@ -8,7 +8,6 @@ Music.url = id => `https://api.spotify.com/v1/tracks/${id}`
 
 export async function createMusic(res) {
   let music = new Music(res)
-  // console.log(res.id)
   music._id = res.id
   await music.save()
   return music
