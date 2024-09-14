@@ -1,17 +1,17 @@
 // import SearchDropDown from '../components/Search/SearchDropDown'
 
 const movie = movie => ({
-  id: movie.id, // Add a unique key prop
+  id: movie.id || movie._id, // Add a unique key prop
   title: movie.title,
   releaseDate: movie.release_date,
   description: movie.overview,
   poster: `https://image.tmdb.org/t/p/w185_and_h278_bestv2${movie.poster_path}`,
   rating: movie.vote_average,
-  mediaItemStatus: movie.mediaItemStatus
+  mediaItemStatus: movie.mediaItemStatus,
 })
 
 const show = show => ({
-  id: show.id, // Add a unique key prop
+  id: show.id || show._id, // Add a unique key prop
   title: show.name,
   releaseDate: show.first_air_date,
   description: show.overview,
@@ -20,7 +20,7 @@ const show = show => ({
 })
 
 const track = track => ({
-  id: track.id,
+  id: track.id || track._id,
   title: track.name,
   album: track.album.name,
   poster: track.album.images[0].url,
@@ -30,7 +30,7 @@ const track = track => ({
 })
 
 const book = book => ({
-  id: book.id,
+  id: book.id || book._id,
   title: book.title,
   description: book?.description,
   poster: book.imageLinks?.thumbnail,
@@ -40,7 +40,7 @@ const book = book => ({
 })
 
 const game = game => ({
-  id: game.id,
+  id: game.id || game._id,
   title: game.name,
   description: game.summary,
   poster: game.cover?.url,

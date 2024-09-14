@@ -13,6 +13,7 @@ import CssBaseline from '@mui/material/CssBaseline'
 import Login, { authHelper } from './components/User/login'
 import { AuthContext, useAuth } from './utils/UserContext'
 import CreateUser from './components/User/createUser'
+import MediaItemViewer from './components/Vault/MediaItemViewer'
 
 // axios.defaults.withCredentials = true
 
@@ -51,6 +52,7 @@ function App() {
             <Route path="myvault" element={<VaultLayout />}>
               <Route index element={<VaultViewer />} />
               <Route path=":media" element={<VaultViewer />} />
+              <Route path=":media/:id" element={<MediaItemViewer />} />
             </Route>
             <Route path="curator" element={<Curator />}></Route>
             <Route path="login" element={<Login />} />

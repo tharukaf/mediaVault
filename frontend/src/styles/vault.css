@@ -37,6 +37,12 @@
     margin: 1rem;
 }
 
+/* .vault-card-item:hover{
+    
+    border: 3px solid white;
+    cursor: pointer;
+} */
+
 .mediaCardContainer{
     display: flex;
     flex-wrap: wrap;

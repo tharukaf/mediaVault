@@ -34,7 +34,7 @@ export default function Search() {
   }, [searchText])
 
   const argsArr = [searchType, setSearchText, searchText]
-
+  console.log(movies)
   return (
     <>
       <TestContext.Provider value={{ inMemoryMediaList, setInMemoryMediaList }}>

@@ -50,7 +50,7 @@ export async function addMediaItemToUser(model, email, itemId, res) {
 
   const isInArray = collection.some(item => item.id === itemId.toString())
   if (!isInArray) {
-    collection.push({ _id: mediaItem._id, mediaItemStatus: 'init' })
+    collection.push({ _id: mediaItem._id, mediaItemStatus: 'unwatched' })
     await user.save()
   }
   res.sendStatus(200)

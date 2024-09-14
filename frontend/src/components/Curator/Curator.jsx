@@ -22,7 +22,6 @@ export default function Curator() {
       }
       const response = await fetch(`${baseURL}curator`, options)
       const data = await response.json()
-      console.log(data)
       setMediaItems(data)
     }
     fetchCuratedMediaList()

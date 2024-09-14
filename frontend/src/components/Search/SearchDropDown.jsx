@@ -18,15 +18,16 @@ export default function SearchDropDown(props) {
   const handleTextChange = debounce(e => {
     setSearchText(e.target.value)
   }, 400)
-
+  console.log(optionList)
   const handleAddMediaToList = option => {
     return async () => {
       const url = `${baseURL}users/media/${searchType}`
-      const response = await fetch(url, {
+      await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
+
         body: JSON.stringify({ email: currentUser.email, id: option.id }),
       })
     }

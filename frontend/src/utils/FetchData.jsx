@@ -22,6 +22,19 @@ export default async function fetchSearchResults(
   }
 }
 
+export async function updateMediaItemStatus(email, mediaType, itemId, status) {
+  console.log(itemId)
+  const url = `${baseURL}users/${email}/${mediaType}/${itemId}`
+  const response = await fetch(url, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ status }),
+  })
+  console.log(response)
+}
+
 const Movies = { name: 'movies', setter: 'setMovies' }
 const TV = { name: 'tv', setter: 'setTV' }
 const Music = { name: 'music', setter: 'setMusic' }
