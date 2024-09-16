@@ -35,7 +35,10 @@ app.use(cookieParser(sessionOptions.secret))
 app.use(express.json())
 
 // Authenticate IGDB & Spotify APIs
-app.use(['/search/games/:query', '/games/:id', '/curator'], igdbAuth)
+app.use(
+  ['/search/games/:query', '/games/:id', '/curator', '/getReleaseDate'],
+  igdbAuth
+)
 app.use(['/search/music/:query', '/music/:id', '/curator'], spotifyAuth)
 
 // Router middleware

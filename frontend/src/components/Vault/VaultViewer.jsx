@@ -75,6 +75,7 @@ export default function VaultViewer() {
             initMovieList.map(movie => {
               return (
                 <MovieCard
+                  isNavigate={true}
                   type="movies"
                   key={self.crypto.randomUUID()}
                   movie={movie}
@@ -85,6 +86,7 @@ export default function VaultViewer() {
             movieList.map(movie => {
               return (
                 <MovieCard
+                  isNavigate={true}
                   type="movies"
                   key={self.crypto.randomUUID()}
                   movie={movie}
@@ -95,6 +97,7 @@ export default function VaultViewer() {
             tvList.map(movie => {
               return (
                 <MovieCard
+                  isNavigate={true}
                   key={self.crypto.randomUUID()}
                   movie={movie}
                   type={media}
@@ -109,6 +112,7 @@ export default function VaultViewer() {
             bookList.map(movie => {
               return (
                 <MovieCard
+                  isNavigate={true}
                   key={self.crypto.randomUUID()}
                   movie={movie}
                   type={media}
@@ -119,6 +123,7 @@ export default function VaultViewer() {
             gameList.map(movie => {
               return (
                 <MovieCard
+                  isNavigate={true}
                   key={self.crypto.randomUUID()}
                   movie={movie}
                   type={media}

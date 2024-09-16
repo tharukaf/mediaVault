@@ -18,42 +18,43 @@ export default function SearchDropDown(props) {
   const handleTextChange = debounce(e => {
     setSearchText(e.target.value)
   }, 400)
-  console.log(optionList)
+
   const handleAddMediaToList = option => {
+    console.log('optionss', option.id)
     return async () => {
       const url = `${baseURL}users/media/${searchType}`
-      await fetch(url, {
+      const response = await fetch(url, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: currentUser.email, id: option.id }),
       })
     }
   }
 
   // Save Guest media to local storage
-  const handleAddToStorage = id => {
+  const handleAddToStorage = option => {
     return () => {
-      fetch(`${baseURL}${searchType}/${id}`, {
+      fetch(`${baseURL}${searchType}/${option.id}`, {
         method: 'POST',
       })
       if (localStorage.getItem(searchType) !== undefined) {
         const storageData = JSON.parse(localStorage.getItem(searchType))
         localStorage.setItem(
           searchType,
-          JSON.stringify({ ...storageData, [id]: Status.Init })
+          JSON.stringify({ ...storageData, [option.id]: Status.Init })
         )
       } else {
-        localStorage.setItem(searchType, JSON.stringify({ [id]: Status.Init }))
+        localStorage.setItem(
+          searchType,
+          JSON.stringify({ [option.id]: Status.Init })
+        )
       }
     }
   }
 
   function handleAddMedia(option) {
     if (currentUser.name == 'Guest') {
-      return handleAddToStorage(option.id)
+      return handleAddToStorage(option)
     } else {
       return handleAddMediaToList(option)
     }

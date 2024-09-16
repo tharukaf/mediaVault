@@ -78,4 +78,58 @@
     }
 }
 
+/* #Card.hover{
+    border: 3px solid white;
+    cursor: pointer;
+} */
+
+
+.itemViewContainer{
+    border: white 2px solid;
+    border-radius: 10px;
+    padding: 1rem;
+    background-color: rgb(26, 37, 37);
+    backdrop-filter: blur(5px);
+    margin: 2rem;
+    display: flex;
+    height: fit-content;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.itemViewContainer img{
+    object-fit: cover;
+    border-radius: 10px;
+    margin: 0 1rem 0 0;
+    width: 200px;
+}
+
+.itemViewContainer Button{
+    margin: 1rem 0 0 0;
+}
+
+.itemViewDetailTitle{
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+}
+
+.itemViewDetailsSecondary{
+    margin: 1rem 0 0 0;
+}
+
+.itemViewAuthors{
+    margin: 0 0 1rem 0;
+    background-color: rgba(140, 146, 165, 0.295);
+    width: fit-content;
+    padding: 1px 5px 1px 5px;
+    border-radius: 10px;   
+}
+
+.mediaItemSimilar{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
 

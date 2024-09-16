@@ -24,11 +24,11 @@ export async function retrieveItemsFromDB(model, idList, res) {
 }
 
 export async function saveToDatabaseByID(req, res, model, optObjType) {
-  const { id } = req.params
+  const { id } = req.params('id', id)
   let { options } = OptObj[optObjType](id, ...fetchArgs[optObjType])
 
   if (optObjType === 'game') {
-    options.body = `fields name,summary,cover.url,genres,first_release_date,age_ratings,aggregated_rating,platforms; where id = ${id};`
+    options.search.body = `fields name,summary,cover.url,genres,first_release_date,age_ratings,aggregated_rating,platforms; where id = ${id};`
   }
 
   let data = await model.findById(id)
@@ -36,7 +36,7 @@ export async function saveToDatabaseByID(req, res, model, optObjType) {
     return data
   } else {
     const url = model.url(id)
-    data = await fetchDataToServer(url, options)
+    data = await fetchDataToServer(url, options.search)
     return model.createItem(data)
   }
 }

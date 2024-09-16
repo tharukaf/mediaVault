@@ -31,16 +31,6 @@ router.route('/search/:mediaType/:query').get((req, res) => {
   fetchDataToClient(url.search, options.search, res)
 })
 
-router.get('/similar/:mediaType/:id', async (req, res) => {
-  const [model, modelName] = getModelByMediaType(req.params.mediaType)
-  const { url, options } = OptObj[modelName](
-    req.params.id,
-    ...fetchArgs[modelName]
-  )
-  fetchDataToClient(url.similar(req.params.id), options.search, res)
-  // res.send('ok')
-})
-
 // Curator endpoint
 router.get('/curator', async (req, res) => {
   const data = {
@@ -69,6 +59,16 @@ router.get('/curator', async (req, res) => {
     // console.log(data[mediaType])
   }
   res.json(data)
+})
+
+// Similar items endpoint
+router.get('/similar/:mediaType/:id', async (req, res) => {
+  const [model, modelName] = getModelByMediaType(req.params.mediaType)
+  const { url, options } = OptObj[modelName](
+    req.params.id,
+    ...fetchArgs[modelName]
+  )
+  fetchDataToClient(url.similar(req.params.id), options.search, res)
 })
 
 // Media item endpoints
