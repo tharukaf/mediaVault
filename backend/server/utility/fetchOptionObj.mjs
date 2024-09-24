@@ -89,7 +89,7 @@ const tvOptObj = (name, type, API_KEY) => {
       search: `https://api.themoviedb.org/3/search/${type}?query=${name}&include_adult=false&language=en-US&page=1`,
       curator: 'https://api.themoviedb.org/3/tv/popular?language=en-US&page=1',
       similar: movie_id =>
-        `https://api.themoviedb.org/3/movie/${movie_id}/similar`,
+        `https://api.themoviedb.org/3/tv/${movie_id}/similar`,
     },
     options: {
       search: {

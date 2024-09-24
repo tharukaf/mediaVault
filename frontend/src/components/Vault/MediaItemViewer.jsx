@@ -10,7 +10,7 @@ export default function MediaItemViewer() {
   const { media, id } = useParams()
   const [firstRender, setFirstRender] = useState(true)
   const [itemDetails, setItemDetails] = useState({})
-  const [auxData, setAuxData] = useState({})
+  // const [auxData, setAuxData] = useState({})
   const [similarItems, setSimilarItems] = useState([])
   const navigate = useNavigate()
 

@@ -50,6 +50,7 @@ export default function MovieCard({ movie, type, isNavigate }) {
       }
     }
   }, [mediaItemStatus])
+
   const handleStatusButtonClick = e => {
     e.stopPropagation()
     setMediaItemStatus(mediaItemStatus === 'watched' ? 'unwatched' : 'watched')
@@ -84,8 +85,7 @@ export default function MovieCard({ movie, type, isNavigate }) {
       <CardHeader
         className="vault-card-header"
         action={
-          !isGuest ||
-          (!isNavigate && (
+          !isGuest && (
             <IconButton
               onClick={handleStatusButtonClick}
               aria-label="add to favorites">
@@ -95,7 +95,7 @@ export default function MovieCard({ movie, type, isNavigate }) {
                 <QueuePlayNextIcon style={{ color: 'yellow' }} />
               )}
             </IconButton>
-          ))
+          )
         }
         title={movie.title.slice(0, 20) || 'N/A'}
         titleTypographyProps={{ variant: 'h7' }}

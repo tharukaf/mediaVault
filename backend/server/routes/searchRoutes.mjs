@@ -31,6 +31,14 @@ router.route('/search/:mediaType/:query').get((req, res) => {
   fetchDataToClient(url.search, options.search, res)
 })
 
+// Guest media list endpoint
+router.post('/guest/:media/list', async (req, res) => {
+  const [model] = getModelByMediaType(req.params.media)
+  const { keys } = req.body
+  const data = await model.find({ _id: { $in: keys } })
+  res.json(data)
+})
+
 // Curator endpoint
 router.get('/curator', async (req, res) => {
   const data = {

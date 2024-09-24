@@ -24,7 +24,7 @@ export async function retrieveItemsFromDB(model, idList, res) {
 }
 
 export async function saveToDatabaseByID(req, res, model, optObjType) {
-  const { id } = req.params('id', id)
+  const { id } = req.params
   let { options } = OptObj[optObjType](id, ...fetchArgs[optObjType])
 
   if (optObjType === 'game') {
