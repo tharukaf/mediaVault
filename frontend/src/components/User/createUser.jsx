@@ -53,7 +53,7 @@ export default function CreateUser() {
         }
         setIsLoggedIn(true)
       } catch (error) {
-        console.log(error)
+        throw new Error(error)
       }
     }
   }

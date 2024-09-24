@@ -10,40 +10,25 @@ import { useAuth } from '../../utils/UserContext'
 import { baseURL, updateMediaItemStatus } from '../../utils/FetchData'
 import { useLocation, useNavigate } from 'react-router'
 
-export default function MovieCard({ movie, type, isNavigate }) {
+export default function MovieCard({ movie, mediaType, isNavigate }) {
   const navigate = useNavigate()
 
   const [mediaItemStatus, setMediaItemStatus] = useState(
     movie.mediaItemStatus || 'unwatched'
   )
+  console.log('mediaItemStatus: ', mediaItemStatus)
   const [firstRender, setFirstRender] = useState(true)
   const { currentUser } = useAuth()
   const [isGuest] = useState(currentUser.name === 'Guest')
-
-  // const handleAddMediaToList = option => {
-  //   return async () => {
-  //     const url = `${baseURL}users/media/${type}`
-  //     await fetch(url, {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-
-  //       body: JSON.stringify({ email: currentUser.email, id: option.id }),
-  //     })
-  //   }
-  // }
-
   useEffect(() => {
     if (firstRender) {
       setFirstRender(false)
       return
     } else {
       if (isNavigate) {
-        // handleAddMediaToList(movie)
         updateMediaItemStatus(
           currentUser.email,
-          type,
+          mediaType,
           movie.id,
           mediaItemStatus
         )
@@ -57,11 +42,11 @@ export default function MovieCard({ movie, type, isNavigate }) {
   }
 
   const releaseDate =
-    type === 'movies' || type === 'tv'
+    mediaType === 'movies' || mediaType === 'tv'
       ? `${movie.releaseDate.slice(0, 4)}`
-      : type === 'books'
+      : mediaType === 'books'
       ? `${movie.releaseDate}`
-      : type === 'games'
+      : mediaType === 'games'
       ? `${movie.releaseDate}`
       : 'N/A'
 
@@ -70,7 +55,7 @@ export default function MovieCard({ movie, type, isNavigate }) {
       onClick={() => {
         if (isNavigate) {
           location.pathname === '/myvault'
-            ? navigate(`${type}/${movie.id}`)
+            ? navigate(`${mediaType}/${movie.id}`)
             : navigate(`${movie.id}`)
         }
       }}

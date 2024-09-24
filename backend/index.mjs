@@ -26,9 +26,8 @@ const app = express()
 
 app.use(limiter)
 app.use(helmet())
+app.use(cors(CorsOptions))
 
-app.use(cors())
-app.use(CorsOptions)
 app.use(session(sessionOptions))
 app.use(cookieParser(sessionOptions.secret))
 

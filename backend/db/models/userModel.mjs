@@ -69,10 +69,11 @@ export async function updateMediaItemStatus(model, email, itemId, status) {
   const user = await getUserByEmail(email)
   const mediaTypeString =
     model === TvShow ? 'tv' : model.modelName.toLowerCase()
-
+  console.log('mediaTypeString', mediaTypeString)
   const collection = getCollectionByModelName(user, mediaTypeString)
   const item = collection.find(item => item._id === itemId)
   item.mediaItemStatus = status
+  console.log(collection)
   await user.save()
   return item
 }

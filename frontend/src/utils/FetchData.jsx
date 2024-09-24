@@ -12,9 +12,7 @@ export default async function fetchSearchResults(
       const data = await response.json()
 
       const [model, dataNormalizer] = getModelByMediaType(mSearchType)
-      console.log(model, dataNormalizer)
       const normalizedData = dataNormalizer(data)
-      console.log('normalized data', normalizedData)
       mFunc[model.setter](normalizedData)
     } catch (error) {
       console.error(`Error fetching ${mSearchType}s: `, error)
@@ -23,16 +21,17 @@ export default async function fetchSearchResults(
 }
 
 export async function updateMediaItemStatus(email, mediaType, itemId, status) {
-  console.log(itemId)
   const url = `${baseURL}users/${email}/${mediaType}/${itemId}`
-  const response = await fetch(url, {
+  const requestOptions = {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ status }),
-  })
-  console.log(response)
+  }
+  const response = await fetch(url, requestOptions)
+  const data = await response.json()
+  return data
 }
 
 const Movies = { name: 'movies', setter: 'setMovies' }

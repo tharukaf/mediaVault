@@ -20,7 +20,6 @@ export default function SearchDropDown(props) {
   }, 400)
 
   const handleAddMediaToList = option => {
-    console.log('optionss', option.id)
     return async () => {
       const url = `${baseURL}users/media/${searchType}`
       const response = await fetch(url, {

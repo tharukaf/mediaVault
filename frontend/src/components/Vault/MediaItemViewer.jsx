@@ -22,7 +22,6 @@ export default function MediaItemViewer() {
     async function fetchItemDetails(mMedia, mId) {
       const response = await fetch(`${baseURL}${mMedia}/${mId}`)
       const data = await response.json()
-      console.log(data)
       setItemDetails(normalize[mMedia](data))
     }
     if (firstRender) {
@@ -35,9 +34,7 @@ export default function MediaItemViewer() {
   async function handleGetSimilar() {
     const response = await fetch(`${baseURL}similar/${media}/${id}`)
     const data = await response.json()
-    console.log(data.results)
     const normalized = data.results.map(item => normalize[media](item))
-    console.log(normalized)
     const similarCards = normalized.map(item => {
       return (
         <MovieCard key={item.id} movie={item} type={media} isNavigate={false} />

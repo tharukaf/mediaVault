@@ -64,7 +64,6 @@ router.get('/curator', async (req, res) => {
         : model === Music
         ? items.albums.items
         : items
-    // console.log(data[mediaType])
   }
   res.json(data)
 })
@@ -128,12 +127,13 @@ router.post('/guest/:media/list', async (req, res) => {
 
 // Updates the status of a media item
 router.put('/users/:email/:mediaType/:id', async (req, res) => {
+  console.log('hit it')
   if (req.session) {
     const { mediaType, id, email } = req.params
     const { status } = req.body
     const [model] = getModelByMediaType(mediaType)
     updateMediaItemStatus(model, email, id, status)
-    res.sendStatus(200)
+    res.json({ status })
   } else {
     res.sendStatus(401)
   }

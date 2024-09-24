@@ -76,7 +76,7 @@ export default function VaultViewer() {
               return (
                 <MovieCard
                   isNavigate={true}
-                  type="movies"
+                  mediaType="movies"
                   key={self.crypto.randomUUID()}
                   movie={movie}
                 />
@@ -87,7 +87,7 @@ export default function VaultViewer() {
               return (
                 <MovieCard
                   isNavigate={true}
-                  type="movies"
+                  mediaType="movies"
                   key={self.crypto.randomUUID()}
                   movie={movie}
                 />
@@ -100,7 +100,7 @@ export default function VaultViewer() {
                   isNavigate={true}
                   key={self.crypto.randomUUID()}
                   movie={movie}
-                  type={media}
+                  mediaType={media}
                 />
               )
             })}
@@ -115,7 +115,7 @@ export default function VaultViewer() {
                   isNavigate={true}
                   key={self.crypto.randomUUID()}
                   movie={movie}
-                  type={media}
+                  mediaType={media}
                 />
               )
             })}
@@ -126,7 +126,7 @@ export default function VaultViewer() {
                   isNavigate={true}
                   key={self.crypto.randomUUID()}
                   movie={movie}
-                  type={media}
+                  mediaType={media}
                 />
               )
             })}
