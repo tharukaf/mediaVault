@@ -10,13 +10,11 @@ import VaultViewer from './components/Vault/VaultViewer'
 import StarBackground from './utils/StarBackground'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
-import Login, { authHelper } from './components/User/login'
 import { AuthContext, useAuth } from './utils/UserContext'
-import CreateUser from './components/User/createUser'
 import CreateUserForm from './components/User/CreateUserForm'
+import LoginForm from './components/User/LoginForm'
 import MediaItemViewer from './components/Vault/MediaItemViewer'
-
-// axios.defaults.withCredentials = true
+import { authHelper } from './utils/AuthHelper'
 
 function App() {
   const [currentUser, setCurrentUser] = useState(
@@ -56,7 +54,7 @@ function App() {
               <Route path=":media/:id" element={<MediaItemViewer />} />
             </Route>
             <Route path="curator" element={<Curator />}></Route>
-            <Route path="login" element={<Login />} />
+            <Route path="login" element={<LoginForm />} />
             <Route path="createuser" element={<CreateUserForm />} />
           </Route>
         </Routes>

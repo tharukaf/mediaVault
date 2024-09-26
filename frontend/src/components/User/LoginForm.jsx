@@ -1,18 +1,20 @@
 import { useForm } from 'react-hook-form'
 import { baseURL } from '../../utils/FetchData'
 import { useState } from 'react'
-import { Button, CircularProgress, TextField } from '@mui/material'
+import { Box, Paper, Typography, Button, TextField } from '@mui/material'
+import { ErrorMessage } from '@hookform/error-message'
 import { ErrMessage } from './UserForm'
 import UserForm from './UserForm'
+import CircularProgress from '@mui/material/CircularProgress'
 import { useAuth } from '../../utils/UserContext'
 import { useNavigate } from 'react-router'
 import { authHelper } from '../../utils/AuthHelper'
-import { createUserRequestOptions } from '../../utils/FetchOptionObjects'
+import { loginRequestOptions } from '../../utils/FetchOptionObjects'
+import { set } from 'mongoose'
 
-export default function CreateUserForm() {
+export default function LoginForm() {
   const [loading, setLoading] = useState(false)
-  const { setCurrentUser } = useAuth()
-  // eslint-disable-next-line no-unused-vars
+  const { currentUser, setCurrentUser } = useAuth()
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const navigate = useNavigate()
   const {
@@ -27,8 +29,8 @@ export default function CreateUserForm() {
 
     try {
       const response = await fetch(
-        `${baseURL}users`,
-        createUserRequestOptions(formData)
+        `${baseURL}login`,
+        loginRequestOptions(formData)
       )
       setTimeout(() => {
         setLoading(false)
@@ -39,62 +41,38 @@ export default function CreateUserForm() {
         navigate('/')
       }
       setIsLoggedIn(true)
+      setLoading(false)
     } catch (error) {
       throw new Error(error)
     }
   }
 
   return (
-    <UserForm title="Create Account">
-      <TextField
-        label="Name"
-        style={{ marginTop: '11px' }}
-        {...register('name', {
-          required: true,
-          maxLength: {
-            value: 15,
-            message: 'Name is too long',
-          },
-        })}
-      />
+    <UserForm title="Login to MediaVault">
       <TextField
         {...register('email', {
-          required: true,
+          required: {
+            value: true,
+            message: 'You must specify an email',
+          },
           pattern: { value: /^\S+@\S+$/i, message: 'Invalid email address' },
-          maxLength: { value: 32, message: 'Email is too long' },
-        })} // pattern: /^\S+@\S+$/i
+        })}
         style={{ marginTop: '11px' }}
         label="Email"
       />
-      <TextField
-        type="text"
-        label="Username"
-        style={{ marginTop: '11px' }}
-        {...register('username', {
-          required: true,
-          maxLength: {
-            value: 15,
-            message: 'Username is too long',
-          },
-        })}
-      />
+
       <TextField
         type="password"
         label="Password"
         style={{ marginTop: '11px' }}
         {...register('password', {
-          required: true,
-          maxLength: { value: 32, message: 'Password is too long' },
-          minLength: { value: 8, message: 'Password is too short' },
+          required: 'You must specify a password',
         })}
       />
-      {errors.name?.message && <ErrMessage errors={errors} elementID="name" />}
       {errors.email?.message && (
         <ErrMessage errors={errors} elementID="email" />
       )}
-      {errors.username?.message && (
-        <ErrMessage errors={errors} elementID="username" />
-      )}
+
       {errors.password?.message && (
         <ErrMessage errors={errors} elementID="password" />
       )}
@@ -103,7 +81,16 @@ export default function CreateUserForm() {
         onClick={handleSubmit(onSubmit)}
         variant="contained"
         style={{ marginTop: '20px', marginBottom: '10px' }}>
-        {loading ? <CircularProgress /> : 'Create Account'}
+        {loading ? <CircularProgress /> : 'Login'}
+      </Button>
+      <Button
+        onClick={() => navigate('/createuser')}
+        color="success"
+        variant="contained"
+        style={{ marginTop: '20px', marginBottom: '10px' }}>
+        <Typography style={{ textDecoration: 'none' }}>
+          Create Account
+        </Typography>
       </Button>
     </UserForm>
   )
