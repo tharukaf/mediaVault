@@ -31,6 +31,7 @@ router.route('/search/:mediaType/:query').get((req, res) => {
   fetchDataToClient(url.search, options.search, res)
 })
 
+// TB tested
 // Guest media list endpoint
 router.post('/guest/:media/list', async (req, res) => {
   const [model] = getModelByMediaType(req.params.media)

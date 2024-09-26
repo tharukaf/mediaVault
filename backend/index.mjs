@@ -46,6 +46,7 @@ app.use('/', Routes)
 // create user route
 app.post('/users', async (req, res) => {
   const userData = req.body
+  console.log(userData)
   userData._id = sha256(userData.email)
   userData.password = sha256(userData.password)
   createUser(userData, res)
