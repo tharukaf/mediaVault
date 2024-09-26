@@ -22,7 +22,6 @@ export default function CreateUserForm() {
   } = useForm()
 
   async function onSubmit(formData) {
-    console.log(formData)
     setLoading(true)
 
     try {
@@ -34,7 +33,6 @@ export default function CreateUserForm() {
         setLoading(false)
       }, 1000)
       if (response.status === 200) {
-        console.log('data: ', formData)
         authHelper('cookie/refresh', formData.email, setCurrentUser)
         navigate('/')
       }

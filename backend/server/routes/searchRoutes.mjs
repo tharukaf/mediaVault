@@ -128,7 +128,6 @@ router.post('/guest/:media/list', async (req, res) => {
 
 // Updates the status of a media item
 router.put('/users/:email/:mediaType/:id', async (req, res) => {
-  console.log('hit it')
   if (req.session) {
     const { mediaType, id, email } = req.params
     const { status } = req.body

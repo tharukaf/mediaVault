@@ -8,7 +8,7 @@ import QueuePlayNextIcon from '@mui/icons-material/QueuePlayNext'
 import { useAuth } from '../../utils/UserContext'
 // eslint-disable-next-line no-unused-vars
 import { baseURL, updateMediaItemStatus } from '../../utils/FetchData'
-import { useLocation, useNavigate } from 'react-router'
+import { useNavigate } from 'react-router'
 
 export default function MovieCard({ movie, mediaType, isNavigate }) {
   const navigate = useNavigate()
@@ -16,7 +16,6 @@ export default function MovieCard({ movie, mediaType, isNavigate }) {
   const [mediaItemStatus, setMediaItemStatus] = useState(
     movie.mediaItemStatus || 'unwatched'
   )
-  console.log('mediaItemStatus: ', mediaItemStatus)
   const [firstRender, setFirstRender] = useState(true)
   const { currentUser } = useAuth()
   const [isGuest] = useState(currentUser.name === 'Guest')

@@ -1,8 +1,8 @@
 import { useForm } from 'react-hook-form'
 import { baseURL } from '../../utils/FetchData'
 import { useState } from 'react'
-import { Box, Paper, Typography, Button, TextField } from '@mui/material'
-import { ErrorMessage } from '@hookform/error-message'
+import { Typography, Button, TextField } from '@mui/material'
+
 import { ErrMessage } from './UserForm'
 import UserForm from './UserForm'
 import CircularProgress from '@mui/material/CircularProgress'
@@ -10,11 +10,12 @@ import { useAuth } from '../../utils/UserContext'
 import { useNavigate } from 'react-router'
 import { authHelper } from '../../utils/AuthHelper'
 import { loginRequestOptions } from '../../utils/FetchOptionObjects'
-import { set } from 'mongoose'
 
 export default function LoginForm() {
   const [loading, setLoading] = useState(false)
-  const { currentUser, setCurrentUser } = useAuth()
+  const { setCurrentUser } = useAuth()
+
+  // eslint-disable-next-line no-unused-vars
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const navigate = useNavigate()
   const {
@@ -24,7 +25,6 @@ export default function LoginForm() {
   } = useForm()
 
   async function onSubmit(formData) {
-    console.log(formData)
     setLoading(true)
 
     try {
@@ -36,7 +36,6 @@ export default function LoginForm() {
         setLoading(false)
       }, 1000)
       if (response.status === 200) {
-        console.log('data: ', formData)
         authHelper('cookie/refresh', formData.email, setCurrentUser)
         navigate('/')
       }
