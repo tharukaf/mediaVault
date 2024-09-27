@@ -6,6 +6,7 @@ import MusicCard from '../mediaCards/musicCard'
 import { normalize } from '../../utils/NormalizeData'
 import { useAuth } from '../../utils/UserContext'
 import { useLocation } from 'react-router-dom'
+import { Typography, Paper } from '@mui/material'
 
 export default function VaultViewer() {
   const { currentUser } = useAuth()
@@ -133,7 +134,20 @@ export default function VaultViewer() {
         </div>
         {isListEmpty && (
           <div className="empty-list">
-            <h1>Your list is empty</h1>
+            <Paper
+              elevation={3}
+              sx={{
+                border: 'solid grey 1px',
+                borderRadius: '10px',
+                height: '50px',
+                width: 'fit-content',
+                padding: '2rem',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Typography variant="h5">Your list is empty</Typography>
+            </Paper>
           </div>
         )}
       </div>

@@ -12,11 +12,8 @@
 
 .vault-sidebar {
     width: 15%;
-
     position: sticky;
     height: fit-content;
-    /* margin: 1rem 2rem 0 2rem; */
-    /* position: fixed; */
     background-color: rgba(0, 255, 255, 0.37);
     backdrop-filter: blur(5px);
 }
@@ -27,7 +24,6 @@
 }
 
 .vault-items-view {
-    background-color: rgba(65, 105, 225, 0.096);
     justify-self: center;
     width: 100%;
     padding: 1rem;

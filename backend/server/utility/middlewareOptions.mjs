@@ -1,7 +1,7 @@
-import dotenv from 'dotenv'
+import 'dotenv/config'
 
 export const CorsOptions = {
-  origin: 'http://localhost:5173',
+  origin: process.env.FRONTEND_URL,
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   preflightContinue: true,
   credentials: true,
@@ -20,3 +20,16 @@ export const sessionOptions = {
   resave: false,
   saveUninitialized: false,
 }
+
+export const redisClientOptions = {
+  password: process.env.REDIS_PASSWORD,
+  socket: {
+    host: process.env.REDIS_HOST,
+    port: 19439,
+  },
+}
+
+export let redisStoreOptions = redisClient => ({
+  client: redisClient,
+  prefix: 'myapp:',
+})
