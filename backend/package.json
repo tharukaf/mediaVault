@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.mjs",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/index.mjs",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon ./src/index.mjs"
   },
   "author": "Nipun Fernando",
   "license": "ISC",
@@ -12,10 +13,11 @@
   "dependencies": {
     "@netlify/functions": "^2.8.1",
     "@types/express": "^4.17.21",
+    "connect-redis": "^7.1.1",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
-    "express": "^4.19.2",
+    "express": "^4.21.0",
     "express-rate-limit": "^7.4.0",
     "express-session": "^1.18.0",
     "helmet": "^7.1.0",
@@ -24,6 +26,7 @@
     "mongoose": "^8.5.3",
     "node-fetch": "^3.3.2",
     "nodemon": "^3.1.4",
+    "redis": "^4.7.0",
     "serverless-http": "^3.2.0"
   }
 }

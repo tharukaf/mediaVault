@@ -39,6 +39,10 @@ app.use(cookieParser(sessionOptions.secret))
 
 app.use(express.json())
 
+app.get('/', (req, res) => {
+  res.send('Base Route')
+})
+
 // Authenticate IGDB & Spotify APIs
 app.use(
   ['/search/games/:query', '/games/:id', '/curator', '/getReleaseDate'],
