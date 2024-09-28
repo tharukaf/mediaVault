@@ -1,4 +1,4 @@
-import { Movie } from './moviemodel.mjs'
+import { Movie } from './movieModel.mjs'
 import { TvShow } from './tvModel.mjs'
 import { Music } from './musicModel.mjs'
 import { Book } from './bookModel.mjs'
