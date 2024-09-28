@@ -12,8 +12,8 @@ import {
   getSameMediaTypeItemsFromUser,
   updateMediaItemStatus,
 } from '../../db/models/userModel.mjs'
+import { Movie } from '../../db/models/movieModel.mjs'
 import { Game } from '../../db/models/gameModel.mjs'
-import { Movie } from '../../db/models/moviemodel.mjs'
 import { TvShow } from '../../db/models/tvModel.mjs'
 import { Music } from '../../db/models/musicModel.mjs'
 
