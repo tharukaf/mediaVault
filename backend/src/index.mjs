@@ -27,7 +27,7 @@ redisClient.connect().catch(console.error)
 const redisStore = new RedisStore(redisStoreOptions(redisClient))
 sessionOptions.store = redisStore
 
-const PORT = 8000
+const PORT = process.env.PORT || 8000
 const app = express()
 
 app.use(limiter)

@@ -29,8 +29,10 @@ export default function UserForm({ children, title }) {
 
 export function ErrMessage({ errors, elementID }) {
   return (
-    <Typography variant="er" style={{ color: 'red' }}>
-      <ErrorMessage errors={errors} name={elementID} as="p" />
-    </Typography>
+    <ErrorMessage
+      errors={errors}
+      name={elementID}
+      render={({ message }) => <p>{message}</p>}
+    />
   )
 }

@@ -1,4 +1,4 @@
-export const baseURL = 'http://localhost:8000/'
+export const baseURL = 'https://mediavault.onrender.com/'
 
 export default async function fetchSearchResults(
   mSearchType,
