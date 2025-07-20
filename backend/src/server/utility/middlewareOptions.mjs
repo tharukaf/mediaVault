@@ -1,7 +1,14 @@
 import 'dotenv/config'
 
+console.log('Middleware Options Loaded')
+console.log('Environment Variables:', {
+  FRONTEND_URL_DEV: process.env.FRONTEND_URL_DEV,
+  REDIS_HOST: process.env.REDIS_HOST,
+  REDIS_PORT: process.env.REDIS_PORT,
+})
+
 export const CorsOptions = {
-  origin: process.env.FRONTEND_URL,
+  origin: [process.env.FRONTEND_URL_DEV, process.env.FRONTEND_URL],
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   preflightContinue: true,
   credentials: true,
