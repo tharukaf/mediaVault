@@ -4,6 +4,7 @@ import TextField from '@mui/material/TextField'
 import Autocomplete from '@mui/material/Autocomplete'
 import { debounce } from 'lodash'
 import IconButton from '@mui/material/IconButton'
+import Button from '@mui/material/Button'
 import DoneIcon from '@mui/icons-material/Done'
 import { baseURL } from '../../utils/FetchData'
 import { useAuth } from '../../utils/UserContext'
@@ -102,9 +103,14 @@ export default function SearchDropDown(props) {
                   <DoneIcon />
                 </IconButton>
               ) : (
-                <IconButton size="small" onClick={handleAddMedia(option)} sx={{ ml: 1, border: '1px solid', borderColor: 'teal.main' }}>
-                  <span style={{ fontWeight: 'bold', fontSize: 18 }}>+</span>
-                </IconButton>
+                <Button
+                  size="small"
+                  onClick={handleAddMedia(option)}
+                  variant="outlined"
+                  sx={{ ml: 1, minWidth: 60, borderColor: 'teal.main', color: 'teal.main', fontWeight: 'bold', fontSize: 18, px: 1 }}
+                >
+                  +
+                </Button>
               )}
             </Box>
           )
