@@ -23,10 +23,24 @@ const limiter = RateLimit(RateLimitOptions)
 
 connectToMongo()
 
+
 const redisClient = createClient(redisClientOptions)
-redisClient.connect().catch(console.error)
-const redisStore = new RedisStore(redisStoreOptions(redisClient))
-sessionOptions.store = redisStore
+console.log('Connecting to Redis session store...')
+redisClient.connect()
+  .then(() => {
+    console.log('Connected to Redis session store.')
+  })
+  .catch(err => {
+    console.error('Error connecting to Redis session store:', err)
+  })
+let redisStore
+try {
+  redisStore = new RedisStore(redisStoreOptions(redisClient))
+  sessionOptions.store = redisStore
+  console.log('RedisStore initialized for session management.')
+} catch (err) {
+  console.error('Error initializing RedisStore:', err)
+}
 
 const PORT = process.env.PORT || 8000
 const app = express()

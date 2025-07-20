@@ -11,37 +11,52 @@ userRouter.post('/users', async (req, res) => {
   const userData = req.body
   userData._id = sha256(userData.email)
   userData.password = sha256(userData.password)
-  createUser(userData, res)
+  try {
+    const existing = await getUserByEmail(userData.email)
+    if (existing) {
+      return res.status(409).json({ error: 'User already exists' })
+    }
+    createUser(userData, res)
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
 })
 
 // login route
 userRouter.post('/login', async (req, res) => {
-  console.log(req.body)
   const { email, password } = req.body
-  const user = await getUserByEmail(email)
-  if (user === null) {
-    res.status(404).send('User not found')
-  }
-  if (user.password === sha256(password)) {
-    res.sendStatus(200)
-  } else {
-    res.sendStatus(401)
+  try {
+    const user = await getUserByEmail(email)
+    if (!user) {
+      return res.status(404).send('User not found')
+    }
+    if (user.password === sha256(password)) {
+      return res.sendStatus(200)
+    } else {
+      return res.sendStatus(401)
+    }
+  } catch (err) {
+    res.status(500).json({ error: err.message })
   }
 })
 
 userRouter.get('/cookie/refresh/:email', async (req, res) => {
   const { email } = req.params
-  const user = await getUserByEmail(email)
-
-  req.session.email = user.email
-  req.session.name = user.name
-  res.cookie('email', `${user.email}`)
-  res.cookie('name', `${user.name}`)
-  res.json({
-    name: req.session.name,
-    email: req.session.email,
-    token: user._id,
-  })
+  try {
+    const user = await getUserByEmail(email)
+    if (!user) return res.status(404).json({ error: 'User not found' })
+    req.session.email = user.email
+    req.session.name = user.name
+    res.cookie('email', `${user.email}`)
+    res.cookie('name', `${user.name}`)
+    res.json({
+      name: req.session.name,
+      email: req.session.email,
+      token: user._id,
+    })
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
 })
 
 
