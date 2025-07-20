@@ -44,9 +44,25 @@ userRouter.get('/cookie/refresh/:email', async (req, res) => {
   })
 })
 
-userRouter.post('/logout', (req, res) => {
-  req.session.destroy()
-  res.status(200).send('Logout successful')
+
+// Delete a media item from user's profile
+userRouter.delete('/users/media/:mediaType/:itemId', async (req, res) => {
+  const { mediaType, itemId } = req.params
+  const { email } = req.body
+  if (!email) return res.status(400).json({ error: 'Email required' })
+  try {
+    const user = await getUserByEmail(email)
+    if (!user) return res.status(404).json({ error: 'User not found' })
+    const collection = user[mediaType]
+    if (!Array.isArray(collection)) return res.status(400).json({ error: 'Invalid media type' })
+    const idx = collection.findIndex(item => item._id.toString() === itemId.toString())
+    if (idx === -1) return res.status(404).json({ error: 'Media item not found' })
+    collection.splice(idx, 1)
+    await user.save()
+    res.json({ message: 'Media item deleted' })
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
 })
 
 export default userRouter

@@ -3,6 +3,7 @@ import { useState, useEffect, useContext } from 'react'
 import { Routes, Route, Outlet } from 'react-router-dom'
 import './App.css'
 import Dashboard from './components/Dashboard'
+import UserProfile from './components/User/UserProfile'
 import Search from './components/Search/Search'
 import VaultLayout from './components/Vault/VaultLayout'
 import Curator from './components/Curator/Curator'
@@ -20,15 +21,15 @@ function App() {
   const [currentUser, setCurrentUser] = useState(
     localStorage.getItem('token')
       ? {
-          token: localStorage.getItem('token'),
-          email: localStorage.getItem('email'),
-          name: localStorage.getItem('name'),
-        }
+        token: localStorage.getItem('token'),
+        email: localStorage.getItem('email'),
+        name: localStorage.getItem('name'),
+      }
       : {
-          name: 'Guest',
-          email: null,
-          token: null,
-        }
+        name: 'Guest',
+        email: null,
+        token: null,
+      }
   )
 
   useEffect(() => {
@@ -56,6 +57,7 @@ function App() {
             <Route path="curator" element={<Curator />}></Route>
             <Route path="login" element={<LoginForm />} />
             <Route path="createuser" element={<CreateUserForm />} />
+            <Route path="profile" element={<UserProfile />} />
           </Route>
         </Routes>
       </AuthContext.Provider>

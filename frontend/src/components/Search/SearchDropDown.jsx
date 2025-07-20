@@ -1,8 +1,10 @@
+import { useState } from 'react'
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
 import Autocomplete from '@mui/material/Autocomplete'
 import { debounce } from 'lodash'
-import Button from '@mui/material/Button'
+import IconButton from '@mui/material/IconButton'
+import DoneIcon from '@mui/icons-material/Done'
 import { baseURL } from '../../utils/FetchData'
 import { useAuth } from '../../utils/UserContext'
 
@@ -15,6 +17,7 @@ const Status = {
 export default function SearchDropDown(props) {
   const { optionList, searchType, setSearchText, searchText } = props
   const { currentUser } = useAuth()
+  const [added, setAdded] = useState({})
   const handleTextChange = debounce(e => {
     setSearchText(e.target.value)
   }, 400)
@@ -27,13 +30,17 @@ export default function SearchDropDown(props) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: currentUser.email, id: option.id }),
       })
+      if (response.ok) {
+        setAdded(prev => ({ ...prev, [option.id]: true }))
+        setTimeout(() => setAdded(prev => ({ ...prev, [option.id]: false })), 1200)
+      }
     }
   }
 
   // Save Guest media to local storage
   const handleAddToStorage = option => {
-    return () => {
-      fetch(`${baseURL}${searchType}/${option.id}`, {
+    return async () => {
+      await fetch(`${baseURL}${searchType}/${option.id}`, {
         method: 'POST',
       })
       if (localStorage.getItem(searchType) !== undefined) {
@@ -48,6 +55,8 @@ export default function SearchDropDown(props) {
           JSON.stringify({ [option.id]: Status.Init })
         )
       }
+      setAdded(prev => ({ ...prev, [option.id]: true }))
+      setTimeout(() => setAdded(prev => ({ ...prev, [option.id]: false })), 1200)
     }
   }
 
@@ -88,12 +97,15 @@ export default function SearchDropDown(props) {
               {searchType === 'music' && (
                 <div className="dropdownArtists">{option.artists}</div>
               )}
-              <Button
-                onClick={handleAddMedia(option)}
-                variant="outlined"
-                style={{ fontSize: '10px', marginLeft: '10px' }}>
-                +
-              </Button>
+              {added[option.id] ? (
+                <IconButton size="small" sx={{ ml: 1, bgcolor: 'teal.main', color: 'white' }} disabled>
+                  <DoneIcon />
+                </IconButton>
+              ) : (
+                <IconButton size="small" onClick={handleAddMedia(option)} sx={{ ml: 1, border: '1px solid', borderColor: 'teal.main' }}>
+                  <span style={{ fontWeight: 'bold', fontSize: 18 }}>+</span>
+                </IconButton>
+              )}
             </Box>
           )
         }}
@@ -103,9 +115,8 @@ export default function SearchDropDown(props) {
             variant="outlined"
             onChange={handleTextChange}
             value={searchText}
-            label={`Search for ${
-              searchType.charAt(0).toUpperCase() + searchType.slice(1)
-            } `}
+            label={`Search for ${searchType.charAt(0).toUpperCase() + searchType.slice(1)
+              } `}
             inputProps={{
               ...params.inputProps,
               autoComplete: 'off', // disable autocomplete and autofill

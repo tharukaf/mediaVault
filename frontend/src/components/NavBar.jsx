@@ -24,7 +24,19 @@ function ResponsiveAppBar() {
   const pages = ['myvault', 'curator']
   const pagesText = { myvault: 'My Vault', curator: 'Curator' }
   const settings = [
-    currentUser.name,
+    <>
+      {currentUser.name !== 'Guest' && (
+        <Link
+          key="profile"
+          onClick={() => {
+            handleCloseUserMenu()
+            navigate('/profile')
+          }}
+          style={{ color: 'white', textDecoration: 'none' }} to="/profile">
+          {currentUser.name}
+        </Link>
+      )}
+    </>,
     currentUser.name === 'Guest' ? (
       <Link style={{ color: 'white', textDecoration: 'none' }} to="/login">
         Login
@@ -184,17 +196,23 @@ function ResponsiveAppBar() {
               }}
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}>
-              {settings.map(setting => (
+              {settings.map((setting, idx) => (
                 <MenuItem
-                  key={setting}
+                  key={idx}
                   onClick={
                     setting === 'Logout'
                       ? () => {
-                          handleLogout()
-                        }
-                      : handleCloseUserMenu
-                  }>
-                  <Typography textAlign="center">{setting}</Typography>
+                        handleLogout()
+                      }
+                      : undefined
+                  }
+                  disableRipple={setting?.type === Button}
+                >
+                  {typeof setting === 'string' ? (
+                    <Typography textAlign="center">{setting}</Typography>
+                  ) : (
+                    setting
+                  )}
                 </MenuItem>
               ))}
             </Menu>
