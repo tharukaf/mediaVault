@@ -26,11 +26,13 @@ connectToMongo()
 
 const redisClient = createClient(redisClientOptions)
 console.log('Connecting to Redis session store...')
+console.log(process.env.REDIS_PASSWORD, process.env.REDIS_HOST, process.env.REDIS_PORT)
 redisClient.connect()
   .then(() => {
     console.log('Connected to Redis session store.')
   })
   .catch(err => {
+
     console.error('Error connecting to Redis session store:', err)
   })
 let redisStore
