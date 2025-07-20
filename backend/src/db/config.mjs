@@ -13,11 +13,12 @@ export async function connectToMongo() {
 //  connectToRedis
 export async function connectToRedis() {
   let redisClient = createClient({
+    username: 'default',
     password: process.env.REDIS_PASSWORD,
     socket: {
       host: process.env.REDIS_HOST,
-      port: process.env.REDIS_PORT,
-    },
+      port: process.env.REDIS_PORT
+    }
   })
   redisClient.connect().catch(console.error)
   let redisStore = new RedisStore({
