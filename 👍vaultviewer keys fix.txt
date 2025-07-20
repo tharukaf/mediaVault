@@ -1,0 +1,19 @@
+[👍]- vaultviewer keys fix
+[👍]- add item status
+[👍]- create user redirect and cookies
+[👍]- default vaultviewer movies
+[👍]- persist user
+[👍]- guest user behavior
+[👍]- curator feature
+[👍]- add item display page
+[👍]- fix cards
+
+[👍]- fix login and createuser form validation
+[👍]- fix cors
+
+[👍]- change session store to redis cloud
+[👍]- deploy site
+
+
+[❔]- refactor mediaType repetition
+

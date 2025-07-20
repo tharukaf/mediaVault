@@ -5,6 +5,7 @@ import { normalize } from '../../utils/NormalizeData'
 import { Button } from '@mui/material'
 import Typography from '@mui/material/Typography'
 import MovieCard from '../mediaCards/movieCard'
+import ReviewSection from './ReviewSection.jsx'
 
 export default function MediaItemViewer() {
   const { media, id } = useParams()
@@ -66,7 +67,7 @@ export default function MediaItemViewer() {
             </Typography>
             <div className="itemViewDetailsSecondary">
               <Typography variant="body2">
-                Release Date: {itemDetails.releaseDate}
+                Release Date: {new Date(itemDetails.releaseDate * 1000).toLocaleDateString()}
               </Typography>
               <Typography variant="body2">
                 Rating: {itemDetails.rating || itemDetails.popularity}
@@ -80,6 +81,7 @@ export default function MediaItemViewer() {
           </div>
         </div>
         <div className="mediaItemSimilar">{similarItems}</div>
+        <ReviewSection mediaId={id} mediaType={media} />
       </div>
     </>
   )

@@ -44,10 +44,10 @@ export default function MovieCard({ movie, mediaType, isNavigate }) {
     mediaType === 'movies' || mediaType === 'tv'
       ? `${movie.releaseDate.slice(0, 4)}`
       : mediaType === 'books'
-      ? `${movie.releaseDate}`
-      : mediaType === 'games'
-      ? `${movie.releaseDate}`
-      : 'N/A'
+        ? `${movie.releaseDate}`
+        : mediaType === 'games'
+          ? `${movie.releaseDate}`
+          : 'N/A'
 
   return (
     <Card

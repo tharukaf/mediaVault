@@ -17,6 +17,7 @@ const show = show => ({
   description: show.overview,
   poster: `https://image.tmdb.org/t/p/w185_and_h278_bestv2${show.poster_path}`,
   rating: show.vote_average,
+  mediaItemStatus: show.mediaItemStatus,
 })
 
 const track = track => ({
@@ -37,16 +38,18 @@ const book = book => ({
   rating: book.averageRating,
   releaseDate: book.publishedDate,
   authors: book.authors?.join(', '),
+  mediaItemStatus: book.mediaItemStatus,
 })
 
 const game = game => ({
   id: game.id || game._id,
   title: game.name,
   description: game.summary,
-  poster: game.cover?.url,
+  poster: game.cover?.url ? game.cover.url.replace('t_thumb', 't_cover_big') : undefined,
   rating: game?.rating,
   releaseDate: game?.first_release_date,
   platforms: game?.platforms?.map(platform => platform).join(', '),
+  mediaItemStatus: game.mediaItemStatus,
 })
 
 export const normalize = {

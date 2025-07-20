@@ -6,7 +6,9 @@ import MusicCard from '../mediaCards/musicCard'
 import { normalize } from '../../utils/NormalizeData'
 import { useAuth } from '../../utils/UserContext'
 import { useLocation } from 'react-router-dom'
-import { Typography, Paper } from '@mui/material'
+import { Typography, Paper, Button } from '@mui/material'
+
+import { useNavigate } from 'react-router-dom'
 
 export default function VaultViewer() {
   const { currentUser } = useAuth()
@@ -18,6 +20,7 @@ export default function VaultViewer() {
   const [books, setBooks] = useState([])
   const [isListEmpty, setIsListEmpty] = useState(false)
   const location = useLocation()
+  const navigate = useNavigate()
 
   useEffect(() => {
     async function fetchDataFromDB() {
@@ -68,8 +71,21 @@ export default function VaultViewer() {
   const gameList =
     media === 'games' && games?.map(game => normalize.games(game))
 
+  // Show Back to Vault button if on /myvault/:media/:id
+  const showBackButton = /^\/myvault\/.+\/.+/.test(location.pathname)
+
   return (
     <>
+      {showBackButton && (
+        <Button
+          variant="contained"
+          color="primary"
+          style={{ margin: '1rem' }}
+          onClick={() => navigate('/myvault')}
+        >
+          Back to Vault
+        </Button>
+      )}
       <div className="vault-items-view">
         <div className="mediaCardContainer">
           {location.pathname === '/myvault' &&

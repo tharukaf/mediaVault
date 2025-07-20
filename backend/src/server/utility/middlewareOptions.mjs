@@ -22,11 +22,12 @@ export const sessionOptions = {
 }
 
 export const redisClientOptions = {
+  username: 'default',
   password: process.env.REDIS_PASSWORD,
   socket: {
     host: process.env.REDIS_HOST,
-    port: 19439,
-  },
+    port: process.env.REDIS_PORT
+  }
 }
 
 export let redisStoreOptions = redisClient => ({

@@ -8,6 +8,7 @@ import { connectToMongo } from './db/config.mjs'
 import { createClient } from 'redis'
 import RedisStore from 'connect-redis'
 import Routes from './server/routes/searchRoutes.mjs'
+import reviewRoutes from './server/routes/reviewRoutes.mjs'
 import userRoutes from './server/routes/userRoutes.mjs'
 import { igdbAuth, spotifyAuth } from './server/utility/apiAuth.mjs'
 import {
@@ -52,6 +53,7 @@ app.use(['/search/music/:query', '/music/:id', '/curator'], spotifyAuth)
 
 // Router middleware
 app.use('/', userRoutes)
+app.use('/reviews', reviewRoutes)
 app.use('/', Routes)
 
 app.listen(PORT, () => {
