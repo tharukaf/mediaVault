@@ -1,6 +1,6 @@
-// import 'dotenv/config'
 
-export const baseURL = 'http://localhost:8000/'
+console.log(import.meta.env.VITE_DEV_API_URL)
+export const baseURL = 'https://mediavault.onrender.com/'
 
 export default async function fetchSearchResults(
   mSearchType,
