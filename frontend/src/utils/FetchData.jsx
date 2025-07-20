@@ -1,6 +1,8 @@
-
-console.log(import.meta.env.VITE_DEV_API_URL)
-export const baseURL = 'https://mediavault.onrender.com/'
+// Use Vite env variables for API URLs, fallback to hostname check
+export const baseURL =
+  import.meta.env.MODE === 'development'
+    ? import.meta.env.VITE_DEV_API_URL
+    : import.meta.env.VITE_PROD_API_URL
 
 export default async function fetchSearchResults(
   mSearchType,
