@@ -46,7 +46,7 @@ export default function MovieCard({ movie, mediaType, isNavigate }) {
       : mediaType === 'books'
         ? `${movie.releaseDate}`
         : mediaType === 'games'
-          ? `${movie.releaseDate}`
+          ? `${new Date(movie.releaseDate * 1000).toLocaleDateString()}`
           : 'N/A'
 
   return (

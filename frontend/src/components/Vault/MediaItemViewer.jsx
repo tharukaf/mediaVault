@@ -121,7 +121,7 @@ export default function MediaItemViewer() {
             </Typography>
             <Stack direction="row" spacing={1} sx={{ mt: 1, mb: 2, flexWrap: 'wrap' }}>
               <Chip
-                label={`Release: ${new Date(itemDetails.releaseDate).toLocaleDateString() || 'N/A'}`}
+                label={`Release: ${media === 'movies' || media === 'tv' ? new Date(itemDetails.releaseDate).toLocaleDateString() : media === 'books' ? itemDetails.releaseDate : media === 'games' ? new Date(itemDetails.releaseDate * 1000).toLocaleDateString() : 'N/A'}`}
                 color="info"
                 variant="outlined"
                 sx={{ fontWeight: 500, fontSize: 14, bgcolor: 'rgba(0,128,128,0.08)', color: 'teal', borderColor: 'teal' }}
