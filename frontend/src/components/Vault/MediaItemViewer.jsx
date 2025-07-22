@@ -10,7 +10,7 @@ import MovieCard from '../mediaCards/movieCard'
 import ReviewSection from './ReviewSection.jsx'
 
 export default function MediaItemViewer() {
-  const { currentUser } = useAuth()
+  const { user } = useAuth()
   const { media, id } = useParams()
   const [firstRender, setFirstRender] = useState(true)
   const [itemDetails, setItemDetails] = useState({})
@@ -47,7 +47,7 @@ export default function MediaItemViewer() {
     setSimilarItems(similarCards)
   }
   async function handleDeleteMedia() {
-    const email = localStorage.getItem('userEmail') || (currentUser && currentUser.email)
+    const email = localStorage.getItem('userEmail') || (user && user.email)
     if (!email) return
     await fetch(`${baseURL}users/media/${media}/${id}`, {
       method: 'DELETE',

@@ -22,7 +22,7 @@ const GradientHeader = styled(Box)(({ theme }) => ({
 }))
 
 export default function ReviewSection({ mediaId, mediaType }) {
-    const { currentUser } = useAuth()
+    const { user } = useAuth()
     const [reviews, setReviews] = useState([])
     const [reviewText, setReviewText] = useState('')
     const [rating, setRating] = useState(0)
@@ -41,7 +41,7 @@ export default function ReviewSection({ mediaId, mediaType }) {
         const review = {
             mediaId,
             mediaType,
-            userName: currentUser.name,
+            userName: user.name,
             rating,
             reviewText,
         }
@@ -105,7 +105,7 @@ export default function ReviewSection({ mediaId, mediaType }) {
                             title={review.userName}
                             subheader={new Date(review.reviewDate).toLocaleDateString()}
                             action={
-                                currentUser.name === review.userName && (
+                                user.name === review.userName && (
                                     <>
                                         <Tooltip title="Edit" arrow>
                                             <IconButton size="small" onClick={() => handleEdit(review)} sx={{ color: 'grey.500', mr: 0.5 }}>

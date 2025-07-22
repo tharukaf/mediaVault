@@ -17,7 +17,7 @@ const Status = {
 
 export default function SearchDropDown(props) {
   const { optionList, searchType, setSearchText, searchText } = props
-  const { currentUser } = useAuth()
+  const { user } = useAuth()
   const [added, setAdded] = useState({})
   const handleTextChange = debounce(e => {
     setSearchText(e.target.value)
@@ -29,7 +29,7 @@ export default function SearchDropDown(props) {
       const response = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: currentUser.email, id: option.id }),
+        body: JSON.stringify({ email: user.email, id: option.id }),
       })
       if (response.ok) {
         setAdded(prev => ({ ...prev, [option.id]: true }))
@@ -62,7 +62,7 @@ export default function SearchDropDown(props) {
   }
 
   function handleAddMedia(option) {
-    if (currentUser.name == 'Guest') {
+    if (user.name == 'Guest') {
       return handleAddToStorage(option)
     } else {
       return handleAddMediaToList(option)

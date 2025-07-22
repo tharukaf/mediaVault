@@ -1,23 +1,20 @@
 import { useForm } from 'react-hook-form'
-import { baseURL } from '../../utils/FetchData'
 import { useState } from 'react'
-import { Typography, Button, TextField } from '@mui/material'
+import { Typography, Button, TextField, Alert, Link } from '@mui/material'
 
 import { ErrMessage } from './UserForm'
 import UserForm from './UserForm'
 import CircularProgress from '@mui/material/CircularProgress'
 import { useAuth } from '../../utils/UserContext'
 import { useNavigate } from 'react-router'
-import { authHelper } from '../../utils/AuthHelper'
-import { loginRequestOptions } from '../../utils/FetchOptionObjects'
+import { validationRules, validateForm, sanitizeInput } from '../../utils/validation'
 
 export default function LoginForm() {
   const [loading, setLoading] = useState(false)
-  const { setCurrentUser } = useAuth()
-
-  // eslint-disable-next-line no-unused-vars
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [error, setError] = useState('')
+  const { loginUser } = useAuth()
   const navigate = useNavigate()
+
   const {
     register,
     handleSubmit,
@@ -26,53 +23,80 @@ export default function LoginForm() {
 
   async function onSubmit(formData) {
     setLoading(true)
+    setError('')
+
+    // Additional client-side validation
+    const validation = validateForm(formData, 'login')
+    if (!validation.isValid) {
+      setLoading(false)
+      return
+    }
+
+    // Sanitize inputs
+    const sanitizedData = {
+      email: sanitizeInput(formData.email),
+      password: formData.password // Don't sanitize password
+    }
 
     try {
-      const response = await fetch(
-        `${baseURL}login`,
-        loginRequestOptions(formData)
-      )
-      setTimeout(() => {
-        setLoading(false)
-      }, 1000)
-      if (response.status === 200) {
-        authHelper('cookie/refresh', formData.email, setCurrentUser)
+      const result = await loginUser(sanitizedData.email, sanitizedData.password)
+
+      if (result.success) {
         navigate('/')
+      } else {
+        setError(result.error || 'Login failed')
       }
-      setIsLoggedIn(true)
-      setLoading(false)
     } catch (error) {
-      throw new Error(error)
+      setError('Login failed. Please try again.')
+    } finally {
+      setLoading(false)
     }
   }
 
   return (
     <UserForm title="Login to MediaVault">
+      {error && (
+        <Alert
+          severity="error"
+          sx={{ marginBottom: '16px' }}
+          action={
+            error.includes('Invalid email or password') ? (
+              <Link
+                component="button"
+                variant="body2"
+                onClick={() => navigate('/createuser')}
+                sx={{ color: 'white', textDecoration: 'underline' }}
+              >
+                Create account
+              </Link>
+            ) : null
+          }
+        >
+          {error}
+        </Alert>
+      )}
       <TextField
-        {...register('email', {
-          required: {
-            value: true,
-            message: 'You must specify an email',
-          },
-          pattern: { value: /^\S+@\S+$/i, message: 'Invalid email address' },
-        })}
+        {...register('email', validationRules.email)}
         style={{ marginTop: '11px' }}
         label="Email"
+        type="email"
+        error={!!errors.email}
+        helperText={errors.email?.message}
       />
 
       <TextField
         type="password"
         label="Password"
         style={{ marginTop: '11px' }}
-        {...register('password', {
-          required: 'You must specify a password',
-        })}
+        error={!!errors.password}
+        helperText={errors.password?.message}
+        {...register('password', validationRules.loginPassword)}
       />
-      {errors.email?.message && (
+      {errors.email && (
         <ErrMessage errors={errors} elementID="email" />
       )}
 
-      {errors.password?.message && (
+      {errors.password && (
         <ErrMessage errors={errors} elementID="password" />
       )}
 

@@ -170,9 +170,33 @@ export const musicSchema = new Schema({
 
 export const userSchema = new Schema({
   _id: String,
-  email: String,
-  name: String,
-  password: String,
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    lowercase: true,
+    trim: true
+  },
+  name: {
+    type: String,
+    required: true,
+    trim: true,
+    minlength: 2,
+    maxlength: 50
+  },
+  password: {
+    type: String,
+    required: true,
+    minlength: 60 // bcrypt hash length
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
+  },
+  lastLogin: {
+    type: Date,
+    default: Date.now
+  },
   movies: [{ _id: String, mediaItemStatus: String }],
   tv: [{ _id: String, mediaItemStatus: String }],
   games: [{ _id: String, mediaItemStatus: String }],

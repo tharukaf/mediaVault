@@ -13,38 +13,38 @@ import Tooltip from '@mui/material/Tooltip'
 import MenuItem from '@mui/material/MenuItem'
 import mySVG from '../assets/media_vault_logo_2.svg'
 import { Link, NavLink } from 'react-router-dom'
-import { useContext } from 'react'
-import { AuthContext } from '../utils/UserContext'
+import { useAuth } from '../utils/UserContext'
 import { useNavigate } from 'react-router-dom'
-import { baseURL } from '../utils/FetchData'
 
 function ResponsiveAppBar() {
   const navigate = useNavigate()
-  const { currentUser, setCurrentUser } = useContext(AuthContext)
+  const { user, currentUser, logoutUser } = useAuth()
+
+  // Use currentUser which is guaranteed to have a value (either user or Guest)
+  const displayUser = currentUser || { name: 'Guest', email: null }
+
   const pages = ['myvault', 'curator']
   const pagesText = { myvault: 'My Vault', curator: 'Curator' }
   const settings = [
-    <>
-      {currentUser.name !== 'Guest' && (
-        <Link
-          key="profile"
-          onClick={() => {
-            handleCloseUserMenu()
-            navigate('/profile')
-          }}
-          style={{ color: 'white', textDecoration: 'none' }} to="/profile">
-          {currentUser.name}
-        </Link>
-      )}
-    </>,
-    currentUser.name === 'Guest' ? (
+    displayUser.name !== 'Guest' && (
+      <Link
+        key="profile"
+        onClick={() => {
+          handleCloseUserMenu()
+          navigate('/profile')
+        }}
+        style={{ color: 'white', textDecoration: 'none' }} to="/profile">
+        {displayUser.name}
+      </Link>
+    ),
+    displayUser.name === 'Guest' ? (
       <Link style={{ color: 'white', textDecoration: 'none' }} to="/login">
         Login
       </Link>
     ) : (
       'Logout'
     ),
-  ]
+  ].filter(Boolean) // Remove falsy values
   const [anchorElNav, setAnchorElNav] = React.useState(null)
   const [anchorElUser, setAnchorElUser] = React.useState(null)
 
@@ -64,15 +64,12 @@ function ResponsiveAppBar() {
   }
 
   const handleLogout = async () => {
-    const res = await fetch(`${baseURL}logout`, {
-      method: 'POST',
-      credentials: 'include',
-    })
-    if (res.status) {
-      localStorage.removeItem('token')
-      localStorage.removeItem('email')
-      localStorage.removeItem('name')
-      setCurrentUser({ name: 'Guest', email: null, token: null })
+    try {
+      await logoutUser()
+      navigate('/')
+    } catch (error) {
+      console.error('Logout failed:', error)
+      // Force logout on frontend even if backend fails
       navigate('/')
     }
   }
@@ -178,7 +175,7 @@ function ResponsiveAppBar() {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar>{settings[0][0]}</Avatar>
+                <Avatar>{displayUser.name.charAt(0)}</Avatar>
               </IconButton>
             </Tooltip>
             <Menu

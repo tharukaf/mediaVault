@@ -11,7 +11,7 @@ import { Typography, Paper, Button } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 
 export default function VaultViewer() {
-  const { currentUser } = useAuth()
+  const { user } = useAuth()
   const { media } = useParams()
   const [movies, setMovies] = useState([])
   const [tv, setTV] = useState([])
@@ -25,9 +25,9 @@ export default function VaultViewer() {
   useEffect(() => {
     async function fetchDataFromDB() {
       let data
-      const email = currentUser.email
+      const email = user.email
       const mediaType = location.pathname === '/myvault' ? 'movies' : media
-      if (currentUser.name === 'Guest') {
+      if (user.name === 'Guest') {
         const storageItems = JSON.parse(localStorage.getItem(mediaType))
         const keys = Object.keys(storageItems)
         const res = await fetch(`${baseURL}guest/${media}/list`, {

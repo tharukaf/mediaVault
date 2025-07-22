@@ -8,7 +8,7 @@ import { connectToMongo } from './db/config.mjs'
 import { createClient } from 'redis'
 import RedisStore from 'connect-redis'
 import Routes from './server/routes/searchRoutes.mjs'
-import reviewRoutes from './server/routes/reviewRoutes.mjs'
+import mediaRoutes from './server/routes/mediaRoutes.mjs'
 import userRoutes from './server/routes/userRoutes.mjs'
 import { igdbAuth, spotifyAuth } from './server/utility/apiAuth.mjs'
 import {
@@ -44,7 +44,7 @@ try {
   console.error('Error initializing RedisStore:', err)
 }
 
-const PORT = process.env.PORT || 8000
+const PORT = process.env.PORT || 3000
 const app = express()
 
 app.use(limiter)
@@ -68,8 +68,8 @@ app.use(
 app.use(['/search/music/:query', '/music/:id', '/curator'], spotifyAuth)
 
 // Router middleware
-app.use('/', userRoutes)
-app.use('/reviews', reviewRoutes)
+app.use('/api/auth', userRoutes)
+app.use('/api/media', mediaRoutes)
 app.use('/', Routes)
 
 app.listen(PORT, () => {

@@ -17,8 +17,8 @@ export default function MovieCard({ movie, mediaType, isNavigate }) {
     movie.mediaItemStatus || 'unwatched'
   )
   const [firstRender, setFirstRender] = useState(true)
-  const { currentUser } = useAuth()
-  const [isGuest] = useState(currentUser.name === 'Guest')
+  const { user } = useAuth()
+  const [isGuest] = useState(user.name === 'Guest')
   useEffect(() => {
     if (firstRender) {
       setFirstRender(false)
@@ -26,7 +26,7 @@ export default function MovieCard({ movie, mediaType, isNavigate }) {
     } else {
       if (isNavigate) {
         updateMediaItemStatus(
-          currentUser.email,
+          user.email,
           mediaType,
           movie.id,
           mediaItemStatus
