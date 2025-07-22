@@ -1,4 +1,5 @@
 import { createContext, useContext, useReducer, useEffect } from 'react'
+import { baseURL } from './FetchData'
 
 // Initial state
 const initialState = {
@@ -125,7 +126,7 @@ export const AuthProvider = ({ children }) => {
     dispatch({ type: AUTH_ACTIONS.LOGIN_START })
 
     try {
-      const response = await fetch('http://localhost:3000/api/auth/login', {
+      const response = await fetch(`${baseURL}api/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -176,7 +177,7 @@ export const AuthProvider = ({ children }) => {
     dispatch({ type: AUTH_ACTIONS.REGISTER_START })
 
     try {
-      const response = await fetch('http://localhost:3000/api/auth/register', {
+      const response = await fetch(`${baseURL}api/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -227,7 +228,7 @@ export const AuthProvider = ({ children }) => {
     try {
       // Call logout endpoint if authenticated
       if (state.token) {
-        await fetch('http://localhost:3000/api/auth/logout', {
+        await fetch(`${baseURL}api/auth/logout`, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${state.token}`,
