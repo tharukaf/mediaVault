@@ -31,9 +31,10 @@ export default function ReviewSection({ mediaId, mediaType }) {
     const [editRating, setEditRating] = useState(0)
 
     useEffect(() => {
-        fetch(`${baseURL}reviews/${mediaType}/${mediaId}`)
+        fetch(`${baseURL}api/reviews/${mediaType}/${mediaId}`)
             .then(res => res.json())
             .then(setReviews)
+            .catch(error => console.error('Error fetching reviews:', error))
     }, [mediaId, mediaType])
 
     const handleSubmit = async e => {
@@ -45,21 +46,31 @@ export default function ReviewSection({ mediaId, mediaType }) {
             rating,
             reviewText,
         }
-        const res = await fetch(`${baseURL}reviews/`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(review),
-        })
-        if (res.ok) {
-            setReviewText('')
-            setRating(0)
-            setReviews([...reviews, await res.json()])
+        try {
+            const res = await fetch(`${baseURL}api/reviews/`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(review),
+            })
+            if (res.ok) {
+                setReviewText('')
+                setRating(0)
+                setReviews([...reviews, await res.json()])
+            }
+        } catch (error) {
+            console.error('Error creating review:', error)
         }
     }
 
     const handleDelete = async id => {
-        await fetch(`${baseURL}reviews/${id}`, { method: 'DELETE' })
-        setReviews(reviews.filter(r => r._id !== id))
+        try {
+            const response = await fetch(`${baseURL}api/reviews/${id}`, { method: 'DELETE' })
+            if (response.ok) {
+                setReviews(reviews.filter(r => r._id !== id))
+            }
+        } catch (error) {
+            console.error('Error deleting review:', error)
+        }
     }
 
     const handleEdit = review => {
@@ -70,18 +81,22 @@ export default function ReviewSection({ mediaId, mediaType }) {
 
     const handleEditSubmit = async e => {
         e.preventDefault()
-        const res = await fetch(`${baseURL}reviews/${editingId}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ reviewText: editText, rating: editRating }),
-        })
-        if (res.ok) {
-            setReviews(
-                reviews.map(r =>
-                    r._id === editingId ? { ...r, reviewText: editText, rating: editRating } : r
+        try {
+            const res = await fetch(`${baseURL}api/reviews/${editingId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ reviewText: editText, rating: editRating }),
+            })
+            if (res.ok) {
+                setReviews(
+                    reviews.map(r =>
+                        r._id === editingId ? { ...r, reviewText: editText, rating: editRating } : r
+                    )
                 )
-            )
-            setEditingId(null)
+                setEditingId(null)
+            }
+        } catch (error) {
+            console.error('Error updating review:', error)
         }
     }
 

@@ -282,30 +282,20 @@ userRouter.delete('/media/:mediaType/:itemId', authenticateToken, async (req, re
   try {
     const { mediaType, itemId } = req.params
 
-    const user = await getUserByEmail(req.user.email)
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' })
-    }
+    console.log(`Deleting media item: ${mediaType}/${itemId} for user: ${req.user.email}`)
 
-    const collection = user[mediaType]
-    if (!Array.isArray(collection)) {
-      return res.status(400).json({ error: 'Invalid media type' })
-    }
-
-    const initialLength = collection.length
-    const updatedCollection = collection.filter(item => item._id.toString() !== itemId.toString())
-
-    if (updatedCollection.length === initialLength) {
-      return res.status(404).json({ error: 'Media item not found in collection' })
-    }
-
-    user[mediaType] = updatedCollection
-    await user.save()
-
-    res.json({ message: 'Media item removed from collection successfully' })
+    const result = await deleteMediaItemFromUser(req.user.email, mediaType, itemId)
+    res.json(result)
   } catch (error) {
     console.error('Delete media error:', error)
-    res.status(500).json({ error: 'Internal server error' })
+
+    if (error.message === 'User not found') {
+      res.status(404).json({ error: 'User not found' })
+    } else if (error.message === 'Media item not found in collection') {
+      res.status(404).json({ error: 'Media item not found in collection' })
+    } else {
+      res.status(500).json({ error: 'Internal server error' })
+    }
   }
 })
 

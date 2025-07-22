@@ -10,6 +10,7 @@ import RedisStore from 'connect-redis'
 import Routes from './server/routes/searchRoutes.mjs'
 import mediaRoutes from './server/routes/mediaRoutes.mjs'
 import userRoutes from './server/routes/userRoutes.mjs'
+import reviewRoutes from './server/routes/reviewRoutes.mjs'
 import { igdbAuth, spotifyAuth } from './server/utility/apiAuth.mjs'
 import {
   CorsOptions,
@@ -70,6 +71,7 @@ app.use(['/search/music/:query', '/music/:id', '/curator'], spotifyAuth)
 // Router middleware
 app.use('/api/auth', userRoutes)
 app.use('/api/media', mediaRoutes)
+app.use('/api/reviews', reviewRoutes)
 app.use('/', Routes)
 
 app.listen(PORT, () => {

@@ -43,7 +43,10 @@ export async function getUserByEmail(email) {
 }
 
 function getCollectionByModelName(user, mediaTypeString) {
-  switch (mediaTypeString) {
+  // Handle both singular and plural forms
+  const normalizedType = mediaTypeString.replace(/s$/, '') // Remove trailing 's' if present
+
+  switch (normalizedType) {
     case 'movie':
       return user.movies
     case 'tv':
@@ -133,8 +136,37 @@ export async function deleteMediaItemFromUser(email, mediaType, itemId) {
     if (!user) {
       throw new Error('User not found')
     }
+    console.log(`Deleting media item: ${mediaType}/${itemId} for user: ${email}`)
+    // Handle both singular and plural forms, and map to correct property names
+    let collectionName
+    switch (mediaType) {
+      case 'movies':
+      case 'movie':
+        collectionName = 'movies'
+        break
+      case 'tv':
+        collectionName = 'tv'
+        break
+      case 'games':
+      case 'game':
+        collectionName = 'games'
+        break
+      case 'music':
+        collectionName = 'music'
+        break
+      case 'books':
+      case 'book':
+        collectionName = 'books'
+        break
+      default:
+        throw new Error('Invalid media type')
+    }
 
-    const collection = getCollectionByModelName(user, mediaType)
+    const collection = user[collectionName]
+    if (!Array.isArray(collection)) {
+      throw new Error('Invalid media type')
+    }
+
     const initialLength = collection.length
     const updatedCollection = collection.filter(item => item._id.toString() !== itemId.toString())
 
@@ -142,7 +174,7 @@ export async function deleteMediaItemFromUser(email, mediaType, itemId) {
       throw new Error('Media item not found in collection')
     }
 
-    user[mediaType] = updatedCollection
+    user[collectionName] = updatedCollection
     await user.save()
     return { message: 'Media item removed successfully' }
   } catch (error) {

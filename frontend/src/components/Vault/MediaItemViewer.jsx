@@ -10,7 +10,7 @@ import MovieCard from '../mediaCards/movieCard'
 import ReviewSection from './ReviewSection.jsx'
 
 export default function MediaItemViewer() {
-  const { user } = useAuth()
+  const { user, getAuthHeaders } = useAuth()
   const { media, id } = useParams()
   const [firstRender, setFirstRender] = useState(true)
   const [itemDetails, setItemDetails] = useState({})
@@ -47,15 +47,47 @@ export default function MediaItemViewer() {
     setSimilarItems(similarCards)
   }
   async function handleDeleteMedia() {
-    const email = localStorage.getItem('userEmail') || (user && user.email)
-    if (!email) return
-    await fetch(`${baseURL}users/media/${media}/${id}`, {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email }),
-    })
-    setOpenDelete(false)
-    navigate('/myvault')
+    console.log('Delete function called, user:', user)
+    console.log('Media:', media, 'ID:', id)
+
+    if (!user || user.name === 'Guest') {
+      // Handle Guest user - remove from localStorage
+      console.log('Handling Guest user deletion')
+      const mediaItems = JSON.parse(localStorage.getItem(media) || '{}')
+      console.log('Current localStorage items:', mediaItems)
+      delete mediaItems[id]
+      localStorage.setItem(media, JSON.stringify(mediaItems))
+      setOpenDelete(false)
+      navigate('/myvault')
+      return
+    }
+
+    // Handle authenticated user - call backend API
+    console.log('Handling authenticated user deletion')
+    try {
+      const headers = getAuthHeaders()
+      console.log('Auth headers:', headers)
+      const url = `${baseURL}api/auth/media/${media}/${id}`
+      console.log('DELETE URL:', url)
+
+      const response = await fetch(url, {
+        method: 'DELETE',
+        headers: headers,
+      })
+
+      console.log('Response status:', response.status)
+      console.log('Response ok:', response.ok)
+
+      if (response.ok) {
+        setOpenDelete(false)
+        navigate('/myvault')
+      } else {
+        const errorData = await response.text()
+        console.error('Failed to delete media item:', errorData)
+      }
+    } catch (error) {
+      console.error('Error deleting media item:', error)
+    }
   }
 
   return (
@@ -89,7 +121,7 @@ export default function MediaItemViewer() {
             </Typography>
             <Stack direction="row" spacing={1} sx={{ mt: 1, mb: 2, flexWrap: 'wrap' }}>
               <Chip
-                label={`Release: ${itemDetails.releaseDate ? new Date(itemDetails.releaseDate * 1000).toLocaleDateString() : 'N/A'}`}
+                label={`Release: ${new Date(itemDetails.releaseDate).toLocaleDateString() || 'N/A'}`}
                 color="info"
                 variant="outlined"
                 sx={{ fontWeight: 500, fontSize: 14, bgcolor: 'rgba(0,128,128,0.08)', color: 'teal', borderColor: 'teal' }}
